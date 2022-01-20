@@ -1,6 +1,6 @@
-package fr.unice.polytech.si3.qgl.teamid.tooling;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.tooling;
 
-import fr.unice.polytech.si3.qgl.teamid.Cockpit;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 
 public class Application {
 	
