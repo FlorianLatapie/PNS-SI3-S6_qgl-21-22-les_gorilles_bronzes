@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CockpitTest {
-
     Cockpit cockpit;
 
     @BeforeEach
@@ -16,6 +15,11 @@ class CockpitTest {
 
     @Test
     void nextRoundTest() {
+        assertEquals("[]", this.cockpit.nextRound("{}"));
+    }
+
+    @Test
+    void initGameTest() {
         assertEquals("[]", this.cockpit.nextRound("{}"));
     }
 }
