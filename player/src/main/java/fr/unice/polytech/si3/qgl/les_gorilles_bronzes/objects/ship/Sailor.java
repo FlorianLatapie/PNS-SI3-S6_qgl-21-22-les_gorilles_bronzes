@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
 public class Sailor {
     private int id;

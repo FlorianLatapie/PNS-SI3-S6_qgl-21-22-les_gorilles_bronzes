@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 public class Rectangle implements Shape {
     private double width;

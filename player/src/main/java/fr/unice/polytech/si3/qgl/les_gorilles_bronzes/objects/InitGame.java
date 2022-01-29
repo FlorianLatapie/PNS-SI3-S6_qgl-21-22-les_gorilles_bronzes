@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
 public class InitGame {

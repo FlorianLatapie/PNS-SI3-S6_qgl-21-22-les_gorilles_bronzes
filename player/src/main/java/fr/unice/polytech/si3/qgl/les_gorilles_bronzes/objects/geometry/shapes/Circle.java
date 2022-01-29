@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 public class Circle implements Shape{
     private double radius;

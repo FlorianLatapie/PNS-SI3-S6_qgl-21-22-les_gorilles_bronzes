@@ -2,9 +2,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes.Circle;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes.Polygon;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes.Rectangle;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({

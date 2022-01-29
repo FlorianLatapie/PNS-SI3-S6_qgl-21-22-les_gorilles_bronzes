@@ -1,6 +1,6 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Point;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
 public class Polygon implements Shape{
     private	double orientation;

@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Position;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.shapes.Shape;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 
 public class Ship {
