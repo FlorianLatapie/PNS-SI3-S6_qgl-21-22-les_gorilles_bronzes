@@ -16,7 +16,7 @@ public class Cockpit implements ICockpit {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public Cockpit() {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public void initGame(String JSONgame) {
@@ -28,18 +28,14 @@ public class Cockpit implements ICockpit {
     }
 
     public String nextRound(String JSONround) {
-        String defaultAnswer = " [{    \"sailorId\": 0,    \"type\": \"OAR\"  },  {    \"sailorId\": 1,    \"type\": \"OAR\"  }]";
-        if (JSONround.isEmpty()) {
-            return defaultAnswer;
-        } else {
-            try {
-                NextRound nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
-                return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0),new Oar(1)});
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                return "[]";
-            }
+        try {
+            NextRound nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
+            return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0), new Oar(1)});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "[]";
         }
+
     }
 
     @Override
