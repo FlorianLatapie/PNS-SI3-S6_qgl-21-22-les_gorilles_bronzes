@@ -14,6 +14,8 @@ import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 
 public class Cockpit implements ICockpit {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private InitGame initGame;
+    private NextRound nextRound;
 
     public Cockpit() {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -21,7 +23,7 @@ public class Cockpit implements ICockpit {
 
     public void initGame(String JSONgame) {
         try {
-            InitGame initGame = OBJECT_MAPPER.readValue(JSONgame, InitGame.class);
+            this.initGame = OBJECT_MAPPER.readValue(JSONgame, InitGame.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -29,7 +31,7 @@ public class Cockpit implements ICockpit {
 
     public String nextRound(String JSONround) {
         try {
-            NextRound nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
+            this.nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
             return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0), new Oar(1)});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -41,5 +43,13 @@ public class Cockpit implements ICockpit {
     @Override
     public List<String> getLogs() {
         return new ArrayList<>();
+    }
+
+    public InitGame getInitGame() {
+        return initGame;
+    }
+
+    public NextRound getNextRound() {
+        return nextRound;
     }
 }
