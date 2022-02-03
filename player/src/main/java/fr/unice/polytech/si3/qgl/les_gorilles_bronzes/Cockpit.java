@@ -18,6 +18,9 @@ public class Cockpit implements ICockpit {
     private NextRound nextRound;
 
     public Cockpit() {
+        /**
+         * Avoids exceptions when a JSON string contains new fields/properties
+         */
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
