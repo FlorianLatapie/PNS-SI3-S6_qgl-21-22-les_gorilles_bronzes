@@ -85,11 +85,10 @@ public class DeckEngine {
     }
 
     public List<Sailor> sailorsWhoDontHaveAnOar(){
-
         List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
         for(i = 0; i<sailors.length; i++){
             oars.forEach(o->{
-                   if((sailors[i].getX()==o.getX() || sailors[i].getY()==o.getY()) && sailorsWhoDontHaveAnOar.contains(sailors[i])){
+                   if((sailors[i].getX()==o.getX() && sailors[i].getY()==o.getY())&& sailorsWhoDontHaveAnOar.contains(sailors[i])){
                             sailorsWhoDontHaveAnOar.remove(sailors[i]);
                    }
             });
@@ -123,7 +122,7 @@ public class DeckEngine {
         List<Rame> oarsAvailable = new ArrayList<>(oars);
         for(i = 0; i<sailors.length; i++){
             oars.forEach(o->{
-                if((sailors[i].getX()==o.getX() || sailors[i].getY()==o.getY())&& oarsAvailable.contains(o)){
+                if((sailors[i].getX()==o.getX() && sailors[i].getY()==o.getY())&& oarsAvailable.contains(o)){
                     oarsAvailable.remove(o);
                 }
             });
@@ -161,5 +160,10 @@ public class DeckEngine {
             if(s.getY()==ship.getDeck().getWidth()) rightSailors.add(s);
         }
         return rightSailors;
+    }
+
+    public void printSailorsLocations (){
+        Arrays.stream(sailors).collect(Collectors.toList())
+                .forEach(s -> System.out.println(s.getId()+" is on " + ship.getEntityNameWithPosition(s.getX(),s.getY())));
     }
 }

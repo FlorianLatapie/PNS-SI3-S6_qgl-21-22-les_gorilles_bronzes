@@ -19,4 +19,8 @@ public class Rame implements Entity{
     public void setY(int y) {
         this.y = y;
     }
+
+    public String getName(){
+        return "Rame";
+    }
 }

@@ -5,6 +5,10 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Ship {
     private String type;
     private int life;
@@ -56,6 +60,15 @@ public class Ship {
 
     public Entity[] getEntities() {
         return entities;
+    }
+
+    public String getEntityNameWithPosition(int x, int y){
+        List<Entity> entity = Arrays.stream(getEntities()).collect(Collectors.toList())
+                .stream().filter(e-> e.getX()==x && e.getY()==y).collect(Collectors.toList());
+        if(!entity.isEmpty()){
+            return entity.get(0).getName()+"[" + x + "," +y+ "]";
+        }
+        return "No entity [" + x + "," +y+ "]";
     }
 
     public void setEntities(Entity[] entities) {
