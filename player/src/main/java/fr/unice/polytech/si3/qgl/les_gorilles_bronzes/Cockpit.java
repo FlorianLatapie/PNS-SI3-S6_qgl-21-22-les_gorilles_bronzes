@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.GlobalEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
@@ -17,6 +18,7 @@ public class Cockpit implements ICockpit {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private InitGame initGame;
     private NextRound nextRound;
+    private GlobalEngine globalEngine;
 
     public Cockpit() {
         /**
@@ -28,6 +30,7 @@ public class Cockpit implements ICockpit {
     public void initGame(String JSONgame) {
         try {
             this.initGame = OBJECT_MAPPER.readValue(JSONgame, InitGame.class);
+            this.globalEngine = new GlobalEngine(initGame);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -36,12 +39,11 @@ public class Cockpit implements ICockpit {
     public String nextRound(String JSONround) {
         try {
             this.nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
-            return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0), new Oar(1)});
+            return OBJECT_MAPPER.writeValueAsString(globalEngine.computeNextRound(nextRound));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return "[]";
         }
-
     }
 
     @Override

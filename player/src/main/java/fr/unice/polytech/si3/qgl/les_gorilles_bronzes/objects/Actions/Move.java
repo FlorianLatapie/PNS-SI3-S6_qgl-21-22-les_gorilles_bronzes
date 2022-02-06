@@ -5,6 +5,13 @@ public class Move implements Action {
     private int xdistance; //absolute(xdistance) + absolute(ydistance) <= 5
     private int ydistance; //absolute(xdistance) + absolute(ydistance) <= 5
 
+    public Move(int sailorId, int xdistance, int ydistance) {
+        this.sailorId = sailorId;
+        this.xdistance = xdistance;
+        this.ydistance = ydistance;
+    }
+
+
     public int getSailorId() {
         return sailorId;
     }

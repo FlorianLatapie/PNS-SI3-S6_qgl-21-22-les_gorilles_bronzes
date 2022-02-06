@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 
 public class Sailor {
@@ -7,6 +8,8 @@ public class Sailor {
     private int x;
     private int y;
     private String name;
+
+    private boolean isFree;
 
     public int getId() {
         return id;
@@ -40,13 +43,23 @@ public class Sailor {
         this.name = name;
     }
 
-    public void moveSailor(Entity entity){
+    public boolean isFree() {
+        return isFree;
+    }
+
+    public void setFree(boolean free) {
+        isFree = free;
+    }
+
+    public Move moveSailor(Entity entity){
         int totalOfMovement = Math.abs(entity.getX() - getX()) + Math.abs(entity.getY()- getY());
         if(totalOfMovement<=5) {
             setX(entity.getX());
             setY(entity.getY());
+            return new Move(id, x, y);
         }else{
             System.out.println("Can't move "+ name +" to ["+ entity.getX() +" : "+ entity.getY() +"]");
+            throw new RuntimeException("Can't move "+ name +" to ["+ entity.getX() +" : "+ entity.getY() +"]");
         }
     }
 }
