@@ -6,7 +6,9 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DeckEngine {
     private Ship ship;
@@ -55,7 +57,7 @@ public class DeckEngine {
             entitiesOnDeck[entities.indexOf(e)][0] = e.getX();
         }
         return entitiesOnDeck;
-    }*/
+    }
 
     private List<DeckPosition> getOarsDeckPosition(){
         List<DeckPosition> oarsDeckPosition = new ArrayList<>();
@@ -71,7 +73,7 @@ public class DeckEngine {
             sailorsDeckPosition.add(new DeckPosition(sailors[i].getX(),sailors[i].getY()));
         }
         return sailorsDeckPosition;
-    }
+    }*/
 
     public void assignEachSailorAnOar(){
         List<Rame> oarsAvailable = oarsAvailable();
@@ -83,26 +85,46 @@ public class DeckEngine {
     }
 
     public List<Sailor> sailorsWhoDontHaveAnOar(){
-        List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>();
+
+        List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
         for(i = 0; i<sailors.length; i++){
             oars.forEach(o->{
-                   if((sailors[i].getX()!=o.getX() || sailors[i].getY()!=o.getY())&& !sailorsWhoDontHaveAnOar.contains(sailors[i])){
-                            sailorsWhoDontHaveAnOar.add(sailors[i]);
+                   if((sailors[i].getX()==o.getX() || sailors[i].getY()==o.getY()) && sailorsWhoDontHaveAnOar.contains(sailors[i])){
+                            sailorsWhoDontHaveAnOar.remove(sailors[i]);
                    }
             });
         }
         return sailorsWhoDontHaveAnOar;
     }
 
+    public List<Sailor> sailorsWhoHaveAnOar(){
+        List<Sailor> sailorsWhoHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
+        sailorsWhoDontHaveAnOar().forEach(s->{
+            if(sailorsWhoHaveAnOar.contains(s)) sailorsWhoHaveAnOar.remove(s);
+        });
+        return sailorsWhoHaveAnOar;
+    }
 
+
+    /*public List<Sailor> sailorsWhoDontHave(List<Entity> entities){
+        List<Sailor> sailorsWhoDontHave = new ArrayList<>();
+        for(i = 0; i<sailors.length; i++){
+            entities.forEach(e->{
+                if((sailors[i].getX()!=e.getX() || sailors[i].getY()!=e.getY())&& !sailorsWhoDontHave.contains(sailors[i])){
+                    sailorsWhoDontHave.add(sailors[i]);
+                }
+            });
+        }
+        return sailorsWhoDontHave;
+    }*/
 
 
     public List<Rame> oarsAvailable(){
-        List<Rame> oarsAvailable = new ArrayList<>();
+        List<Rame> oarsAvailable = new ArrayList<>(oars);
         for(i = 0; i<sailors.length; i++){
             oars.forEach(o->{
-                if((sailors[i].getX()!=o.getX() || sailors[i].getY()!=o.getY())&& !oarsAvailable.contains(o)){
-                    oarsAvailable.add(o);
+                if((sailors[i].getX()==o.getX() || sailors[i].getY()==o.getY())&& oarsAvailable.contains(o)){
+                    oarsAvailable.remove(o);
                 }
             });
         }
@@ -125,5 +147,19 @@ public class DeckEngine {
         return closestOar;
     }
 
+    public List<Sailor> getLeftSailorsWithAnOar(){
+        List<Sailor> leftSailors = new ArrayList<>();
+        for(Sailor s : sailorsWhoHaveAnOar()){
+            if(s.getY()==0) leftSailors.add(s);
+        }
+        return leftSailors;
+    }
 
+    public List<Sailor> getRightSailorsWithAnOar(){
+        List<Sailor> rightSailors = new ArrayList<>();
+        for(Sailor s : sailorsWhoHaveAnOar()){
+            if(s.getY()==ship.getDeck().getWidth()) rightSailors.add(s);
+        }
+        return rightSailors;
+    }
 }
