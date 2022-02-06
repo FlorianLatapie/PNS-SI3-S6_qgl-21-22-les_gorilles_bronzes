@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+
 public class Sailor {
     private int id;
     private int x;
@@ -36,5 +38,15 @@ public class Sailor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void moveSailor(Entity entity){
+        int totalOfMovement = Math.abs(entity.getX() - getX()) + Math.abs(entity.getY()- getY());
+        if(totalOfMovement<=5) {
+            setX(entity.getX());
+            setY(entity.getY());
+        }else{
+            System.out.println("Can't move "+ name +" to ["+ entity.getX() +" : "+ entity.getY() +"]");
+        }
     }
 }

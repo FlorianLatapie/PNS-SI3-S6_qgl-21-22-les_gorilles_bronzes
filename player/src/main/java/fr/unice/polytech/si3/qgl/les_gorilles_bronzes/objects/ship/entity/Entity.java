@@ -13,4 +13,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public interface Entity {
 
+    int getX();
+    int getY();
 }

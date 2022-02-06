@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
@@ -35,6 +36,8 @@ public class Cockpit implements ICockpit {
     public String nextRound(String JSONround) {
         try {
             this.nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
+            DeckEngine deckEngine = new DeckEngine(nextRound.getShip(), initGame.getSailors());
+            deckEngine.assignEachSailorAnOar();
             return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0), new Oar(1)});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
