@@ -36,8 +36,6 @@ public class Cockpit implements ICockpit {
     public String nextRound(String JSONround) {
         try {
             this.nextRound = OBJECT_MAPPER.readValue(JSONround, NextRound.class);
-            DeckEngine deckEngine = new DeckEngine(nextRound.getShip(), initGame.getSailors());
-            deckEngine.assignEachSailorAnOar();
             return OBJECT_MAPPER.writeValueAsString(new Action[]{new Oar(0), new Oar(1)});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
