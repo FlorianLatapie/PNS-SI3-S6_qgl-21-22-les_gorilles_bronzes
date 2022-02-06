@@ -1,23 +1,13 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
 
-public class Move implements Action {
-    private int sailorId;
+public class Move extends Action {
     private int xdistance; //absolute(xdistance) + absolute(ydistance) <= 5
     private int ydistance; //absolute(xdistance) + absolute(ydistance) <= 5
 
     public Move(int sailorId, int xdistance, int ydistance) {
-        this.sailorId = sailorId;
+        super(sailorId);
         this.xdistance = xdistance;
         this.ydistance = ydistance;
-    }
-
-
-    public int getSailorId() {
-        return sailorId;
-    }
-
-    public void setSailorId(int sailorId) {
-        this.sailorId = sailorId;
     }
 
     public int getXdistance() {
@@ -34,5 +24,13 @@ public class Move implements Action {
 
     public void setYdistance(int ydistance) {
         this.ydistance = ydistance;
+    }
+
+    @Override
+    public String toString() {
+        return "Move{" + super.toString() +
+                "xdistance=" + xdistance +
+                ", ydistance=" + ydistance +
+                "} ";
     }
 }

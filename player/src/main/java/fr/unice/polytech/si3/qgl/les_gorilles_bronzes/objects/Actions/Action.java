@@ -15,5 +15,24 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Fire.class, name = "FIRE"),
         @JsonSubTypes.Type(value = Reload.class, name = "FIRE")
 })
-public interface Action {
+public abstract class Action {
+    private int sailorId;
+
+    public Action(int sailorId) {
+        this.sailorId = sailorId;
+    }
+
+    public int getSailorId() {
+        return sailorId;
+    }
+
+    public void setSailorId(int sailorId) {
+        this.sailorId = sailorId;
+    }
+
+    @Override
+    public String toString() {
+        return "sailorId=" + sailorId;
+
+    }
 }

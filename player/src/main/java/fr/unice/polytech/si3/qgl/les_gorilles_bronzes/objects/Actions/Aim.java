@@ -1,15 +1,11 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
 
-public class Aim implements Action {
-    private int sailorId;
+public class Aim extends Action {
     private double angle;//-PI/4 <= rotation <= PI/4
 
-    public int getSailorId() {
-        return sailorId;
-    }
-
-    public void setSailorId(int sailorId) {
-        this.sailorId = sailorId;
+    public Aim(int sailorId, double angle) {
+        super(sailorId);
+        this.angle = angle;
     }
 
     public double getAngle() {

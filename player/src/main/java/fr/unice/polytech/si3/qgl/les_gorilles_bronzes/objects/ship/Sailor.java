@@ -51,15 +51,27 @@ public class Sailor {
         isFree = free;
     }
 
-    public Move moveSailor(Entity entity){
-        int totalOfMovement = Math.abs(entity.getX() - getX()) + Math.abs(entity.getY()- getY());
-        if(totalOfMovement<=5) {
-            setX(entity.getX());
-            setY(entity.getY());
-            return new Move(id, x, y);
-        }else{
-            System.out.println("Can't move "+ name +" to ["+ entity.getX() +" : "+ entity.getY() +"]");
-            throw new RuntimeException("Can't move "+ name +" to ["+ entity.getX() +" : "+ entity.getY() +"]");
+    public Move moveSailor(Entity entity) {
+        int oldX = x;
+        int oldY = y;
+        int totalOfMovement = Math.abs(entity.getX() - getX()) + Math.abs(entity.getY() - getY());
+        if (totalOfMovement <= 5) {
+            x = entity.getX();
+            y = entity.getY();
+            return new Move(id, x-oldX, y-oldY);
+        } else {
+            throw new RuntimeException("Can't move " + name + "from [" + oldX + ":" + oldY + "] to [" + entity.getX() + ":" + entity.getY() + "] : too far = " + totalOfMovement);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Sailor{" +
+                "id=" + id +
+                ", x=" + x +
+                ", y=" + y +
+                ", name='" + name + '\'' +
+                ", isFree=" + isFree +
+                '}';
     }
 }

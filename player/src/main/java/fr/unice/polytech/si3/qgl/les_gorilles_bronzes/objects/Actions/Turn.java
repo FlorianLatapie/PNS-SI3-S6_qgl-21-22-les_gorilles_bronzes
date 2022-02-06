@@ -1,15 +1,11 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
 
-public class Turn implements Action {
-    private int sailorId;
+public class Turn extends Action {
     private double rotation;//-PI/4 <= rotation <= PI/4
 
-    public int getSailorId() {
-        return sailorId;
-    }
-
-    public void setSailorId(int sailorId) {
-        this.sailorId = sailorId;
+    public Turn(int sailorId, double rotation) {
+        super(sailorId);
+        this.rotation = rotation;
     }
 
     public double getRotation() {

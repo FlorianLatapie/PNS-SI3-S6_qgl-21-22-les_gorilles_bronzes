@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
+import java.util.Arrays;
+
 public class InitGame {
     private Goal goal;
     private Ship ship;
@@ -40,5 +42,15 @@ public class InitGame {
 
     public void setShipCount(int shipCount) {
         this.shipCount = shipCount;
+    }
+
+    @Override
+    public String toString() {
+        return "InitGame{" + System.lineSeparator() +
+                "goal=" + goal + System.lineSeparator() +
+                ", ship=" + ship + System.lineSeparator() +
+                ", sailors=" + Arrays.toString(sailors) + System.lineSeparator() +
+                ", shipCount=" + shipCount + System.lineSeparator() +
+                '}';
     }
 }
