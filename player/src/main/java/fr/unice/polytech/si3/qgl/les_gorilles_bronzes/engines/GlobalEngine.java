@@ -19,7 +19,7 @@ public class GlobalEngine {
     public GlobalEngine(InitGame initGame) {
         this.initGame = initGame;
         this.deckEngine = new DeckEngine(initGame);
-        this.navigationEngine = new NavigationEngine(initGame);
+        this.navigationEngine = new NavigationEngine(initGame, deckEngine);
         this.nbSailors = initGame.getSailors().length;
     }
 

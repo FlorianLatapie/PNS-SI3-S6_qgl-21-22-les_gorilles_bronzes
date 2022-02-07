@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
@@ -11,6 +12,8 @@ public class InitGame {
     private Ship ship;
     private Sailor[] sailors;
     private int shipCount;
+
+    private RegattaGoal regattaGoal;
 
     public Ship getShip() {
         return ship;
@@ -26,6 +29,14 @@ public class InitGame {
 
     public void setGoal(Goal goal) {
         this.goal = goal;
+    }
+
+    public RegattaGoal getRegattaGoal() {
+        return regattaGoal;
+    }
+
+    public void setRegattaGoal(RegattaGoal regattaGoal) {
+        this.regattaGoal = regattaGoal;
     }
 
     public Sailor[] getSailors() {

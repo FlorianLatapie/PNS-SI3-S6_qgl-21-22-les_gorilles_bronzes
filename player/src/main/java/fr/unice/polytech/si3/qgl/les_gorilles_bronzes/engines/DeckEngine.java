@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Direction;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
@@ -106,6 +107,7 @@ public class DeckEngine {
         return actions;
     }
 
+
     public List<Sailor> sailorsWhoDontHaveAnOar() {
         List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
         for (i = 0; i < sailors.length; i++) {
@@ -182,6 +184,15 @@ public class DeckEngine {
             if (r.getY() == ship.getDeck().getWidth() - 1) rightOars.add(r);
         }
         return rightOars;
+    }
+
+    public List<Sailor> getSailorsPerSide(Direction direction){
+        List<Sailor> sideSailors = new ArrayList<>();
+        for(Sailor s : sailors){
+            if(direction == Direction.LEFT && s.getY() == 0) sideSailors.add(s);
+            if(direction == Direction.RIGHT && s.getY() == ship.getDeck().getWidth()-1) sideSailors.add(s);
+        }
+        return sideSailors;
     }
 
     public void printSailorsLocations() {
