@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,12 +14,6 @@ class CockpitTest {
     @BeforeEach
     void setUp() {
         this.cockpit = new Cockpit();
-    }
-
-    @Test
-    void nextRoundTest() {
-        this.cockpit = new Cockpit();
-        assertEquals("[{\"type\":\"OAR\",\"sailorId\":0},{\"type\":\"OAR\",\"sailorId\":1}]", this.cockpit.nextRound("{}"));
     }
 
     @Test

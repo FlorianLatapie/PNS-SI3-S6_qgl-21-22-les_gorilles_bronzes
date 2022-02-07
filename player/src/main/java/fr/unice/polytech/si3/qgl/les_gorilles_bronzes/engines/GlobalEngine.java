@@ -14,10 +14,12 @@ public class GlobalEngine {
     private int nbSailors;
     private int round = 0;
     private DeckEngine deckEngine;
+    private NavigationEngine navigationEngine;
 
     public GlobalEngine(InitGame initGame) {
         this.initGame = initGame;
         this.deckEngine = new DeckEngine(initGame);
+        this.navigationEngine = new NavigationEngine(initGame);
         this.nbSailors = initGame.getSailors().length;
     }
 
@@ -27,11 +29,9 @@ public class GlobalEngine {
         actions.addAll(deckEngine.moveSailorsToLeftOars(nbSailors / 2));
         actions.addAll(deckEngine.moveSailorsToRightOars(nbSailors / 2));
 
-        //if (round != 0) {
-            for (Sailor sailor : initGame.getSailors()) {
-                actions.add(new Oar(sailor.getId()));
-            }
-        //}
+        if (round != 0) {
+            actions.addAll(navigationEngine.computeNextRound(nextRound));
+        }
         round++;
         return actions.toArray(new Action[0]);
     }
