@@ -46,40 +46,6 @@ public class DeckEngine {
         return oars;
     }
 
-    /*private Entity[][] getEntityDeckPosition(List<Entity> entities){
-        Entity entitiesOnDeck[][] = new Entity[entities.size()][2];
-        for (Entity e : entities) {
-            entitiesOnDeck[entities.indexOf(e)][0] = e.getX();
-        }
-        return entitiesOnDeck;
-    }
-
-    private List<DeckPosition> getOarsDeckPosition(){
-        List<DeckPosition> oarsDeckPosition = new ArrayList<>();
-        oars.forEach(o->{
-            oarsDeckPosition.add(new DeckPosition(o.getX(),o.getY()));
-        });
-        return oarsDeckPosition;
-    }
-
-    private List<DeckPosition> getSailorsDeckPosition(){
-        List<DeckPosition> sailorsDeckPosition = new ArrayList<>();
-        for(int i = 0; i<sailors.length; i++){
-            sailorsDeckPosition.add(new DeckPosition(sailors[i].getX(),sailors[i].getY()));
-        }
-        return sailorsDeckPosition;
-    }*/
-
-    public List<Action> assignEachSailorAnOar() {
-        List<Action> actions = new ArrayList<>();
-        List<Rame> oarsAvailable = oarsAvailable();
-        for (Sailor s : sailorsWhoDontHaveAnOar()) {
-            Rame oar = getTheClosestOarAvailable(s, oarsAvailable);
-            oarsAvailable.remove(oar);
-            actions.add(s.moveSailor(oar));
-        }
-        return actions;
-    }
 
     public List<Action> moveSailorsToOars(int nbSailorsToMove, Direction direction) {
         List<Action> actions = new ArrayList<>();
@@ -163,4 +129,28 @@ public class DeckEngine {
     public void printSailorsLocations() {
         Arrays.stream(sailors).forEach(s -> System.out.println(s.getId() + " is on " + ship.getEntityNameWithPosition(s.getX(), s.getY())));
     }
+
+     /*private Entity[][] getEntityDeckPosition(List<Entity> entities){
+        Entity entitiesOnDeck[][] = new Entity[entities.size()][2];
+        for (Entity e : entities) {
+            entitiesOnDeck[entities.indexOf(e)][0] = e.getX();
+        }
+        return entitiesOnDeck;
+    }
+
+    private List<DeckPosition> getOarsDeckPosition(){
+        List<DeckPosition> oarsDeckPosition = new ArrayList<>();
+        oars.forEach(o->{
+            oarsDeckPosition.add(new DeckPosition(o.getX(),o.getY()));
+        });
+        return oarsDeckPosition;
+    }
+
+    private List<DeckPosition> getSailorsDeckPosition(){
+        List<DeckPosition> sailorsDeckPosition = new ArrayList<>();
+        for(int i = 0; i<sailors.length; i++){
+            sailorsDeckPosition.add(new DeckPosition(sailors[i].getX(),sailors[i].getY()));
+        }
+        return sailorsDeckPosition;
+    }*/
 }
