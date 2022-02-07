@@ -49,13 +49,16 @@ public class DeckEngineTest {
         assertEquals(4, deckEngine.sailorsWhoHaveAnOar().size());
     }
 
-    /*@Test
+    @Test
     void moveSailorsToOars(){
-        assertEquals(3, deckEngine.getLeftOars().size());
+        assertEquals(2,deckEngine.sailorsWhoHaveAnOar().size());
+        assertEquals(4, deckEngine.oarsAvailable().size());
         deckEngine.moveSailorsToOars(2, DeckEngine.Direction.LEFT);
-        assertEquals(2, deckEngine.oarsAvailable().size());
-        deckEngine.moveSailorsToOars(2, DeckEngine.Direction.RIGHT);
-        assertEquals(2, deckEngine.oarsAvailable().size());
-    }*/
+        assertEquals(4,deckEngine.sailorsWhoHaveAnOar().size()); // +2 sailors with an oar
+        assertEquals(3, deckEngine.oarsAvailable().size()); // -1 oar available
+        deckEngine.moveSailorsToOars(3, DeckEngine.Direction.RIGHT);
+        assertEquals(6,deckEngine.sailorsWhoHaveAnOar().size()); // + 2 sailors with an oar
+        assertEquals(1, deckEngine.oarsAvailable().size()); // -2 oars available
+    }
 }
 
