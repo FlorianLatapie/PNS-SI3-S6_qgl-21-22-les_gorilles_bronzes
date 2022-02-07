@@ -26,8 +26,8 @@ public class GlobalEngine {
     public Action[] computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList();
         this.deckEngine.beforeEachRound();
-        actions.addAll(deckEngine.moveSailorsToLeftOars(nbSailors / 2));
-        actions.addAll(deckEngine.moveSailorsToRightOars(nbSailors / 2));
+        actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
+        actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
 
         if (round != 0) {
             actions.addAll(navigationEngine.computeNextRound(nextRound));

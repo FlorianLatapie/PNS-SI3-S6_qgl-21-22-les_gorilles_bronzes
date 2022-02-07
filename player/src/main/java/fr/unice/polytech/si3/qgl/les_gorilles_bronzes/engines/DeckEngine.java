@@ -16,6 +16,7 @@ public class DeckEngine {
     private Sailor[] sailors;
     private List<Rame> oars;
     private int i;
+    public enum Direction{LEFT, RIGHT}
 
     public DeckEngine(InitGame initGame) {
         this.ship = initGame.getShip();
@@ -80,25 +81,13 @@ public class DeckEngine {
         return actions;
     }
 
-    public List<Action> moveSailorsToLeftOars(int nbSailorsToMove) {
+    public List<Action> moveSailorsToOars(int nbSailorsToMove, Direction direction) {
         List<Action> actions = new ArrayList<>();
         int j = 0;
         for (Sailor s : sailors) {
             if (s.isFree() && j < nbSailorsToMove) {
-                actions.add(s.moveSailor(getLeftOars().get(j)));
-                s.setFree(false);
-                j++;
-            }
-        }
-        return actions;
-    }
-
-    public List<Action> moveSailorsToRightOars(int nbSailorsToMove) {
-        List<Action> actions = new ArrayList<>();
-        int j = 0;
-        for (Sailor s : sailors) {
-            if (s.isFree() && j < nbSailorsToMove) {
-                actions.add(s.moveSailor(getRightOars().get(j)));
+                if(direction.equals(Direction.RIGHT)) actions.add(s.moveSailor(getRightOars().get(j)));
+                if(direction.equals(Direction.LEFT)) actions.add(s.moveSailor(getLeftOars().get(j)));
                 s.setFree(false);
                 j++;
             }
@@ -125,19 +114,6 @@ public class DeckEngine {
         });
         return sailorsWhoHaveAnOar;
     }
-
-
-    /*public List<Sailor> sailorsWhoDontHave(List<Entity> entities){
-        List<Sailor> sailorsWhoDontHave = new ArrayList<>();
-        for(i = 0; i<sailors.length; i++){
-            entities.forEach(e->{
-                if((sailors[i].getX()!=e.getX() || sailors[i].getY()!=e.getY())&& !sailorsWhoDontHave.contains(sailors[i])){
-                    sailorsWhoDontHave.add(sailors[i]);
-                }
-            });
-        }
-        return sailorsWhoDontHave;
-    }*/
 
 
     public List<Rame> oarsAvailable() {
