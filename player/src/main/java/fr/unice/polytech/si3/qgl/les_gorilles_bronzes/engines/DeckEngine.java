@@ -4,11 +4,13 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DeckEngine {
@@ -16,7 +18,8 @@ public class DeckEngine {
     private Sailor[] sailors;
     private List<Rame> oars;
     private int i;
-    public enum Direction{LEFT, RIGHT}
+
+    public enum Direction {LEFT, RIGHT}
 
     public DeckEngine(InitGame initGame) {
         this.ship = initGame.getShip();
@@ -38,12 +41,12 @@ public class DeckEngine {
     }
 
     public List<Rame> getOars() {
-        List<Rame> oars = new ArrayList<>();
-        for (int i = 0; i < ship.getEntities().length; i++) {
-            if (ship.getEntities()[i] instanceof Rame)
-                oars.add((Rame) ship.getEntities()[i]);
+        List<Rame> res = new ArrayList<>();
+        for (int j = 0; j < ship.getEntities().length; j++) {
+            if (ship.getEntities()[j] instanceof Rame)
+                res.add((Rame) ship.getEntities()[j]);
         }
-        return oars;
+        return res;
     }
 
 
@@ -52,8 +55,8 @@ public class DeckEngine {
         int j = 0;
         for (Sailor s : sailors) {
             if (s.isFree() && j < nbSailorsToMove) {
-                if(direction.equals(Direction.RIGHT)) actions.add(s.moveSailor(getRightOars().get(j)));
-                if(direction.equals(Direction.LEFT)) actions.add(s.moveSailor(getLeftOars().get(j)));
+                if (direction.equals(Direction.RIGHT)) actions.add(s.moveSailor(getOars(Direction.RIGHT).get(j)));
+                if (direction.equals(Direction.LEFT)) actions.add(s.moveSailor(getOars(Direction.LEFT).get(j)));
                 s.setFree(false);
                 j++;
             }
@@ -110,6 +113,17 @@ public class DeckEngine {
         return closestOar;
     }
 
+    public List<Rame> getOars(Direction direction) {
+        List<Rame> res = new ArrayList<>();
+        for (Rame r : oars) {
+            if (direction.equals(Direction.LEFT))
+                if (r.getY() == 0) res.add(r);
+            if (direction.equals(Direction.RIGHT))
+                if (r.getY() == ship.getDeck().getWidth() - 1) res.add(r);
+        }
+        return res;
+    }
+
     public List<Rame> getLeftOars() {
         List<Rame> leftOars = new ArrayList<>();
         for (Rame r : oars) {
@@ -126,31 +140,7 @@ public class DeckEngine {
         return rightOars;
     }
 
-    public void printSailorsLocations() {
-        Arrays.stream(sailors).forEach(s -> System.out.println(s.getId() + " is on " + ship.getEntityNameWithPosition(s.getX(), s.getY())));
+    public Optional<Sailor> getSailorByEntity(Entity entity){
+        return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
     }
-
-     /*private Entity[][] getEntityDeckPosition(List<Entity> entities){
-        Entity entitiesOnDeck[][] = new Entity[entities.size()][2];
-        for (Entity e : entities) {
-            entitiesOnDeck[entities.indexOf(e)][0] = e.getX();
-        }
-        return entitiesOnDeck;
-    }
-
-    private List<DeckPosition> getOarsDeckPosition(){
-        List<DeckPosition> oarsDeckPosition = new ArrayList<>();
-        oars.forEach(o->{
-            oarsDeckPosition.add(new DeckPosition(o.getX(),o.getY()));
-        });
-        return oarsDeckPosition;
-    }
-
-    private List<DeckPosition> getSailorsDeckPosition(){
-        List<DeckPosition> sailorsDeckPosition = new ArrayList<>();
-        for(int i = 0; i<sailors.length; i++){
-            sailorsDeckPosition.add(new DeckPosition(sailors[i].getX(),sailors[i].getY()));
-        }
-        return sailorsDeckPosition;
-    }*/
 }

@@ -19,19 +19,20 @@ public class GlobalEngine {
     public GlobalEngine(InitGame initGame) {
         this.initGame = initGame;
         this.deckEngine = new DeckEngine(initGame);
-        this.navigationEngine = new NavigationEngine(initGame);
+        this.navigationEngine = new NavigationEngine(initGame, deckEngine);
         this.nbSailors = initGame.getSailors().length;
     }
 
     public Action[] computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList();
         this.deckEngine.beforeEachRound();
-        actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
-        actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
 
-        if (round != 0) {
-            actions.addAll(navigationEngine.computeNextRound(nextRound));
+        if (round == 0) {
+            actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
+            actions.addAll(deckEngine.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
         }
+        actions.addAll(navigationEngine.computeNextRound(nextRound));
+
         round++;
         return actions.toArray(new Action[0]);
     }
