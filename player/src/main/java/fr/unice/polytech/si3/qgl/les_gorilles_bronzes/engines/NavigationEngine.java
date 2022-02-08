@@ -35,6 +35,7 @@ public class NavigationEngine {
         possibleAngles.remove(0); // removing 0 oars on each side
 
         OarConfiguration bestConf = possibleAngles.stream()//NOSONAR
+                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.leftOar + conf.rightOar).reversed())
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
                 .get();
 
