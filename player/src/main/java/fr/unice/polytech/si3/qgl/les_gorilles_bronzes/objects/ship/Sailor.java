@@ -60,7 +60,7 @@ public class Sailor {
             y = entity.getY();
             return new Move(id, x-oldX, y-oldY);
         } else {
-            throw new RuntimeException("Can't move " + name + "from [" + oldX + ":" + oldY + "] to [" + entity.getX() + ":" + entity.getY() + "] : too far = " + totalOfMovement);
+            throw new RuntimeException("Can't move " + name + " from [" + oldX + ":" + oldY + "] to [" + entity.getX() + ":" + entity.getY() + "] : too far = " + totalOfMovement);
         }
     }
 

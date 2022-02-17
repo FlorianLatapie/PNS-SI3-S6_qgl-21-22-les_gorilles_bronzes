@@ -143,4 +143,13 @@ public class DeckEngine {
     public Optional<Sailor> getSailorByEntity(Entity entity){
         return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
     }
+
+    public String getEntityNameWithPosition(int x, int y){ // todo faire ca en optionnal
+        List<Entity> entity = Arrays.stream(this.ship.getEntities()).collect(Collectors.toList())
+                .stream().filter(e-> e.getX()==x && e.getY()==y).collect(Collectors.toList());
+        if(!entity.isEmpty()){
+            return entity.get(0).getName()+"[" + x + "," +y+ "]";
+        }
+        return "No entity [" + x + "," +y+ "]";
+    }
 }

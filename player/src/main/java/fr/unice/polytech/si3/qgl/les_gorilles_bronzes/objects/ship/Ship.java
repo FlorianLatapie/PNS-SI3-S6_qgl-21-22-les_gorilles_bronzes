@@ -62,15 +62,6 @@ public class Ship {
         return entities;
     }
 
-    public String getEntityNameWithPosition(int x, int y){
-        List<Entity> entity = Arrays.stream(getEntities()).collect(Collectors.toList())
-                .stream().filter(e-> e.getX()==x && e.getY()==y).collect(Collectors.toList());
-        if(!entity.isEmpty()){
-            return entity.get(0).getName()+"[" + x + "," +y+ "]";
-        }
-        return "No entity [" + x + "," +y+ "]";
-    }
-
     public void setEntities(Entity[] entities) {
         this.entities = entities;
     }
