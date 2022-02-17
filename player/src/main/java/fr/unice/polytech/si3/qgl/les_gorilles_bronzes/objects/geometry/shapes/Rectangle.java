@@ -28,4 +28,13 @@ public class Rectangle implements Shape {
     public void setOrientation(double orientation) {
         this.orientation = orientation;
     }
+
+    @Override
+    public String toString() {
+        return "Rectangle{" +
+                "width=" + width +
+                ", height=" + height +
+                ", orientation=" + orientation +
+                '}';
+    }
 }

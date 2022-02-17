@@ -22,4 +22,12 @@ public class Checkpoint{
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+
+    @Override
+    public String toString() {
+        return "Checkpoint{" +
+                "position=" + position +
+                ", shape=" + shape +
+                '}';
+    }
 }

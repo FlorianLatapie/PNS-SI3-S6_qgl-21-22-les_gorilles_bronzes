@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
+import java.util.Arrays;
+
 public class Polygon implements Shape{
     private	double orientation;
     private Point[] vertices;
@@ -20,5 +22,13 @@ public class Polygon implements Shape{
 
     public void setVertices(Point[] vertices) {
         this.vertices = vertices;
+    }
+
+    @Override
+    public String toString() {
+        return "Polygon{" +
+                "orientation=" + orientation +
+                ", vertices=" + Arrays.toString(vertices) +
+                '}';
     }
 }
