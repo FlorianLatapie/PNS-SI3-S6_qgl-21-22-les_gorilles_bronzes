@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Move;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 
 public class Sailor {

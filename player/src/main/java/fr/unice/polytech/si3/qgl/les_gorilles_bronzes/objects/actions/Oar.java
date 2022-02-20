@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions;
 
 public class Oar extends Action {
     public Oar(int sailorId) {

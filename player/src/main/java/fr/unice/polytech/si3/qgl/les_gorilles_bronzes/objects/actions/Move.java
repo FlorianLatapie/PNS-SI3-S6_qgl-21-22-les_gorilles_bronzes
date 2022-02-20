@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions;
 
 public class Move extends Action {
     private int xdistance; //absolute(xdistance) + absolute(ydistance) <= 5

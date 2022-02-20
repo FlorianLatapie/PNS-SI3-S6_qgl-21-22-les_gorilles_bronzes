@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity;
 
-public class Voile implements Entity {
-    private int x;
-    private int y;
+public class Voile extends Entity {
     private boolean openned;
 
     public boolean isOpenned() {
@@ -12,24 +10,9 @@ public class Voile implements Entity {
     public void setOpenned(boolean openned) {
         this.openned = openned;
     }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public String getName(){
-        return "Voile";
+    @Override
+    public String toString() {
+        return super.toString().substring(0,super.toString().length()-1) +
+                ", openned=" + openned + "} ";
     }
 }

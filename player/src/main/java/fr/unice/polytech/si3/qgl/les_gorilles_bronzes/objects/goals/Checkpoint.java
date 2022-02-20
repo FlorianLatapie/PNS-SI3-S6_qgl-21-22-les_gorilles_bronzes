@@ -4,8 +4,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 
 public class Checkpoint{
-    public Position position;
-    public Shape shape;
+    private Position position;
+    private Shape shape;
 
     public Position getPosition() {
         return position;

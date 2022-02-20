@@ -2,9 +2,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.OtherShip;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Reef;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Stream;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({

@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions;
 
 public class Turn extends Action {
     private double rotation;//-PI/4 <= rotation <= PI/4

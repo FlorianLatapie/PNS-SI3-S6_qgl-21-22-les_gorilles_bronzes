@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Action {
     private int sailorId;
 
-    public Action(int sailorId) {
+    protected Action(int sailorId) {
         this.sailorId = sailorId;
     }
 

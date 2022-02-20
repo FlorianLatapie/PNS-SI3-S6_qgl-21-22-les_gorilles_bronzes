@@ -11,9 +11,31 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Vigie.class, name = "watch"),
         @JsonSubTypes.Type(value = Canon.class, name = "Canon")
 })
-public interface Entity {
+public abstract class Entity {
+    private int x;
+    private int y;
 
-    int getX();
-    int getY();
-    String getName();
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity: " + this.getClass().getSimpleName() + " {" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

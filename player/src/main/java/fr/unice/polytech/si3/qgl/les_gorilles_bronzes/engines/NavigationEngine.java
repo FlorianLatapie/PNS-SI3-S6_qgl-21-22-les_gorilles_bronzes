@@ -1,7 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Oar;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
@@ -25,7 +25,7 @@ public class NavigationEngine {
     }
 
     public List<Action> computeNextRound(NextRound nextRound) {
-        List<Action> actions = new ArrayList();
+        List<Action> actions = new ArrayList<>();
         this.nextRound = nextRound;
 
         actions.addAll(turnShipWithOars());
@@ -34,7 +34,7 @@ public class NavigationEngine {
     }
 
     public List<Action> turnShipWithOars() {
-        List<Action> actions = new ArrayList();
+        List<Action> actions = new ArrayList<>();
 
         double goalAngle = getGoalAngle();
         int nbOars = initGame.getSailors().length; // for the next weeks we need to change this number
@@ -53,8 +53,8 @@ public class NavigationEngine {
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
                 .get();
 
-        var leftOars = deckEngine.getLeftOars().stream().limit(bestConf.getLeftOar());// take N left oars
-        var rightOars = deckEngine.getRightOars().stream().limit(bestConf.getRightOar());// take M right oars
+        var leftOars = deckEngine.getOars(DeckEngine.Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
+        var rightOars = deckEngine.getOars(DeckEngine.Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
 
         Stream.concat(leftOars, rightOars) // we take all oars we want to activate
                 .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it

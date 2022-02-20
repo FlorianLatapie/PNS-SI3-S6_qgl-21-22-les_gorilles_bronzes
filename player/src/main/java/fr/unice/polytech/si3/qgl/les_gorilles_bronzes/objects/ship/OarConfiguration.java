@@ -3,7 +3,9 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 import java.util.Objects;
 
 public class OarConfiguration {
-    int leftOar, rightOar, totalOar;
+    int leftOar;
+    int rightOar;
+    int totalOar;
 
     public OarConfiguration(int leftOar, int rightOar, int totalOar) {
         this.leftOar = leftOar;
@@ -28,7 +30,7 @@ public class OarConfiguration {
         return ((rightOar - leftOar) * Math.PI) / totalOar;
     }
 
-    public double getSpeed() {
+    public double getSpeed() { //TODO utiliser le bon calcul de la vitesse
         return rightOar + leftOar;
     }
 

@@ -1,7 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.Actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
@@ -18,6 +18,20 @@ public class DeckEngine {
     private Sailor[] sailors;
     private List<Rame> oars;
     private int i;
+
+    public List<Action> placeSailors() {
+        List<Action> actions = new ArrayList<>();
+        int nbSailors = sailors.length;
+        //if (sailors.length <= ship.getEntities().length) {
+        actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
+        actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
+       /* } else {
+            actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
+            actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
+        }*/
+
+        return actions;
+    }
 
     public enum Direction {LEFT, RIGHT}
 
@@ -97,29 +111,15 @@ public class DeckEngine {
         return oarsAvailable;
     }
 
-    public Rame getTheClosestOarAvailable(Sailor sailor, List<Rame> oarsAvailable) {
-        int sailorX = sailor.getX();
-        int sailorY = sailor.getY();
-        Rame closestOar = new Rame();
-        int minDistance = 0, distance;
-
-        for (Rame oar : oarsAvailable) {
-            distance = (((sailorX - oar.getX()) ^ 2 + (sailorY - oar.getY()) ^ 2) ^ (-1 / 2));
-            if (oarsAvailable.indexOf(oar) == 0 || distance < minDistance) {
-                closestOar = oar;
-                minDistance = distance;
-            }
-        }
-        return closestOar;
-    }
-
     public List<Rame> getOars(Direction direction) {
         List<Rame> res = new ArrayList<>();
         for (Rame r : oars) {
-            if (direction.equals(Direction.LEFT))
-                if (r.getY() == 0) res.add(r);
-            if (direction.equals(Direction.RIGHT))
-                if (r.getY() == ship.getDeck().getWidth() - 1) res.add(r);
+            if (direction.equals(Direction.LEFT) && r.getY() == 0) {
+                res.add(r);
+            }
+            if (direction.equals(Direction.RIGHT) && r.getY() == ship.getDeck().getWidth() - 1) {
+                res.add(r);
+            }
         }
         return res;
     }
@@ -140,16 +140,7 @@ public class DeckEngine {
         return rightOars;
     }
 
-    public Optional<Sailor> getSailorByEntity(Entity entity){
+    public Optional<Sailor> getSailorByEntity(Entity entity) {
         return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
-    }
-
-    public String getEntityNameWithPosition(int x, int y){ // todo faire ca en optionnal
-        List<Entity> entity = Arrays.stream(this.ship.getEntities()).collect(Collectors.toList())
-                .stream().filter(e-> e.getX()==x && e.getY()==y).collect(Collectors.toList());
-        if(!entity.isEmpty()){
-            return entity.get(0).getName()+"[" + x + "," +y+ "]";
-        }
-        return "No entity [" + x + "," +y+ "]";
     }
 }
