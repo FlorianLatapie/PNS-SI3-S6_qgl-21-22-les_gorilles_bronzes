@@ -37,7 +37,7 @@ public class NavigationEngine {
         List<Action> actions = new ArrayList<>();
 
         double goalAngle = getGoalAngle();
-        int nbOars = initGame.getSailors().length; // for the next weeks we need to change this number
+        int nbOars = deckEngine.getTotalNbSailorsOnOars(); // for the next weeks we need to change this number
         List<OarConfiguration> possibleAngles = new ArrayList<>();
 
         for (int i = 0; i <= nbOars / 2; i++) {
@@ -61,6 +61,8 @@ public class NavigationEngine {
                 .flatMap(Optional::stream) // we keep only the oars that do have a sailor on them
                 .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
 
+        System.out.println(bestConf);
+        System.out.println(actions);
         return actions;
     }
 

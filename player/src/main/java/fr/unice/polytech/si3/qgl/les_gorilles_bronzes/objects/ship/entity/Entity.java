@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Entity {
     private int x;
     private int y;
+    private boolean free;
 
     public int getX() {
         return x;
@@ -29,6 +30,14 @@ public abstract class Entity {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
     }
 
     @Override

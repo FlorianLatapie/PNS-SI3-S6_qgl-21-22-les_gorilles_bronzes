@@ -32,7 +32,7 @@ public abstract class Action {
 
     @Override
     public String toString() {
-        return "sailorId=" + sailorId;
+        return this.getClass().getSimpleName() + " sailorId=" + sailorId;
 
     }
 }

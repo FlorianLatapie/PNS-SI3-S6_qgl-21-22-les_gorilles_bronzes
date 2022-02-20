@@ -4,8 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,43 +14,78 @@ import java.util.stream.Collectors;
 
 public class DeckEngine {
     private Ship ship;
+    private Entity[] entities;
     private Sailor[] sailors;
     private List<Rame> oars;
-    private int i;
+    private int availableSailors;
+    private int sailorsPlacedOnOars = -1;
 
-    public List<Action> placeSailors() {
-        List<Action> actions = new ArrayList<>();
-        int nbSailors = sailors.length;
-        //if (sailors.length <= ship.getEntities().length) {
-        actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
-        actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
-       /* } else {
-            actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.LEFT));
-            actions.addAll(this.moveSailorsToOars(nbSailors / 2, DeckEngine.Direction.RIGHT));
-        }*/
-
-        return actions;
-    }
 
     public enum Direction {LEFT, RIGHT}
 
     public DeckEngine(InitGame initGame) {
         this.ship = initGame.getShip();
         this.sailors = initGame.getSailors();
+        this.entities = ship.getEntities();
+
+        this.availableSailors = sailors.length;
+
         this.oars = this.getOars();
-        beforeEachRound();
+        this.beforeEachRound();
     }
 
     public void beforeEachRound() {
         Arrays.stream(sailors).collect(Collectors.toList()).forEach(s -> s.setFree(true));
+        Arrays.stream(entities).collect(Collectors.toList()).forEach(e -> e.setFree(true));
+        availableSailors = sailors.length;
     }
 
-    public Ship getShip() {
-        return ship;
+    public List<Action> placeSailors() {
+        List<Action> actions = new ArrayList<>();
+
+        actions.addAll(placeSailors(new Gouvernail()));
+        actions.addAll(placeSailors(new Voile()));
+        actions.addAll(placeSailors(new Vigie()));
+
+        actions.addAll(placeSailorsOnOars());
+
+        return actions;
     }
 
-    public void setShip(Ship ship) {
-        this.ship = ship;
+    public List<Action> placeSailors(Entity entityToMatch) {
+        return placeSailors(entities, entityToMatch);
+    }
+    public List<Action> placeSailors(Entity[] search, Entity entityToMatch) {
+        List<Action> actions = new ArrayList<>();
+
+        Arrays
+                .stream(search)
+                .filter(entity -> entity.getClass().equals(entityToMatch.getClass()))
+                .forEach(entity -> {
+                    var sailor = nearestSailorToThisEntity(entity).get();
+                    if (entity.isFree() && sailor.isFree()){
+                        actions.add(sailor.moveSailor(entity));
+                        sailor.setFree(false);
+                        entity.setFree(false);
+                        availableSailors--;
+                    }
+                });
+        ;
+
+        return actions;
+    }
+
+    public Optional<Sailor> nearestSailorToThisEntity(Entity entity) {
+        Optional<Sailor> nearestSailor = Optional.empty();
+        int minDistance = Integer.MAX_VALUE;
+        for (Sailor sailor : sailors) {
+            int distance = Math.abs(sailor.getX() - entity.getX()) + Math.abs(sailor.getY() - entity.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestSailor = Optional.of(sailor);
+            }
+        }
+        return nearestSailor;
     }
 
     public List<Rame> getOars() {
@@ -63,8 +97,21 @@ public class DeckEngine {
         return res;
     }
 
+    public int getTotalNbSailorsOnOars() {
+        return sailorsPlacedOnOars;
+    }
+    public List<Action> placeSailorsOnOars() {
+        List<Action> actions = new ArrayList<>();
 
-    public List<Action> moveSailorsToOars(int nbSailorsToMove, Direction direction) {
+        int nbSailorsToMove = availableSailors / 2;
+        this.sailorsPlacedOnOars = nbSailorsToMove*2;
+
+        actions.addAll(placeSailorsOnOars(nbSailorsToMove, Direction.LEFT));
+        actions.addAll(placeSailorsOnOars(nbSailorsToMove, Direction.RIGHT));
+        return actions;
+    }
+
+    public List<Action> placeSailorsOnOars(int nbSailorsToMove, Direction direction) {
         List<Action> actions = new ArrayList<>();
         int j = 0;
         for (Sailor s : sailors) {
@@ -78,7 +125,7 @@ public class DeckEngine {
         return actions;
     }
 
-    public List<Sailor> sailorsWhoDontHaveAnOar() {
+    /*public List<Sailor> sailorsWhoDontHaveAnOar() {
         List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
         for (i = 0; i < sailors.length; i++) {
             oars.forEach(o -> {
@@ -98,7 +145,6 @@ public class DeckEngine {
         return sailorsWhoHaveAnOar;
     }
 
-
     public List<Rame> oarsAvailable() {
         List<Rame> oarsAvailable = new ArrayList<>(oars);
         for (i = 0; i < sailors.length; i++) {
@@ -109,7 +155,7 @@ public class DeckEngine {
             });
         }
         return oarsAvailable;
-    }
+    }*/
 
     public List<Rame> getOars(Direction direction) {
         List<Rame> res = new ArrayList<>();
@@ -122,22 +168,6 @@ public class DeckEngine {
             }
         }
         return res;
-    }
-
-    public List<Rame> getLeftOars() {
-        List<Rame> leftOars = new ArrayList<>();
-        for (Rame r : oars) {
-            if (r.getY() == 0) leftOars.add(r);
-        }
-        return leftOars;
-    }
-
-    public List<Rame> getRightOars() {
-        List<Rame> rightOars = new ArrayList<>();
-        for (Rame r : oars) {
-            if (r.getY() == ship.getDeck().getWidth() - 1) rightOars.add(r);
-        }
-        return rightOars;
     }
 
     public Optional<Sailor> getSailorByEntity(Entity entity) {
