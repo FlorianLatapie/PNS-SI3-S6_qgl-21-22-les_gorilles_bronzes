@@ -99,5 +99,8 @@ public class NavigationEngine {
         }
     }
 
+    public int getNextCheckpointToReach() {
+        return nextCheckpointToReach;
+    }
 
 }
