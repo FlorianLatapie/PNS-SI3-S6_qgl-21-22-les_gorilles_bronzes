@@ -95,10 +95,12 @@ public class NavigationEngine {
     }
 
     public void updateCheckPointToReach(Checkpoint[] checkpoints, Ship ship) {
-        if(isShipInsideCheckpoint(checkpoints[nextCheckpointToReach], ship)){
-            for(int i = 0; i < checkpoints.length; i++){
-                if(i == nextCheckpointToReach){
-                    nextCheckpointToReach++;
+        if (isShipInsideCheckpoint(checkpoints[nextCheckpointToReach], ship)) {
+            for (int i = 0; i < checkpoints.length; i++) {
+                if (i == nextCheckpointToReach) {
+                    if (checkpoints.length > nextCheckpointToReach + 1) {
+                        nextCheckpointToReach++;
+                    }
                     break;
                 }
             }
