@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,12 @@ class DeckEngineTest {
     @Test
     void getOarsTest() {
         assertEquals(6, deckEngine.getOars().size());
+    }
+
+    @Test
+    void getOarsDirectionTest(){
+        assertEquals(3, deckEngine.getOars(Direction.RIGHT).size());
+        assertEquals(3, deckEngine.getOars(Direction.LEFT).size());
     }
 
     /*@Test

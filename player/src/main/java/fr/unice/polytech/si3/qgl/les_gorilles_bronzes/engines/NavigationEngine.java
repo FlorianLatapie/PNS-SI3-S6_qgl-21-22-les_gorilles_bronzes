@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
@@ -53,8 +54,8 @@ public class NavigationEngine {
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
                 .get();
 
-        var leftOars = deckEngine.getOars(DeckEngine.Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
-        var rightOars = deckEngine.getOars(DeckEngine.Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
+        var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
+        var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
 
         Stream.concat(leftOars, rightOars) // we take all oars we want to activate
                 .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it
@@ -66,7 +67,7 @@ public class NavigationEngine {
         return actions;
     }
 
-    public boolean isShipInsideCheckpoint(Position checkpointPosition, Position boatPosition, double radius){
+    public boolean isShipInsideCheckpoint(Position checkpointPosition, Position boatPosition, double radius) {
         double distance = Math.hypot(checkpointPosition.getX() - boatPosition.getX(), checkpointPosition.getY() - boatPosition.getY());
         return distance <= radius;
     }
@@ -80,6 +81,7 @@ public class NavigationEngine {
         updateCheckPointToReach(checkpoints, boatPosition, checkpointPosition);
 
         var res = Math.atan2(checkpointPosition.getY() - boatPosition.getY(), checkpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
+
         // clamps the value between -2pi and 2pi
         while (res < -Math.PI)
             res += 2 * Math.PI;
@@ -89,9 +91,9 @@ public class NavigationEngine {
     }
 
     public void updateCheckPointToReach(Checkpoint[] checkpoints, Position boatPosition, Position checkpointPosition) {
-        if(isShipInsideCheckpoint(checkpointPosition, boatPosition, ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius())){
-            for(int i = 0; i < checkpoints.length; i++){
-                if(i == nextCheckpointToReach){
+        if (isShipInsideCheckpoint(checkpointPosition, boatPosition, ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius())) {
+            for (int i = 0; i < checkpoints.length; i++) {
+                if (i == nextCheckpointToReach) {
                     nextCheckpointToReach++;
                     break;
                 }

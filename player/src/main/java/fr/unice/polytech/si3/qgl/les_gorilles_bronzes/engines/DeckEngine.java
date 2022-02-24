@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.*;
@@ -19,9 +20,6 @@ public class DeckEngine {
     private List<Rame> oars;
     private int availableSailors;
     private int sailorsPlacedOnOars = -1;
-
-
-    public enum Direction {LEFT, RIGHT}
 
     public DeckEngine(InitGame initGame) {
         this.ship = initGame.getShip();
@@ -70,7 +68,6 @@ public class DeckEngine {
                         availableSailors--;
                     }
                 });
-        ;
 
         return actions;
     }
@@ -97,9 +94,23 @@ public class DeckEngine {
         return res;
     }
 
+    public List<Rame> getOars(Direction direction) {
+        List<Rame> res = new ArrayList<>();
+        for (Rame r : oars) {
+            if (direction.equals(Direction.LEFT) && r.getY() == 0) {
+                res.add(r);
+            }
+            if (direction.equals(Direction.RIGHT) && r.getY() == ship.getDeck().getWidth() - 1) {
+                res.add(r);
+            }
+        }
+        return res;
+    }
+
     public int getTotalNbSailorsOnOars() {
         return sailorsPlacedOnOars;
     }
+
     public List<Action> placeSailorsOnOars() {
         List<Action> actions = new ArrayList<>();
 
@@ -157,18 +168,7 @@ public class DeckEngine {
         return oarsAvailable;
     }*/
 
-    public List<Rame> getOars(Direction direction) {
-        List<Rame> res = new ArrayList<>();
-        for (Rame r : oars) {
-            if (direction.equals(Direction.LEFT) && r.getY() == 0) {
-                res.add(r);
-            }
-            if (direction.equals(Direction.RIGHT) && r.getY() == ship.getDeck().getWidth() - 1) {
-                res.add(r);
-            }
-        }
-        return res;
-    }
+
 
     public Optional<Sailor> getSailorByEntity(Entity entity) {
         return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
