@@ -10,7 +10,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
-import javafx.geometry.Pos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
