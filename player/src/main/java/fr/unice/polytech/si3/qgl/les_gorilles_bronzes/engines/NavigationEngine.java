@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Ci
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -67,9 +68,15 @@ public class NavigationEngine {
         return actions;
     }
 
+<<<<<<< HEAD
     public boolean isShipInsideCheckpoint(Position checkpointPosition, Position boatPosition, double radius) {
         double distance = Math.hypot(checkpointPosition.getX() - boatPosition.getX(), checkpointPosition.getY() - boatPosition.getY());
         return distance <= radius;
+=======
+    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
+        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX(), checkPoint.getPosition().getY() - ship.getPosition().getY());
+        return distance <= ((Circle) checkPoint.getShape()).getRadius();
+>>>>>>> ef4458d75c980bb162ff48c46d082d7da5257c3e
     }
 
     private double getGoalAngle() {
@@ -78,7 +85,7 @@ public class NavigationEngine {
         var boatPosition = nextRound.getShip().getPosition();
         var checkpointPosition = checkpoints[nextCheckpointToReach].getPosition();
 
-        updateCheckPointToReach(checkpoints, boatPosition, checkpointPosition);
+        updateCheckPointToReach(checkpoints, nextRound.getShip());
 
         var res = Math.atan2(checkpointPosition.getY() - boatPosition.getY(), checkpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
 
@@ -90,10 +97,17 @@ public class NavigationEngine {
         return res;
     }
 
+<<<<<<< HEAD
     public void updateCheckPointToReach(Checkpoint[] checkpoints, Position boatPosition, Position checkpointPosition) {
         if (isShipInsideCheckpoint(checkpointPosition, boatPosition, ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius())) {
             for (int i = 0; i < checkpoints.length; i++) {
                 if (i == nextCheckpointToReach) {
+=======
+    public void updateCheckPointToReach(Checkpoint[] checkpoints, Ship ship) {
+        if(isShipInsideCheckpoint(checkpoints[nextCheckpointToReach], ship)){
+            for(int i = 0; i < checkpoints.length; i++){
+                if(i == nextCheckpointToReach){
+>>>>>>> ef4458d75c980bb162ff48c46d082d7da5257c3e
                     nextCheckpointToReach++;
                     break;
                 }
