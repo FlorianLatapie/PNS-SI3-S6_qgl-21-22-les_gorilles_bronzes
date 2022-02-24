@@ -4,12 +4,17 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -17,18 +22,21 @@ public class NavigationEngine {
     private InitGame initGame;
     private NextRound nextRound;
     private DeckEngine deckEngine;
+    private Util util;
     private int nextCheckpointToReach = 0;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
+        this.util = new Util();
     }
 
     public List<Action> computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList<>();
         this.nextRound = nextRound;
 
-        actions.addAll(turnShipWithOars());
+        //actions.addAll(turnShipWithOars());
+        actions.addAll(turnShipWithOarsOrRudder());
 
         return actions;
     }
@@ -63,6 +71,29 @@ public class NavigationEngine {
 
         System.out.println(bestConf);
         System.out.println(actions);
+        return actions;
+    }
+
+    public List<Action> turnShipWithRudder(){
+        List<Action> actions = new ArrayList<>();
+        Sailor sailorOnRudder = deckEngine.getSailorByEntity(new Gouvernail()).get();
+
+        double goalAngle = getGoalAngle();
+        double angleToTurnWithRudder = util.clamp(goalAngle, -Math.PI/4, Math.PI/4);
+        actions.add(new Turn(sailorOnRudder.getId(), angleToTurnWithRudder));
+
+        return actions;
+    }
+
+    public List<Action> turnShipWithOarsOrRudder(){
+        List<Action> actions = new ArrayList<>();
+        Optional<Sailor> sailorOnRudder = deckEngine.getSailorByEntity(new Gouvernail());
+
+        if(sailorOnRudder.isPresent())
+            actions.addAll(turnShipWithRudder());
+
+        actions.addAll(turnShipWithOars());
+
         return actions;
     }
 
