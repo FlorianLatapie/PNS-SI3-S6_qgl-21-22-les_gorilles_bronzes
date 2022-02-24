@@ -6,11 +6,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
-import javafx.geometry.Pos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,10 +35,8 @@ public class NavigationEngineTest {
     @Test
     void isShipInsideCheckpointTest(){
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
-        Position checkpointPosition = checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition();
-        Position boatPosition = nextRound.getShip().getPosition();
 
-        Boolean shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpointPosition, boatPosition, ((Circle) checkpoints[navigationEngine.getNextCheckpointToReach()].getShape()).getRadius());
+        Boolean shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
 
         assertEquals(false, shouldNotBe);
     }
