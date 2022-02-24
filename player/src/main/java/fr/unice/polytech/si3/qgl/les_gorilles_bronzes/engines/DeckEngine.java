@@ -173,4 +173,11 @@ public class DeckEngine {
     public Optional<Sailor> getSailorByEntity(Entity entity) {
         return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
     }
+
+    public List<Entity> getEntitiesByClass(Entity entityToMatch) {
+        return Arrays
+                .stream(entities)
+                .filter(entity -> entity.getClass().equals(entityToMatch.getClass()))
+                .collect(Collectors.toList());
+    }
 }

@@ -9,4 +9,12 @@ public class Util {
             return max;
         return value;
     }
+
+    public static double clampAngle (double value) {
+        while (value < -Math.PI)
+            value += 2 * Math.PI;
+        while (value > Math.PI)
+            value -= 2 * Math.PI;
+        return value;
+    }
 }
