@@ -27,6 +27,7 @@ public class GlobalEngine {
         actions.addAll(navigationEngine.computeNextRound(nextRound));
 
         round++;
+        System.out.println(actions);
         return actions.toArray(new Action[0]);
     }
 }

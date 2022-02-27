@@ -80,10 +80,17 @@ public class NavigationEngine {
             bestConf = bestDistance(((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach], nextRound.getShip(), bestConf);
         }
 
-        Entity rudderPosition = deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
-        Optional<Sailor> sailorOnRudder = deckEngine.getSailorByEntity(rudderPosition);
+        var rechercheGouvernail = deckEngine.getEntitiesByClass(new Gouvernail());
+        Optional<Sailor> sailorOnRudder = Optional.empty();
+        Gouvernail rudder = null;
 
-        actions.addAll(turnShipWithRudder(goalAngle-bestConf.getAngle(), sailorOnRudder.get(), rudderPosition));
+        if (!rechercheGouvernail.isEmpty()) {
+            rudder = (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
+            sailorOnRudder = deckEngine.getSailorByEntity(rudder);
+            actions.addAll(turnShipWithRudder(goalAngle-bestConf.getAngle(), sailorOnRudder.get(), rudder));
+
+        }
+
 
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
         var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
