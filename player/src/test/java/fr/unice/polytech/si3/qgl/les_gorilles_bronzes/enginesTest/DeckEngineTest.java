@@ -6,8 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +19,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class DeckEngineTest {
     DeckEngine deckEngine;
@@ -44,8 +50,10 @@ class DeckEngineTest {
     @Test
     void beforeEachRoundTest(){
         deckEngine.beforeEachRound();
-        List<Entity> list = Arrays.stream(cockpit.getInitGame().getShip().getEntities()).filter(e -> !e.isFree()).collect(Collectors.toList());
-        assertEquals(0,list.size());
+        List<Entity> listEntities = Arrays.stream(cockpit.getInitGame().getShip().getEntities()).filter(e -> !e.isFree()).collect(Collectors.toList());
+        assertEquals(0,listEntities.size());
+        List<Sailor> listSailors = Arrays.stream(cockpit.getInitGame().getSailors()).filter(e -> !e.isFree()).collect(Collectors.toList());
+        assertEquals(0,listSailors.size());
     }
 
     @Test
@@ -54,13 +62,32 @@ class DeckEngineTest {
         assertEquals(3, deckEngine.getOars(Direction.LEFT).size());
     }
 
+    @Test
+    void placeSailorsTest(){
+        List<Sailor> sailors = Arrays.stream(cockpit.getInitGame().getSailors()).collect(Collectors.toList());
+        List<Entity> entities = Arrays.stream(cockpit.getInitGame().getShip().getEntities()).collect(Collectors.toList());
+
+        assertEquals(3,deckEngine.placeSailors(new Gouvernail()).get(0).getSailorId());
+        assertEquals(false, sailors.get(3).isFree());
+        assertEquals(false, entities.stream().filter(e-> e instanceof Gouvernail).collect(Collectors.toList()).get(0).isFree());
+        assertEquals(4,deckEngine.placeSailors(new Voile()).get(0).getSailorId());
+        assertEquals(false, sailors.get(4).isFree());
+        assertEquals(false, entities.stream().filter(e-> e instanceof Voile).collect(Collectors.toList()).get(0).isFree());
+        assertEquals(0, deckEngine.placeSailors(new Vigie()).size());
+        assertEquals(4, deckEngine.placeSailors().size());
+    }
+
+    @Test
+    void getSailorByEntityTest(){
+        assertEquals(0, deckEngine.getSailorByEntity(new Gouvernail()).get().getId());
+    }
+
     /*@Test
     void sailorsWhoDontHaveAnOarTest() {
         assertEquals(4, deckEngine.sailorsWhoDontHaveAnOar().size());
         deckEngine.placeSailorsOnOars(2, DeckEngine.Direction.LEFT);
         assertEquals(2, deckEngine.sailorsWhoDontHaveAnOar().size());
     }*/
-
 
 
 }
