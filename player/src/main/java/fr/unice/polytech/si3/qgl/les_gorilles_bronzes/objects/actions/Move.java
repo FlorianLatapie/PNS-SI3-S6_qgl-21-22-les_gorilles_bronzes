@@ -28,9 +28,9 @@ public class Move extends Action {
 
     @Override
     public String toString() {
-        return "Move{" + super.toString() +
+        return super.toString() + "{" +
                 "xdistance=" + xdistance +
                 ", ydistance=" + ydistance +
-                "} ";
+                "}";
     }
 }

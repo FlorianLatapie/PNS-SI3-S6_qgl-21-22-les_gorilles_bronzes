@@ -15,4 +15,11 @@ public class Turn extends Action {
     public void setRotation(double rotation) {
         this.rotation = rotation;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "{" +
+                "rotation=" + rotation +
+                "}";
+    }
 }

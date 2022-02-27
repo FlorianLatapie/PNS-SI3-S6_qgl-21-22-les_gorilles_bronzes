@@ -15,4 +15,11 @@ public class Aim extends Action {
     public void setAngle(double angle) {
         this.angle = angle;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "{" +
+                "angle=" + angle +
+                "}";
+    }
 }
