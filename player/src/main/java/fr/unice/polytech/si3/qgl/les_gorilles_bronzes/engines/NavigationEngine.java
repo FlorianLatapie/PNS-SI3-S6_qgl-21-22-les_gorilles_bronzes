@@ -43,53 +43,6 @@ public class NavigationEngine {
         return actions;
     }
 
-    public List<Action> turnShipWithOars() {
-        List<Action> actions = new ArrayList<>();
-
-        double goalAngle = getGoalAngle();
-        List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
-
-        possibleAngles.remove(0); // removing 0 oars on each side
-
-        OarConfiguration bestConf = possibleAngles.stream()//NOSONAR
-                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
-                .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
-                .get();
-
-        var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
-        var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
-
-        Stream.concat(leftOars, rightOars) // we take all oars we want to activate
-                .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it
-                .flatMap(Optional::stream) // we keep only the oars that do have a sailor on them
-                .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
-
-        return actions;
-    }
-
-    public List<Action> goStraightWithOars() {
-        List<Action> actions = new ArrayList<>();
-
-        double goalAngle = getGoalAngle();
-        List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
-
-        possibleAngles.remove(0); // removing 0 oars on each side
-
-        OarConfiguration bestConf = possibleAngles.stream()//NOSONAR
-                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
-                .findFirst().get();
-
-        var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
-        var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
-
-        Stream.concat(leftOars, rightOars) // we take all oars we want to activate
-                .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it
-                .flatMap(Optional::stream) // we keep only the oars that do have a sailor on them
-                .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
-
-        return actions;
-    }
-
     public List<OarConfiguration> getPossibleAnglesWithOars(){
         int nbOars = deckEngine.getTotalNbSailorsOnOars(); // for the next weeks we need to change this number
         List<OarConfiguration> possibleAngles = new ArrayList<>();
@@ -102,10 +55,9 @@ public class NavigationEngine {
         return possibleAngles;
     }
 
-    public List<Action> turnShipWithRudder(Sailor sailorOnRudder, Entity rudderPosition){
+    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder, Entity rudderPosition){
         List<Action> actions = new ArrayList<>();
-        double goalAngle = getGoalAngle();
-        double angleToTurnWithRudder = clamp(clampAngle(goalAngle), -Math.PI / 4, Math.PI / 4);
+        double angleToTurnWithRudder = clamp(angle, -Math.PI / 4, Math.PI / 4);
         actions.add(new Turn(sailorOnRudder.getId(), angleToTurnWithRudder));
 
         return actions;
@@ -114,22 +66,45 @@ public class NavigationEngine {
     public List<Action> turnShipWithBestConfiguration(){
         List<Action> actions = new ArrayList<>();
 
-        List<Double> possibleAngles = new ArrayList<>();
-        getPossibleAnglesWithOars().forEach(v -> possibleAngles.add(v.getAngle()));
+        double goalAngle = getGoalAngle();
+        List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
+
+        possibleAngles.remove(0); // removing 0 oars on each side
+
+        OarConfiguration bestConf = possibleAngles.stream()//NOSONAR
+                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
+                .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
+                .get();
+
+        if(bestConf.getLeftOar()==2 && bestConf.getRightOar()==2){
+            bestConf = bestDistance(((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach], nextRound.getShip(), bestConf);
+        }
 
         Entity rudderPosition = deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
         Optional<Sailor> sailorOnRudder = deckEngine.getSailorByEntity(rudderPosition);
 
-        Double maxAngleWithOars = Collections.max(possibleAngles);
-        Double goalAngle = getGoalAngle();
+        actions.addAll(turnShipWithRudder(goalAngle-bestConf.getAngle(), sailorOnRudder.get(), rudderPosition));
 
-        if(maxAngleWithOars < goalAngle && sailorOnRudder.isPresent()){
-            actions.addAll(turnShipWithRudder(sailorOnRudder.get(), rudderPosition));
-            actions.addAll(turnShipWithOars());
-        }
-        actions.addAll(turnShipWithOars());
+        var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
+        var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
+
+        Stream.concat(leftOars, rightOars) // we take all oars we want to activate
+                .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it
+                .flatMap(Optional::stream) // we keep only the oars that do have a sailor on them
+                .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
 
         return actions;
+    }
+
+    public OarConfiguration bestDistance(Checkpoint checkPoint, Ship ship, OarConfiguration oarConfiguration){
+        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() + (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)
+                , checkPoint.getPosition().getY() - ship.getPosition().getY() + (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2));
+
+        if(Math.abs(distance-(165*oarConfiguration.getTotalOar())/4)>Math.abs(distance-(165*oarConfiguration.getTotalOar()-2)/4)){
+            return new OarConfiguration(oarConfiguration.getLeftOar()-1, oarConfiguration.getRightOar()-1,oarConfiguration.getTotalOar()-2);
+        }
+
+        return oarConfiguration;
     }
 
     public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
