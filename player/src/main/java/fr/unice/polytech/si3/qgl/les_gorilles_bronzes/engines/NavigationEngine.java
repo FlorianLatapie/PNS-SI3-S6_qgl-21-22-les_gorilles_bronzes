@@ -80,7 +80,7 @@ public class NavigationEngine {
                 .filter(conf -> conf.getSpeed() <= objectif)
                 .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
-                .get();
+                .orElse(possibleAngles.get(0));
 
         var rechercheGouvernail = deckEngine.getEntitiesByClass(new Gouvernail());
         Optional<Sailor> sailorOnRudder = Optional.empty();
