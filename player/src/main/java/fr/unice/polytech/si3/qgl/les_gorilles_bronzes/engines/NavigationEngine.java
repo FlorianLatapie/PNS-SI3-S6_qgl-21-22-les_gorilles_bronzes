@@ -71,14 +71,16 @@ public class NavigationEngine {
 
         possibleAngles.remove(0); // removing 0 oars on each side
 
+        var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
+        var objectif = bestDistance(checkpoint, nextRound.getShip())
+                - ((Circle)checkpoint.getShape()).getRadius()
+                + ((Rectangle)initGame.getShip().getShape()).getHeight();
+
         OarConfiguration bestConf = possibleAngles.stream()//NOSONAR
+                .filter(conf -> conf.getSpeed() <= objectif)
                 .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - goalAngle)))
                 .get();
-
-        if(bestConf.getLeftOar()==2 && bestConf.getRightOar()==2){
-            bestConf = bestDistance(((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach], nextRound.getShip(), bestConf);
-        }
 
         var rechercheGouvernail = deckEngine.getEntitiesByClass(new Gouvernail());
         Optional<Sailor> sailorOnRudder = Optional.empty();
@@ -103,15 +105,11 @@ public class NavigationEngine {
         return actions;
     }
 
-    public OarConfiguration bestDistance(Checkpoint checkPoint, Ship ship, OarConfiguration oarConfiguration){
-        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() + (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)
-                , checkPoint.getPosition().getY() - ship.getPosition().getY() + (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2));
-
-        if(Math.abs(distance-(165*oarConfiguration.getTotalOar())/4)>Math.abs(distance-(165*oarConfiguration.getTotalOar()-2)/4)){
-            return new OarConfiguration(oarConfiguration.getLeftOar()-1, oarConfiguration.getRightOar()-1,oarConfiguration.getTotalOar()-2);
-        }
-
-        return oarConfiguration;
+    public double bestDistance(Checkpoint checkPoint, Ship ship){
+        return Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() +
+                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2),
+                checkPoint.getPosition().getY() - ship.getPosition().getY() +
+                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2));
     }
 
     public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
