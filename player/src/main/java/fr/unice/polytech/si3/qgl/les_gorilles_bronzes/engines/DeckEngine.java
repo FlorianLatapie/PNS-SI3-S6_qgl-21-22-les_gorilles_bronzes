@@ -136,40 +136,6 @@ public class DeckEngine {
         return actions;
     }
 
-    /*public List<Sailor> sailorsWhoDontHaveAnOar() {
-        List<Sailor> sailorsWhoDontHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
-        for (i = 0; i < sailors.length; i++) {
-            oars.forEach(o -> {
-                if ((sailors[i].getX() == o.getX() && sailors[i].getY() == o.getY()) && sailorsWhoDontHaveAnOar.contains(sailors[i])) {
-                    sailorsWhoDontHaveAnOar.remove(sailors[i]);
-                }
-            });
-        }
-        return sailorsWhoDontHaveAnOar;
-    }
-
-    public List<Sailor> sailorsWhoHaveAnOar() {
-        List<Sailor> sailorsWhoHaveAnOar = new ArrayList<>(Arrays.stream(sailors).collect(Collectors.toList()));
-        sailorsWhoDontHaveAnOar().forEach(s -> {
-            if (sailorsWhoHaveAnOar.contains(s)) sailorsWhoHaveAnOar.remove(s);
-        });
-        return sailorsWhoHaveAnOar;
-    }
-
-    public List<Rame> oarsAvailable() {
-        List<Rame> oarsAvailable = new ArrayList<>(oars);
-        for (i = 0; i < sailors.length; i++) {
-            oars.forEach(o -> {
-                if ((sailors[i].getX() == o.getX() && sailors[i].getY() == o.getY()) && oarsAvailable.contains(o)) {
-                    oarsAvailable.remove(o);
-                }
-            });
-        }
-        return oarsAvailable;
-    }*/
-
-
-
     public Optional<Sailor> getSailorByEntity(Entity entity) {
         return Arrays.stream(sailors).filter(sailor -> sailor.getX() == entity.getX() && sailor.getY() == entity.getY()).findFirst();
     }
