@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible
 public class Stream extends VisibleEntity {
     private double strength;
 
-
     public double getStrength() {
         return strength;
     }
