@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 public class Sailor {
     private int id;
@@ -54,16 +55,34 @@ public class Sailor {
     public Move moveSailor(Entity entity) {
         int oldX = x;
         int oldY = y;
+
         int totalOfMovement = Math.abs(entity.getX() - getX()) + Math.abs(entity.getY() - getY());
+
+        int entityX = entity.getX();
+        int entityY = entity.getY();
+
+        int rawDistanceX = entityX - oldX;
+        int rawDistanceY = entityY - oldY;
+
         if (totalOfMovement <= 5) {
-            x = entity.getX();
-            y = entity.getY();
-            return new Move(id, x-oldX, y-oldY);
+            setX(oldX + rawDistanceX);
+            setY(oldY + rawDistanceY);
+
+            return new Move(id, rawDistanceX, rawDistanceY);
         } else {
-            return new Move(id, Math.min(x-oldX, 2), Math.min(y-oldY,3));
-            //throw new RuntimeException("Can't move " + name + " from [" + oldX + ":" + oldY + "] to [" + entity.getX() + ":" + entity.getY() + "] : too far = " + totalOfMovement);
+            int clampedDistanceY = Util.clamp(rawDistanceY, -5, 5);
+
+            int xDistanceAvailable = 5 - Math.abs(clampedDistanceY);
+
+            int xMove = Util.clamp(rawDistanceX, -xDistanceAvailable, xDistanceAvailable);
+            int yMove = clampedDistanceY;
+
+            setX(oldX + xMove);
+            setY(oldY + yMove);
+            return new Move(id, xMove, yMove);
         }
     }
+
 
     @Override
     public String toString() {
