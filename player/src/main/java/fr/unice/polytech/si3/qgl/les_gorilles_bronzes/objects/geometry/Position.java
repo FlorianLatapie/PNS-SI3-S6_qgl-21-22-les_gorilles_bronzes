@@ -1,24 +1,16 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry;
 
-public class Position{
-    private double x;
-    private double y;
+public class Position extends Point{
+
     private double orientation;
 
-    public double getX() {
-        return x;
+    public Position (){
+        super();
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
+    public Position(double x, double y, double orientation){
+        super(x,y);
+        this.orientation = orientation;
     }
 
     public double getOrientation() {
@@ -32,8 +24,8 @@ public class Position{
     @Override
     public String toString() {
         return "Position{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + getX() +
+                ", y=" + getY() +
                 ", orientation=" + orientation +
                 '}';
     }

@@ -44,7 +44,6 @@ public class DeckEngine {
         actions.addAll(placeSailors(new Gouvernail()));
         actions.addAll(placeSailors(new Voile()));
         actions.addAll(placeSailors(new Vigie()));
-
         actions.addAll(placeSailorsOnOars());
 
         return actions;
