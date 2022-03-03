@@ -89,10 +89,9 @@ public class NavigationEngine {
         if (!rechercheGouvernail.isEmpty()) {
             rudder = (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
             sailorOnRudder = deckEngine.getSailorByEntity(rudder);
-            actions.addAll(turnShipWithRudder(goalAngle-bestConf.getAngle(), sailorOnRudder.get(), rudder));
-
+            if(sailorOnRudder.isPresent())
+                actions.addAll(turnShipWithRudder(goalAngle-bestConf.getAngle(), sailorOnRudder.get(), rudder));
         }
-
 
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
         var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
