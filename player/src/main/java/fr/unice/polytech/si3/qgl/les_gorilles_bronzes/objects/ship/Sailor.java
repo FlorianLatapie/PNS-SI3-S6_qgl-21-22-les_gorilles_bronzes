@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
+import java.util.Objects;
+
 public class Sailor {
     private int id;
     private int x;
@@ -11,6 +13,20 @@ public class Sailor {
     private String name;
 
     private boolean isFree;
+
+    public Sailor(){
+    }
+
+    public Sailor(int id, int x, int y, String name) {
+        this(id, x, y, name, true);
+    }
+    public Sailor(int id, int x, int y, String name, boolean isFree) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.isFree = isFree;
+    }
 
     public int getId() {
         return id;
@@ -52,7 +68,7 @@ public class Sailor {
         isFree = free;
     }
 
-    public Move moveSailor(Entity entity) {
+    public Move moveTo(Entity entity) {
         int oldX = x;
         int oldY = y;
 
@@ -83,6 +99,18 @@ public class Sailor {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sailor sailor = (Sailor) o;
+        return id == sailor.id && x == sailor.x && y == sailor.y && isFree == sailor.isFree && Objects.equals(name, sailor.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, x, y, name, isFree);
+    }
 
     @Override
     public String toString() {

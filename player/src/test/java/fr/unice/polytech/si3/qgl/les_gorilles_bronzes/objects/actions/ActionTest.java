@@ -15,6 +15,9 @@ class ActionTest {
         aim.setSailorId(2);
         assertEquals(2, aim.getSailorId());
         assertEquals("Aim sailorId=2{angle=3.0}", aim.toString());
+
+        assertEquals(aim, new Aim(2, 3.0));
+        assertNotEquals(aim, new Aim(2, 4.0));
     }
 
     @Test
@@ -22,6 +25,8 @@ class ActionTest {
         Fire fire = new Fire(1);
         assertEquals(1, fire.getSailorId());
         assertEquals("Fire sailorId=1", fire.toString());
+
+        assertEquals(fire, new Fire(1));
     }
 
     @Test
@@ -29,6 +34,8 @@ class ActionTest {
         LiftSail liftSail = new LiftSail(1);
         assertEquals(1, liftSail.getSailorId());
         assertEquals("LiftSail sailorId=1", liftSail.toString());
+
+        assertEquals(liftSail, new LiftSail(1));
     }
 
     @Test
@@ -36,6 +43,8 @@ class ActionTest {
         LowerSail lowerSail = new LowerSail(1);
         assertEquals(1, lowerSail.getSailorId());
         assertEquals("LowerSail sailorId=1", lowerSail.toString());
+
+        assertEquals(lowerSail, new LowerSail(1));
     }
 
     @Test
@@ -50,6 +59,9 @@ class ActionTest {
         assertEquals(4, move.getXdistance());
         assertEquals(5, move.getYdistance());
         assertEquals("Move sailorId=1{xdistance=4, ydistance=5}", move.toString());
+
+        assertEquals(move, new Move(1,4,5));
+        assertNotEquals(move, new Move(1,4,6));
     }
 
     @Test
@@ -57,6 +69,8 @@ class ActionTest {
         Oar oar = new Oar(1);
         assertEquals(1, oar.getSailorId());
         assertEquals("Oar sailorId=1", oar.toString());
+
+        assertEquals(oar, new Oar(1));
     }
 
     @Test
@@ -64,6 +78,8 @@ class ActionTest {
         Reload reload = new Reload(1);
         assertEquals(1, reload.getSailorId());
         assertEquals("Reload sailorId=1", reload.toString());
+
+        assertEquals(reload, new Reload(1));
     }
 
     @Test
@@ -75,6 +91,9 @@ class ActionTest {
 
         assertEquals(5.0, turn.getRotation());
         assertEquals("Turn sailorId=1{rotation=5.0}", turn.toString());
+
+        assertEquals(turn, new Turn(1, 5.0));
+        assertNotEquals(turn, new Turn(1, 6.0));
     }
 
     @Test
@@ -82,5 +101,7 @@ class ActionTest {
         UseWatch useWatch = new UseWatch(1);
         assertEquals(1, useWatch.getSailorId());
         assertEquals("UseWatch sailorId=1", useWatch.toString());
+
+        assertEquals(useWatch, new UseWatch(1));
     }
 }
