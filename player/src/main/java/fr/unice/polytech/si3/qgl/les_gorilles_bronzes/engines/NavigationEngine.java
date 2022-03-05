@@ -1,19 +1,19 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
@@ -39,6 +39,7 @@ public class NavigationEngine {
         this.nextRound = nextRound;
 
         actions.addAll(turnShipWithBestConfiguration());
+        actions.addAll(addSailAction());
 
         return actions;
     }
@@ -75,6 +76,54 @@ public class NavigationEngine {
 
         //oar action
         addOarAction(actions, bestConf);
+
+        return actions;
+    }
+
+    /**
+     * Lifts sail if the wind blows at the back of the boat
+     */
+    public boolean shouldLiftSail(){
+        Wind wind = new Wind();
+        double windOrientation = wind.getOrientation();
+        double shipOrientation = nextRound.getShip().getPosition().getOrientation();
+        double clampedShipOrientation = clampAngle(shipOrientation);
+
+        //checks if ship orientation is approximately equal to wind orientation
+        //at 0.1 rad (5.7 degrees)
+        return Math.abs(clampedShipOrientation-windOrientation) < 0.1;
+    }
+
+    /**
+     * Lowers the sail if the ship is reaching the checkpoint too fast
+     */
+    public boolean shouldLowerSail(){
+        return true;
+    }
+
+    public Voile findSail(){
+        var searchForSail = deckEngine.getEntitiesByClass(new Voile());
+        if (searchForSail.isEmpty()) return null;
+        return (Voile) deckEngine.getEntitiesByClass(new Voile()).get(0);
+    }
+
+    public Optional<Sailor> findSailorOnSail(Voile sail){
+        if(sail == null) return Optional.empty();
+        return deckEngine.getSailorByEntity(sail);
+    }
+
+    public List<Action> addSailAction(){
+        List<Action> actions = new ArrayList<>();
+
+        Voile sail = findSail();
+        Optional<Sailor> sailorOnSail = findSailorOnSail(sail);
+
+        if(sailorOnSail.isPresent() && shouldLiftSail()){
+            actions.add(new LiftSail(sailorOnSail.get().getId()));
+        }
+        if(sailorOnSail.isPresent() && !(shouldLiftSail())){
+            actions.add(new LowerSail(sailorOnSail.get().getId()));
+        }
 
         return actions;
     }
