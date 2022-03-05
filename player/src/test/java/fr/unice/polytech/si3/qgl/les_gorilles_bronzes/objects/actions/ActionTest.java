@@ -17,7 +17,9 @@ class ActionTest {
         assertEquals("Aim sailorId=2{angle=3.0}", aim.toString());
 
         assertEquals(aim, new Aim(2, 3.0));
+        assertEquals(aim.hashCode(), new Aim(2, 3.0).hashCode());
         assertNotEquals(aim, new Aim(2, 4.0));
+        assertNotEquals(aim.hashCode(), new Aim(2, 4.0).hashCode());
     }
 
     @Test
@@ -61,7 +63,9 @@ class ActionTest {
         assertEquals("Move sailorId=1{xdistance=4, ydistance=5}", move.toString());
 
         assertEquals(move, new Move(1,4,5));
+        assertEquals(move.hashCode(), new Move(1,4,5).hashCode());
         assertNotEquals(move, new Move(1,4,6));
+        assertNotEquals(move.hashCode(), new Move(1,4,6));
     }
 
     @Test
@@ -93,7 +97,9 @@ class ActionTest {
         assertEquals("Turn sailorId=1{rotation=5.0}", turn.toString());
 
         assertEquals(turn, new Turn(1, 5.0));
+        assertEquals(turn.hashCode(), new Turn(1, 5.0).hashCode());
         assertNotEquals(turn, new Turn(1, 6.0));
+        assertNotEquals(turn.hashCode(), new Turn(1, 6.0).hashCode());
     }
 
     @Test

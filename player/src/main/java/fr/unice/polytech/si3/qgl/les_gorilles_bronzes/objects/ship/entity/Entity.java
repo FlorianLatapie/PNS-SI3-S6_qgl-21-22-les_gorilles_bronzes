@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Objects;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Rame.class, name = "oar"),
@@ -41,10 +43,23 @@ public abstract class Entity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return x == entity.x && y == entity.y && free == entity.free;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, free);
+    }
+
+    @Override
     public String toString() {
-        return "Entity: " + this.getClass().getSimpleName() + " {" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return this.getClass().getSimpleName() +
+                "(" + x +
+                "," + y +
+                ')';
     }
 }

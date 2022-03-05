@@ -5,6 +5,9 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Ship {
     private String type;
     private int life;
@@ -68,5 +71,33 @@ public class Ship {
 
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ship ship = (Ship) o;
+        return life == ship.life && Objects.equals(type, ship.type) && Objects.equals(position, ship.position) && Objects.equals(name, ship.name) && Objects.equals(deck, ship.deck) && Arrays.equals(entities, ship.entities) && Objects.equals(shape, ship.shape);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(type, life, position, name, deck, shape);
+        result = 31 * result + Arrays.hashCode(entities);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "type='" + type + '\'' +
+                ", life=" + life +
+                ", position=" + position +
+                ", name='" + name + '\'' +
+                ", deck=" + deck +
+                ", entities=" + Arrays.toString(entities) +
+                ", shape=" + shape +
+                '}';
     }
 }

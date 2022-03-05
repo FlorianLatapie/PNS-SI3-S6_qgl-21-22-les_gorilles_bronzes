@@ -10,12 +10,19 @@ class PositionTest {
     void initGameTest() {
         Position position = new Position(1.0, 2.0, PI / 2);
 
-       assertEquals(PI/ 2, position.getOrientation());
+        assertEquals(PI/ 2, position.getOrientation());
 
         position.setOrientation(PI);
 
         assertEquals(PI, position.getOrientation());
 
         assertEquals("Position{x=1.0, y=2.0, orientation=3.141592653589793}", position.toString());
+    }
+
+    @Test
+    void equalsTest(){
+        Position position1 = new Position(1.0, 2.0, PI / 2);
+        assertEquals(position1, new Position(1.0, 2.0, PI / 2));
+        assertEquals(position1.hashCode(), new Position(1.0, 2.0, PI / 2).hashCode());
     }
 }

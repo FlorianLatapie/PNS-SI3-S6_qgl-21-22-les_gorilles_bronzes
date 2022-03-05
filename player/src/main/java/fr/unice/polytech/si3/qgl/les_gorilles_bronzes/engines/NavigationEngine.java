@@ -44,7 +44,7 @@ public class NavigationEngine {
         return actions;
     }
 
-    public List<OarConfiguration> getPossibleAnglesWithOars(){
+    public List<OarConfiguration> getPossibleAnglesWithOars() {
         int nbOars = deckEngine.getTotalNbSailorsOnOars(); // for the next weeks we need to change this number
         List<OarConfiguration> possibleAngles = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class NavigationEngine {
         return possibleAngles;
     }
 
-    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder, Entity rudderPosition){
+    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder, Entity rudderPosition) {
         List<Action> actions = new ArrayList<>();
         double angleToTurnWithRudder = clamp(angle, -Math.PI / 4, Math.PI / 4);
         actions.add(new Turn(sailorOnRudder.getId(), angleToTurnWithRudder));
@@ -64,7 +64,7 @@ public class NavigationEngine {
         return actions;
     }
 
-    public List<Action> turnShipWithBestConfiguration(){
+    public List<Action> turnShipWithBestConfiguration() {
         List<Action> actions = new ArrayList<>();
 
         OarConfiguration bestConf = findBestConfiguration();
@@ -83,63 +83,63 @@ public class NavigationEngine {
     /**
      * Lifts sail if the wind blows at the back of the boat
      */
-    public boolean shouldLiftSail(){
+    public boolean shouldLiftSail() {
         Wind wind = new Wind();
         double windOrientation = wind.getOrientation();
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
 
         //checks if ship orientation is approximately equal to wind orientation
-        return Math.abs(clampedShipOrientation-windOrientation) < Math.toRadians(90);
+        return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
     }
 
     /**
      * Lowers the sail if the ship is reaching the checkpoint too fast
      */
-    public boolean shouldLowerSail(){
+    public boolean shouldLowerSail() {
         return true;
     }
 
-    public Voile findSail(){
+    public Voile findSail() {
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
         if (searchForSail.isEmpty()) return null;
         return (Voile) deckEngine.getEntitiesByClass(new Voile()).get(0);
     }
 
-    public Optional<Sailor> findSailorOnSail(Voile sail){
-        if(sail == null) return Optional.empty();
+    public Optional<Sailor> findSailorOnSail(Voile sail) {
+        if (sail == null) return Optional.empty();
         return deckEngine.getSailorByEntity(sail);
     }
 
-    public List<Action> addSailAction(){
+    public List<Action> addSailAction() {
         List<Action> actions = new ArrayList<>();
 
         Voile sail = findSail();
         Optional<Sailor> sailorOnSail = findSailorOnSail(sail);
 
-        if(sailorOnSail.isPresent() && shouldLiftSail()){
+        if (sailorOnSail.isPresent() && shouldLiftSail()) {
             actions.add(new LiftSail(sailorOnSail.get().getId()));
         }
-        if(sailorOnSail.isPresent() && !(shouldLiftSail())){
+        if (sailorOnSail.isPresent() && !(shouldLiftSail())) {
             actions.add(new LowerSail(sailorOnSail.get().getId()));
         }
 
         return actions;
     }
 
-    public Checkpoint getCheckpoint(){
+    public Checkpoint getCheckpoint() {
         return ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
 
     }
 
-    public double getObjectif(){
+    public double getObjectif() {
         Checkpoint checkpoint = getCheckpoint();
         return bestDistance(checkpoint, nextRound.getShip())
-                - ((Circle)checkpoint.getShape()).getRadius()
-                + ((Rectangle)initGame.getShip().getShape()).getHeight();
+                // - ((Circle)checkpoint.getShape()).getRadius()
+                + ((Rectangle) initGame.getShip().getShape()).getHeight();
     }
 
-    public OarConfiguration findBestConfiguration(){
+    public OarConfiguration findBestConfiguration() {
         List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
         possibleAngles.remove(0); // removing 0 oars on each side
         return possibleAngles.stream()//NOSONAR
@@ -149,18 +149,18 @@ public class NavigationEngine {
                 .orElse(possibleAngles.get(0));
     }
 
-    public Gouvernail findRudder(){
+    public Gouvernail findRudder() {
         var rechercheGouvernail = deckEngine.getEntitiesByClass(new Gouvernail());
         if (rechercheGouvernail.isEmpty()) return null;
         return (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
     }
 
-    public Optional<Sailor> findSailorOnRudder(Gouvernail rudder){
-        if(rudder == null) return Optional.empty();
+    public Optional<Sailor> findSailorOnRudder(Gouvernail rudder) {
+        if (rudder == null) return Optional.empty();
         return deckEngine.getSailorByEntity(rudder);
     }
 
-    public void addOarAction(List<Action> actions, OarConfiguration bestConf){
+    public void addOarAction(List<Action> actions, OarConfiguration bestConf) {
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
         var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
 
@@ -170,16 +170,22 @@ public class NavigationEngine {
                 .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
     }
 
-    public double bestDistance(Checkpoint checkPoint, Ship ship){
-        return Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() +
-                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2),
-                checkPoint.getPosition().getY() - ship.getPosition().getY() +
-                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2));
+    public double bestDistance(Checkpoint checkPoint, Ship ship) {
+        double checkX = checkPoint.getPosition().getX();
+        double checkY = checkPoint.getPosition().getY();
+
+        double shipX = ship.getPosition().getX();
+        double shipY = ship.getPosition().getY();
+        double shipOrientation = ship.getPosition().getOrientation();
+        Rectangle shipShape = (Rectangle) ship.getShape();
+
+        return Math.hypot(checkX - shipX + (Math.sin(shipOrientation) * (shipShape).getHeight() / 2),
+                checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
     }
 
-    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
-        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() + (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)
-                , checkPoint.getPosition().getY() - ship.getPosition().getY() + (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2));
+    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship) {
+        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() + (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2)
+                , checkPoint.getPosition().getY() - ship.getPosition().getY() + (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2));
         return distance <= ((Circle) checkPoint.getShape()).getRadius();
     }
 
@@ -218,5 +224,4 @@ public class NavigationEngine {
     public int getNextCheckpointToReach() {
         return nextCheckpointToReach;
     }
-
 }

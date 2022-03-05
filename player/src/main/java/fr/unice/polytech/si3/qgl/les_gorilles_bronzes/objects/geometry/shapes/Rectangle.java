@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
+import java.util.Objects;
+
 public class Rectangle implements Shape {
     private double width;
     private double height;
@@ -27,6 +29,19 @@ public class Rectangle implements Shape {
 
     public void setOrientation(double orientation) {
         this.orientation = orientation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rectangle rectangle = (Rectangle) o;
+        return Double.compare(rectangle.width, width) == 0 && Double.compare(rectangle.height, height) == 0 && Double.compare(rectangle.orientation, orientation) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, orientation);
     }
 
     @Override
