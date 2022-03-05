@@ -90,8 +90,7 @@ public class NavigationEngine {
         double clampedShipOrientation = clampAngle(shipOrientation);
 
         //checks if ship orientation is approximately equal to wind orientation
-        //at 0.1 rad (5.7 degrees)
-        return Math.abs(clampedShipOrientation-windOrientation) < 0.1;
+        return Math.abs(clampedShipOrientation-windOrientation) < Math.toRadians(90);
     }
 
     /**
