@@ -61,7 +61,7 @@ public class DeckEngine {
                 .forEach(entity -> {
                     var sailor = nearestSailorToThisEntity(entity).get();
                     if (entity.isFree() && sailor.isFree()){
-                        actions.add(sailor.moveSailor(entity));
+                        actions.add(sailor.moveTo(entity));
                         sailor.setFree(false);
                         entity.setFree(false);
                         availableSailors--;
@@ -126,8 +126,8 @@ public class DeckEngine {
         int j = 0;
         for (Sailor s : sailors) {
             if (s.isFree() && j < nbSailorsToMove) {
-                if (direction.equals(Direction.RIGHT)) actions.add(s.moveSailor(getOars(Direction.RIGHT).get(j)));
-                if (direction.equals(Direction.LEFT)) actions.add(s.moveSailor(getOars(Direction.LEFT).get(j)));
+                if (direction.equals(Direction.RIGHT)) actions.add(s.moveTo(getOars(Direction.RIGHT).get(j)));
+                if (direction.equals(Direction.LEFT)) actions.add(s.moveTo(getOars(Direction.LEFT).get(j)));
                 s.setFree(false);
                 j++;
             }
