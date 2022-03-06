@@ -30,7 +30,7 @@ public class OarConfiguration {
         return ((rightOar - leftOar) * Math.PI) / totalOar;
     }
 
-    public double getSpeed() { //TODO utiliser le bon calcul de la vitesse
+    public double getSpeed() {
         return 165*(leftOar+rightOar)/(double)totalOar;
     }
 

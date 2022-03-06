@@ -46,4 +46,9 @@ class OtherShipTest {
         assertEquals(otherShip2, otherShip);
         assertEquals(otherShip2.hashCode(), otherShip.hashCode());
     }
+
+    @Test
+    void toStringTest(){
+        assertEquals("OtherShip{position=Position{x=0.0, y=1.0, orientation=2.0}, shape=Rectangle{width=1.0, height=2.0, orientation=3.0}, life=0}", otherShip.toString());
+    }
 }

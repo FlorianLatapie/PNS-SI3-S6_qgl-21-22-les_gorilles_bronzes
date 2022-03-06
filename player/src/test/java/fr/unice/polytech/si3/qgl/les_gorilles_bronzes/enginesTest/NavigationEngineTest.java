@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NavigationEngineTest {
+
+class NavigationEngineTest {
     DeckEngine deckEngine;
     InitGame initGame;
     NavigationEngine navigationEngine;

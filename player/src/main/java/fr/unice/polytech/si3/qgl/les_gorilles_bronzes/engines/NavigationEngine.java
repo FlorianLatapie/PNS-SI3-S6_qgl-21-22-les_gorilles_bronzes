@@ -11,10 +11,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
 import java.util.*;
@@ -56,7 +54,7 @@ public class NavigationEngine {
         return possibleAngles;
     }
 
-    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder, Entity rudderPosition) {
+    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder) {
         List<Action> actions = new ArrayList<>();
         double angleToTurnWithRudder = clamp(angle, -Math.PI / 4, Math.PI / 4);
         actions.add(new Turn(sailorOnRudder.getId(), angleToTurnWithRudder));
@@ -72,7 +70,7 @@ public class NavigationEngine {
         //rudder action
         Gouvernail rudder = findRudder();
         Optional<Sailor> sailorOnRudder = findSailorOnRudder(rudder);
-        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(getGoalAngle() - bestConf.getAngle(), sailor, rudder)));
+        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(getGoalAngle() - bestConf.getAngle(), sailor)));
 
         //oar action
         addOarAction(actions, bestConf);

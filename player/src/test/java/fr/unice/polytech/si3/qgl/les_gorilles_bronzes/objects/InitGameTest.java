@@ -26,7 +26,7 @@ class InitGameTest {
         assertEquals(initGame.getGoal(), new RegattaGoal());
         assertEquals(initGame.getShip(), new Ship());
         assertEquals(initGame.getSailors()[0], new Sailor());
-        assertEquals(initGame.getShipCount(), 1);
+        assertEquals(1, initGame.getShipCount());
     }
 
     @Test

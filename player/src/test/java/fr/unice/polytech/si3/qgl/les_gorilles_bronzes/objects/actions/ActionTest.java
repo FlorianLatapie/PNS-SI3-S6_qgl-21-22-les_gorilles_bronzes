@@ -65,7 +65,7 @@ class ActionTest {
         assertEquals(move, new Move(1,4,5));
         assertEquals(move.hashCode(), new Move(1,4,5).hashCode());
         assertNotEquals(move, new Move(1,4,6));
-        assertNotEquals(move.hashCode(), new Move(1,4,6));
+        assertNotEquals(move.hashCode(), new Move(1,4,6).hashCode());
     }
 
     @Test

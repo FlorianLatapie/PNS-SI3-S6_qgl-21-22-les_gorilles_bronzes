@@ -21,8 +21,7 @@ public class GlobalEngine {
         List<Action> actions = new ArrayList<>();
         this.deckEngine.beforeEachRound();
 
-        //if (round == 0)
-            actions.addAll(deckEngine.placeSailors());
+        actions.addAll(deckEngine.placeSailors());
 
         actions.addAll(navigationEngine.computeNextRound(nextRound));
 

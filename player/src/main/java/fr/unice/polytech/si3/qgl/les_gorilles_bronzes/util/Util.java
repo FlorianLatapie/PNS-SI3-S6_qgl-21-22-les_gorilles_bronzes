@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util;
 
 public class Util {
+    private Util() {}
 
     public static int clamp (int value, int min, int max){
         if (value < min)
