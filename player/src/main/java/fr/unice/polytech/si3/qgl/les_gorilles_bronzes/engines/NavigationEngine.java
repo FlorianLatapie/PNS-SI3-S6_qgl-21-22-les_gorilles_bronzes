@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
@@ -11,12 +11,15 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
@@ -83,13 +86,25 @@ public class NavigationEngine {
      * Lifts sail if the wind blows at the back of the boat
      */
     public boolean shouldLiftSail() {
-        Wind wind = new Wind();
+        Wind wind = nextRound.getWind();
         double windOrientation = wind.getOrientation();
+        double windStrength = wind.getStrength();
+
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
 
-        //checks if ship orientation is approximately equal to wind orientation
+        if (getWindSpeedRelativeToShip(wind) + findBestConfiguration().getSpeed() >= getGoalSpeed()) return false;
+
         return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
+        //checks if ship orientation is approximately equal to wind orientation
+    }
+
+    public double getWindSpeedRelativeToShip(Wind wind) {
+        int nbSail = deckEngine.getEntitiesByClass(new Voile()).size();
+        double shipOrientation = nextRound.getShip().getPosition().getOrientation();
+        double clampedShipOrientation = clampAngle(shipOrientation);
+
+        return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
     }
 
     /**
@@ -135,7 +150,7 @@ public class NavigationEngine {
         Checkpoint checkpoint = getCheckpoint();
         return bestDistance(checkpoint, nextRound.getShip())
                 // - ((Circle)checkpoint.getShape()).getRadius()
-                + ((Rectangle) initGame.getShip().getShape()).getHeight();
+                + ((Rectangle) nextRound.getShip().getShape()).getHeight();
     }
 
     public OarConfiguration findBestConfiguration() {
@@ -193,7 +208,7 @@ public class NavigationEngine {
         Rectangle shipShape = (Rectangle) ship.getShape();
 
         double distance = Math.hypot(checkX - shipX + (Math.sin(shipOrientation) * (shipShape).getHeight() / 2),
-               checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
+                checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
         return distance <= checkShape.getRadius();
     }
 
