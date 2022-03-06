@@ -11,4 +11,6 @@ class VisibleEntityTest {
         otherShip.setLife(10);
         assertEquals(10, otherShip.getLife());
     }
+
+
 }

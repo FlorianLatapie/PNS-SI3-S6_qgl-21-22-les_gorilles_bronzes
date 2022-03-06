@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
+import java.util.Arrays;
+
 public class NextRound {
     private Ship ship;
     private Wind wind;
@@ -31,5 +33,14 @@ public class NextRound {
 
     public void setVisibleEntities(VisibleEntity[] visibleEntities) {
         this.visibleEntities = visibleEntities;
+    }
+
+    @Override
+    public String toString() {
+        return "NextRound{" +
+                "ship=" + ship +
+                ", wind=" + wind +
+                ", visibleEntities=" + Arrays.toString(visibleEntities) +
+                '}';
     }
 }

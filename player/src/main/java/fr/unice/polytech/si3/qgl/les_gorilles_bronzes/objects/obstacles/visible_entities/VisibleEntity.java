@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 
+import java.util.Objects;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OtherShip.class, name = "ship"),
@@ -29,5 +31,26 @@ public abstract class VisibleEntity {
 
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VisibleEntity that = (VisibleEntity) o;
+        return Objects.equals(position, that.position) && Objects.equals(shape, that.shape);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, shape);
+    }
+
+    @Override
+    public String toString() {
+        return "VisibleEntity{" +
+                "position=" + position +
+                ", shape=" + shape +
+                '}';
     }
 }

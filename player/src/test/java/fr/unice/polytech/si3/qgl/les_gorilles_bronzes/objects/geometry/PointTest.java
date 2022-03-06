@@ -4,14 +4,18 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PointTest {
-    @Test
-    void initGameTest() {
-        Point point = new Point(1.0, 2.0);
+    Point point;
 
+    @BeforeEach
+    void setUp() {
+        point = new Point(1, 2);
+    }
+
+    @Test
+    void pointTest() {
         assertEquals(1.0, point.getX());
         assertEquals(2.0, point.getY());
 
@@ -22,5 +26,14 @@ class PointTest {
         assertEquals(4.0, point.getY());
 
         assertEquals("Point{x=3.0, y=4.0}", point.toString());
+    }
+
+    @Test
+    void equalsTest() {
+        Point point2 = new Point(1, 2);
+        Point point3 = new Point(3, 4);
+
+        assertEquals(point, point2);
+        assertNotEquals(point, point3);
     }
 }

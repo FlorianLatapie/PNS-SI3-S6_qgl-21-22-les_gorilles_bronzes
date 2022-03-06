@@ -2,8 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EntityTest {
     @Test
@@ -15,7 +14,7 @@ class EntityTest {
 
         assertEquals(0, rame.getX());
         assertEquals(1, rame.getY());
-        assertEquals(true, rame.isFree());
+        assertTrue(rame.isFree());
 
         Rame rame2 = new Rame();
         rame2.setX(0);
@@ -44,7 +43,7 @@ class EntityTest {
         voile.setFree(true);
         voile.setOpenned(false);
 
-        assertEquals(false, voile.isOpenned());
+        assertFalse(voile.isOpenned());
 
         Voile voile2 = new Voile();
         voile2.setX(0);
