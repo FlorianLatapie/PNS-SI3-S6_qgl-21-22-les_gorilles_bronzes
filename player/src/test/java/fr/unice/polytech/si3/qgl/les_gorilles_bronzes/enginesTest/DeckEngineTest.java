@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DeckEngineTest {
     DeckEngine deckEngine;
@@ -68,26 +67,34 @@ class DeckEngineTest {
         List<Entity> entities = Arrays.stream(cockpit.getInitGame().getShip().getEntities()).collect(Collectors.toList());
 
         assertEquals(3,deckEngine.placeSailors(new Gouvernail()).get(0).getSailorId());
-        assertEquals(false, sailors.get(3).isFree());
-        assertEquals(false, entities.stream().filter(e-> e instanceof Gouvernail).collect(Collectors.toList()).get(0).isFree());
+        assertFalse(sailors.get(3).isFree());
+        assertFalse(entities.stream().filter(e -> e instanceof Gouvernail).collect(Collectors.toList()).get(0).isFree());
         assertEquals(4,deckEngine.placeSailors(new Voile()).get(0).getSailorId());
-        assertEquals(false, sailors.get(4).isFree());
-        assertEquals(false, entities.stream().filter(e-> e instanceof Voile).collect(Collectors.toList()).get(0).isFree());
+        assertFalse(sailors.get(4).isFree());
+        assertFalse(entities.stream().filter(e -> e instanceof Voile).collect(Collectors.toList()).get(0).isFree());
         assertEquals(0, deckEngine.placeSailors(new Vigie()).size());
         assertEquals(4, deckEngine.placeSailors().size());
+        assertEquals(4, deckEngine.getTotalNbSailorsOnOars());
     }
 
     @Test
     void getSailorByEntityTest(){
         assertEquals(0, deckEngine.getSailorByEntity(new Gouvernail()).get().getId());
+
     }
 
-    /*@Test
-    void sailorsWhoDontHaveAnOarTest() {
-        assertEquals(4, deckEngine.sailorsWhoDontHaveAnOar().size());
-        deckEngine.placeSailorsOnOars(2, DeckEngine.Direction.LEFT);
-        assertEquals(2, deckEngine.sailorsWhoDontHaveAnOar().size());
-    }*/
+    @Test
+    void getEntitiesByClassTest(){
+        DeckEngine deckEngine = new DeckEngine(cockpit.getInitGame());
+
+        deckEngine.setEntities(new Entity[]{new Rame(), new Rame(), new Voile(), new Voile(), new Voile(), new Vigie(), new Gouvernail()});
+
+        assertEquals(2, deckEngine.getEntitiesByClass(new Rame()).size());
+        assertEquals(3, deckEngine.getEntitiesByClass(new Voile()).size());
+        assertEquals(1, deckEngine.getEntitiesByClass(new Gouvernail()).size());
+        assertEquals(1, deckEngine.getEntitiesByClass(new Vigie()).size());
+        assertEquals(0, deckEngine.getEntitiesByClass(new Canon()).size());
+    }
 
 
 }

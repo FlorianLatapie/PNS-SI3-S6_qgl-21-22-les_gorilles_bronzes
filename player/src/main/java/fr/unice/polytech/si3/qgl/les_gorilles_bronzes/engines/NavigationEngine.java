@@ -14,6 +14,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -98,7 +99,7 @@ public class NavigationEngine {
         return true;
     }
 
-    public Voile findSail() {
+    public Voile findSail() {// TODO: use an optional
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
         if (searchForSail.isEmpty()) return null;
         return (Voile) deckEngine.getEntitiesByClass(new Voile()).get(0);
@@ -130,7 +131,7 @@ public class NavigationEngine {
 
     }
 
-    public double getObjectif() {
+    public double getGoalSpeed() { //TODO : check this algorithm : the unit tests shown that the speed was not calculated correctly, it is now fixed
         Checkpoint checkpoint = getCheckpoint();
         return bestDistance(checkpoint, nextRound.getShip())
                 // - ((Circle)checkpoint.getShape()).getRadius()
@@ -141,7 +142,7 @@ public class NavigationEngine {
         List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
         possibleAngles.remove(0); // removing 0 oars on each side
         return possibleAngles.stream()//NOSONAR
-                .filter(conf -> conf.getSpeed() <= getObjectif())
+                .filter(conf -> conf.getSpeed() <= getGoalSpeed())
                 .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
                 .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - getGoalAngle())))
                 .orElse(possibleAngles.get(0));
@@ -182,9 +183,18 @@ public class NavigationEngine {
     }
 
     public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship) {
-        double distance = Math.hypot(checkPoint.getPosition().getX() - ship.getPosition().getX() + (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2)
-                , checkPoint.getPosition().getY() - ship.getPosition().getY() + (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2));
-        return distance <= ((Circle) checkPoint.getShape()).getRadius();
+        double checkX = checkPoint.getPosition().getX();
+        double checkY = checkPoint.getPosition().getY();
+        Circle checkShape = (Circle) checkPoint.getShape();
+
+        double shipX = ship.getPosition().getX();
+        double shipY = ship.getPosition().getY();
+        double shipOrientation = ship.getPosition().getOrientation();
+        Rectangle shipShape = (Rectangle) ship.getShape();
+
+        double distance = Math.hypot(checkX - shipX + (Math.sin(shipOrientation) * (shipShape).getHeight() / 2),
+               checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
+        return distance <= checkShape.getRadius();
     }
 
     private double getGoalAngle() {
@@ -198,12 +208,7 @@ public class NavigationEngine {
 
         var res = Math.atan2(checkpointPosition.getY() - boatPosition.getY(), checkpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
 
-        // clamps the value between -2pi and 2pi
-        while (res < -Math.PI)
-            res += 2 * Math.PI;
-        while (res > Math.PI)
-            res -= 2 * Math.PI;
-        return res;
+        return Util.clampAngle(res);
     }
 
     public void updateCheckPointToReach(Checkpoint[] checkpoints, Ship ship) {

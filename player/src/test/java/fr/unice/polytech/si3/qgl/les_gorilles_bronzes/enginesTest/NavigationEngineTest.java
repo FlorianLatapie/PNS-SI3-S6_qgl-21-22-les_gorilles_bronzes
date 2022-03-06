@@ -8,8 +8,11 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,5 +44,14 @@ class NavigationEngineTest {
 
         assertEquals(false, shouldNotBe);
     }
+
+    @Test
+    void getPossibleAnglesWithOarsTest(){
+        deckEngine.placeSailors();
+        List<OarConfiguration> angles = navigationEngine.getPossibleAnglesWithOars();
+        System.out.println(angles);
+        assertEquals(9, angles.size());
+    }
+
 
 }

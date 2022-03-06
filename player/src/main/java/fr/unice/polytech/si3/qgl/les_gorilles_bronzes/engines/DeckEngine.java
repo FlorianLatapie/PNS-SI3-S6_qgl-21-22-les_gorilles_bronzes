@@ -145,4 +145,11 @@ public class DeckEngine {
                 .filter(entity -> entity.getClass().equals(entityToMatch.getClass()))
                 .collect(Collectors.toList());
     }
+
+
+    // default getters and setters
+
+    public void setEntities(Entity[] entities) {
+        this.entities = entities;
+    }
 }
