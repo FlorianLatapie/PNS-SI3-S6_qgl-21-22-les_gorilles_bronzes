@@ -16,10 +16,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouver
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
@@ -74,13 +72,14 @@ public class NavigationEngine {
         //rudder action
         Gouvernail rudder = findRudder();
         Optional<Sailor> sailorOnRudder = findSailorOnRudder(rudder);
-        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(getGoalAngle() - bestConf.getAngle(), sailor)));
+        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(getBestAngle() - bestConf.getAngle(), sailor)));
 
         //oar action
         addOarAction(actions, bestConf);
 
         return actions;
     }
+
 
     /**
      * Lifts sail if the wind blows at the back of the boat
@@ -154,13 +153,31 @@ public class NavigationEngine {
     }
 
     public OarConfiguration findBestConfiguration() {
+        double goalAngle = getGoalAngle();
+        double bestGoalAngle = getBestAngle();
+        var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
+
         List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
-        possibleAngles.remove(0); // removing 0 oars on each side
-        return possibleAngles.stream()//NOSONAR
-                .filter(conf -> conf.getSpeed() <= getGoalSpeed())
-                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
-                .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - getGoalAngle())))
-                .orElse(possibleAngles.get(0));
+        List<OarConfiguration> bestConfs = possibleAngles.stream()
+                .filter(conf -> willBeInsideCheckpoint(checkpoint, nextRound.getShip(), conf))
+                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()))
+                .collect(Collectors.toList());
+
+        OarConfiguration bestConf;
+
+        if(bestConfs.isEmpty()){
+            bestConf = possibleAngles.stream()//NOSONAR
+                    .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
+                    .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
+                    .get();
+        }
+        else{
+            bestConf = bestConfs.stream()
+                    .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
+                    .get();
+        }
+
+        return bestConf;
     }
 
     public Gouvernail findRudder() {
@@ -197,19 +214,45 @@ public class NavigationEngine {
                 checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
     }
 
-    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship) {
-        double checkX = checkPoint.getPosition().getX();
-        double checkY = checkPoint.getPosition().getY();
-        Circle checkShape = (Circle) checkPoint.getShape();
+    public double getDistance(Checkpoint checkPoint, Ship ship){
+        return Math.hypot(checkPoint.getPosition().getX() - (ship.getPosition().getX() +
+                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2))
+                , checkPoint.getPosition().getY() - (ship.getPosition().getY() +
+                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)));
+    }
 
-        double shipX = ship.getPosition().getX();
-        double shipY = ship.getPosition().getY();
-        double shipOrientation = ship.getPosition().getOrientation();
-        Rectangle shipShape = (Rectangle) ship.getShape();
+    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
+        return getDistance(checkPoint,ship) <= ((Circle) checkPoint.getShape()).getRadius();
+    }
 
-        double distance = Math.hypot(checkX - shipX + (Math.sin(shipOrientation) * (shipShape).getHeight() / 2),
-                checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
-        return distance <= checkShape.getRadius();
+    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration){
+        double distance = getDistance(checkpoint,ship)-oarConfiguration.getSpeed();
+        return distance <= ((Circle) checkpoint.getShape()).getRadius();
+    }
+
+    private double getBestAngle(){
+        Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
+
+        var boatPosition = nextRound.getShip().getPosition();
+
+        updateCheckPointToReach(checkpoints, nextRound.getShip());
+
+        var checkpointPosition = checkpoints[nextCheckpointToReach].getPosition();
+        double res = getGoalAngle();
+
+        if(checkpoints.length > nextCheckpointToReach+1){
+            var nextCheckpointPosition = checkpoints[nextCheckpointToReach+1].getPosition();
+            double angleNextCheckpoint = Math.atan2(nextCheckpointPosition.getY() - boatPosition.getY(), nextCheckpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
+            if(clampAngle(angleNextCheckpoint)<0 && clampAngle(angleNextCheckpoint)>=clampAngle(-5*Math.PI/6)){
+                res = getGoalAngle() - (Math.atan2(((Circle)checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
+                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY()))/1.5);
+            }
+            if(clampAngle(angleNextCheckpoint)>0 && clampAngle(angleNextCheckpoint)<=clampAngle(5*Math.PI/6)) {
+                res = getGoalAngle() + (Math.atan2(((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
+                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY()))/1.5);
+            }
+        }
+        return res;
     }
 
     private double getGoalAngle() {
