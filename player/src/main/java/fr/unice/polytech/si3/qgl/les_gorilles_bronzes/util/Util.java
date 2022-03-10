@@ -1,9 +1,12 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util;
 
 public class Util {
-    private Util() {}
+    private Util() {
+    }
 
-    public static int clamp (int value, int min, int max){
+    public static int clamp(int value, int min, int max) {
+        if (min > max)
+            throw new IllegalArgumentException("min > max (" + min + " > " + max + ")");
         if (value < min)
             return min;
         if (value > max)
@@ -11,7 +14,9 @@ public class Util {
         return value;
     }
 
-    public static double clamp (double value, double min, double max){
+    public static double clamp(double value, double min, double max) {
+        if (min > max)
+            throw new IllegalArgumentException("min > max (" + min + " > " + max + ")");
         if (value < min)
             return min;
         if (value > max)
@@ -19,7 +24,7 @@ public class Util {
         return value;
     }
 
-    public static double clampAngle (double value) {
+    public static double clampAngle(double value) {
         while (value < -Math.PI)
             value += 2 * Math.PI;
         while (value > Math.PI)
