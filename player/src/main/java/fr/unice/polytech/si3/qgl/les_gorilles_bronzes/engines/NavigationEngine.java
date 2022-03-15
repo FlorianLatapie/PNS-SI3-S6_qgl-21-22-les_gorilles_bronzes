@@ -247,7 +247,7 @@ public class NavigationEngine {
         return res;
     }
 
-    private double getGoalAngle() {
+    public double getGoalAngle() {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
 
         var boatPosition = nextRound.getShip().getPosition();
