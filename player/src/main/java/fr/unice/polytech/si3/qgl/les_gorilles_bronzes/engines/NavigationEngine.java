@@ -95,7 +95,6 @@ public class NavigationEngine {
         if (getWindSpeedRelativeToShip(wind) + findBestConfiguration().getSpeed() >= getGoalSpeed()) return false;
 
         return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
-        //checks if ship orientation is approximately equal to wind orientation
     }
 
     public double getWindSpeedRelativeToShip(Wind wind) {
@@ -104,13 +103,6 @@ public class NavigationEngine {
         double clampedShipOrientation = clampAngle(shipOrientation);
 
         return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
-    }
-
-    /**
-     * Lowers the sail if the ship is reaching the checkpoint too fast
-     */
-    public boolean shouldLowerSail() {
-        return true;
     }
 
     public Voile findSail() {// TODO: use an optional

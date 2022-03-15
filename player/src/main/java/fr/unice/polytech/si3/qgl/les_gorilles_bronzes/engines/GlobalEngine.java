@@ -29,4 +29,12 @@ public class GlobalEngine {
         System.out.println(actions);
         return actions.toArray(new Action[0]);
     }
+
+    public DeckEngine getDeckEngine() {
+        return deckEngine;
+    }
+
+    public NavigationEngine getNavigationEngine() {
+        return navigationEngine;
+    }
 }

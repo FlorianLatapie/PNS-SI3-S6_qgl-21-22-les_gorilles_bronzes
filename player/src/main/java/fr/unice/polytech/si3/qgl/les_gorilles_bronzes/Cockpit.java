@@ -55,4 +55,8 @@ public class Cockpit implements ICockpit {
     public NextRound getNextRound() {
         return nextRound;
     }
+
+    public GlobalEngine getGlobalEngine() {
+        return globalEngine;
+    }
 }
