@@ -6,15 +6,21 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 class NavigationEngineTest {
@@ -43,6 +49,62 @@ class NavigationEngineTest {
         Boolean shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
 
         assertEquals(false, shouldNotBe);
+
+        nextRound.getShip().getPosition().setX(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getX());
+        nextRound.getShip().getPosition().setY(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getY());
+        Boolean shouldBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
+        assertEquals(true, shouldBe);
+    }
+
+    @Test
+    void willBeInsideCheckpointTest(){
+        Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
+
+        OarConfiguration bestConf = new OarConfiguration(2,2,4);
+
+        Boolean shouldNotBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
+
+        assertEquals(false, shouldNotBe);
+
+        nextRound.getShip().getPosition().setX(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getX() - (bestConf.getSpeed() * Math.cos(nextRound.getShip().getPosition().getOrientation())));
+        nextRound.getShip().getPosition().setY(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getY() - (bestConf.getSpeed() * Math.sin(nextRound.getShip().getPosition().getOrientation())));
+        shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
+        assertEquals(false, shouldNotBe);
+        Boolean shouldBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
+        assertEquals(true, shouldBe);
+
+
+    }
+
+    @Test
+    void getDistanceTest(){
+        Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
+        Checkpoint checkpoint = checkpoints[navigationEngine.getNextCheckpointToReach()];
+
+        nextRound.getShip().getPosition().setOrientation(0);
+
+        Position position = new Position();
+        position.setX(nextRound.getShip().getPosition().getX());
+        position.setY(nextRound.getShip().getPosition().getY() + ((Rectangle)nextRound.getShip().getShape()).getHeight()/2 + 50);
+        checkpoint.setPosition(position);
+
+        assertEquals(50, navigationEngine.getDistance(checkpoint, nextRound.getShip()));
+    }
+
+    @Test
+    void getGoalAngleTest(){
+        Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
+
+        Checkpoint checkpoint = checkpoints[navigationEngine.getNextCheckpointToReach()];
+        Position position = new Position();
+        position.setX(nextRound.getShip().getPosition().getX() + 50);
+        position.setY(nextRound.getShip().getPosition().getY() + 50);
+        checkpoint.setPosition(position);
+
+        ((RegattaGoal) initGame.getGoal()).setCheckpoints(new Checkpoint[]{checkpoint});
+        navigationEngine.computeNextRound(nextRound);
+
+        assertEquals(Math.PI/4, navigationEngine.getGoalAngle());
     }
 
     @Test
@@ -52,6 +114,4 @@ class NavigationEngineTest {
         System.out.println(angles);
         assertEquals(9, angles.size());
     }
-
-
 }
