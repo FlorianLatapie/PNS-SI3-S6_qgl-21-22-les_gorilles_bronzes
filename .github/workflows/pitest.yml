@@ -1,0 +1,20 @@
+# This is a basic workflow that is manually triggered
+
+name: PITest
+
+on: 
+  push:
+    branches:
+      - master
+      - development
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  pitest:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Run tests
+      run: |
+        cd player
+        mvn test -P pitest
