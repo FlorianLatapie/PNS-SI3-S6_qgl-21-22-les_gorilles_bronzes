@@ -7,7 +7,7 @@ public class OarConfiguration {
     private int rightOar;
     private int totalOar;
 
-    public OarConfiguration(int leftOar, int rightOar, int totalOar) { //TODO ajouter bateau pour avoir le vrai total oar
+    public OarConfiguration(int leftOar, int rightOar, int totalOar) { //TODO add the true total oars and not the ones that are allowed to be assigned
         this.leftOar = leftOar;
         this.rightOar = rightOar;
         this.totalOar = totalOar;
@@ -31,7 +31,7 @@ public class OarConfiguration {
     }
 
     public double getSpeed() {
-        return 165*(leftOar+rightOar)/(double)totalOar;
+        return 165 * (leftOar + rightOar) / (double) totalOar;
     }
 
     public int getLeftOar() {

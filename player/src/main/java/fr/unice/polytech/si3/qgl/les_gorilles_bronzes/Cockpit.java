@@ -29,7 +29,7 @@ public class Cockpit implements ICockpit {
             this.initGame = OBJECT_MAPPER.readValue(jsonGame, InitGame.class);
             this.globalEngine = new GlobalEngine(initGame);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -38,7 +38,7 @@ public class Cockpit implements ICockpit {
             this.nextRound = OBJECT_MAPPER.readValue(jsonRound, NextRound.class);
             return OBJECT_MAPPER.writeValueAsString(globalEngine.computeNextRound(nextRound));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            e.getMessage();
             return "[]";
         }
     }
