@@ -24,14 +24,15 @@ jobs:
       with:
         java-version: 1.11
     - name: Run tests
-      run: mvn test -P pitest
-    - name: Send email
-      uses: dawidd6/action-send-mail@v3.6.0
+      run: |
+        mvn test -P pitest
+        zip -r pit-reports.zip target/pit-reports
+    - name: Slack File Upload
+      uses: adrey/slack-file-upload-action@1.0.5
       with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        subject: Github Actions PITtest result
-        to: thomaspaul987@gmail.com
-        from: Thomas Paul
-        attachments: ./target/pit-reports/*
+          token: xoxb-744038435863-3253611990165-l65US4wKUdXKcVfLVPHHPTI8
+          path: pit-reports.zip
+          channel: si3-qgl-21-22-les_gorilles_bronzes
+          
+    
       
