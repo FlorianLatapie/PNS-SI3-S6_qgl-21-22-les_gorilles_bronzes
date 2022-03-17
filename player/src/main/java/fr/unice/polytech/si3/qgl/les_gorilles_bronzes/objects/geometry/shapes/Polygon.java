@@ -45,15 +45,7 @@ public class Polygon implements Shape {
 
         var width = rightMostValue - leftMostValue;
         var height = bottomMostValue - topMostValue;
-
-        System.out.println(Arrays.toString(vertices));
-        System.out.println("leftMostValue: " + leftMostValue);
-        System.out.println("rightMostValue: " + rightMostValue);
-        System.out.println("topMostValue: " + topMostValue);
-        System.out.println("bottomMostValue: " + bottomMostValue);
-        System.out.println("width: " + width);
-        System.out.println("height: " + height);
-
+        
         return new Rectangle(width, height, orientation);
     }
 
