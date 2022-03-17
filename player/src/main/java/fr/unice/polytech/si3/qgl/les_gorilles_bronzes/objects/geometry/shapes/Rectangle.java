@@ -6,6 +6,16 @@ public class Rectangle implements Shape {
     private double width;
     private double height;
     private double orientation;
+    private double margin = -1;
+
+    public Rectangle (){
+    }
+
+    public Rectangle (double width, double height, double orientation){
+        this.width = width;
+        this.height = height;
+        this.orientation = orientation;
+    }
 
     public double getWidth() {
         return width;
@@ -29,6 +39,25 @@ public class Rectangle implements Shape {
 
     public void setOrientation(double orientation) {
         this.orientation = orientation;
+    }
+
+    public double getMargin() {
+        if (margin == -1) {
+            margin = DEFAULT_MARGIN;
+        }
+        return margin;
+    }
+
+    public void setMargin(double margin) {
+        this.margin = margin;
+    }
+
+    public double getHeightWithMargin() {
+        return height + getMargin();
+    }
+
+    public double getWidthWithMargin(){
+        return width + getMargin();
     }
 
     @Override

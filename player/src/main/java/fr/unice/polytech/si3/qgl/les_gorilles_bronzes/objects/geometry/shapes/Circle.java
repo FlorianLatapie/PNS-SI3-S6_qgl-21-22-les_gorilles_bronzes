@@ -2,8 +2,9 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 import java.util.Objects;
 
-public class Circle implements Shape{
+public class Circle implements Shape {
     private double radius;
+    private double margin = -1;
 
     public double getRadius() {
         return radius;
@@ -11,6 +12,21 @@ public class Circle implements Shape{
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public double getMargin() {
+        if (margin == -1) {
+            margin = DEFAULT_MARGIN;
+        }
+        return margin;
+    }
+
+    public void setMargin(double margin) {
+        this.margin = margin;
+    }
+
+    public double getRadiusWithMargin() {
+        return radius + getMargin();
     }
 
     @Override

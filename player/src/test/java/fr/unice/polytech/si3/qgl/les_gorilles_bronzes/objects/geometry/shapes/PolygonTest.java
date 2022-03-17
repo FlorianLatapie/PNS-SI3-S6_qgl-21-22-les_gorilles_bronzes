@@ -40,4 +40,40 @@ class PolygonTest {
         assertEquals(polygon, polygon2);
         assertEquals(polygon.hashCode(), polygon2.hashCode());
     }
+
+    @Test
+    void toRectangleTest(){
+        Polygon polygon2 = new Polygon();
+        polygon2.setOrientation(0);
+        polygon2.setVertices(new Point[]{new Point(1, 0), new Point(0, 4), new Point(3, 4)});
+
+        Rectangle rectangle = polygon2.toRectangle();
+        assertEquals(3, rectangle.getWidth());
+        assertEquals(4, rectangle.getHeight());
+        assertEquals(0, rectangle.getOrientation());
+    }
+
+    @Test
+    void toRectangleTest2(){
+        Polygon polygon2 = new Polygon();
+        polygon2.setOrientation(Math.PI / 2);
+        polygon2.setVertices(new Point[]{new Point(0, 0), new Point(3, 0), new Point(0, 4)});
+
+        Rectangle rectangle = polygon2.toRectangle();
+        assertEquals(3, rectangle.getWidth());
+        assertEquals(4, rectangle.getHeight());
+        assertEquals(Math.PI / 2, rectangle.getOrientation());
+    }
+
+    @Test
+    void toRectangleTest3(){
+        Polygon polygon2 = new Polygon();
+        polygon2.setOrientation(Math.PI / 2);
+        polygon2.setVertices(new Point[]{new Point(0,2), new Point(2,1), new Point(2,-2), new Point(0,-4), new Point(-3,-2), new Point(-3,1)});
+
+        Rectangle rectangle = polygon2.toRectangle();
+        assertEquals(5, rectangle.getWidth());
+        assertEquals(6, rectangle.getHeight());
+        assertEquals(Math.PI / 2, rectangle.getOrientation());
+    }
 }

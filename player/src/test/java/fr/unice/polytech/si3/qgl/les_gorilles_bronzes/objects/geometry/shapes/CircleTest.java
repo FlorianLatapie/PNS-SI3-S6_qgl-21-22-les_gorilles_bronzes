@@ -33,4 +33,13 @@ class CircleTest {
         assertEquals(circle, circle2);
         assertEquals(circle.hashCode(), circle2.hashCode());
     }
+
+    @Test
+    void getRadiusWithMarginTest() {
+        circle.setRadius(1.0);
+        assertEquals(11.0, circle.getRadiusWithMargin());
+
+        circle.setMargin(0.5);
+        assertEquals(1.5, circle.getRadiusWithMargin());
+    }
 }
