@@ -16,7 +16,10 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouver
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,7 +90,6 @@ public class NavigationEngine {
     public boolean shouldLiftSail() {
         Wind wind = nextRound.getWind();
         double windOrientation = wind.getOrientation();
-        double windStrength = wind.getStrength();
 
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
@@ -145,7 +147,6 @@ public class NavigationEngine {
     }
 
     public OarConfiguration findBestConfiguration() {
-        double goalAngle = getGoalAngle();
         double bestGoalAngle = getBestAngle();
         var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
 
@@ -157,16 +158,15 @@ public class NavigationEngine {
 
         OarConfiguration bestConf;
 
-        if(bestConfs.isEmpty()){
-            bestConf = possibleAngles.stream()//NOSONAR
+        if (bestConfs.isEmpty()) {
+            bestConf = possibleAngles.stream()
                     .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
                     .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
-                    .get();
-        }
-        else{
+                    .orElse(possibleAngles.get(0));
+        } else {
             bestConf = bestConfs.stream()
                     .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
-                    .get();
+                    .orElse(bestConfs.get(0));
         }
 
         return bestConf;
@@ -206,23 +206,23 @@ public class NavigationEngine {
                 checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
     }
 
-    public double getDistance(Checkpoint checkPoint, Ship ship){
+    public double getDistance(Checkpoint checkPoint, Ship ship) {
         return Math.hypot(checkPoint.getPosition().getX() - (ship.getPosition().getX() +
-                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2))
+                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2))
                 , checkPoint.getPosition().getY() - (ship.getPosition().getY() +
-                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)));
+                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2)));
     }
 
-    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
-        return getDistance(checkPoint,ship) <= ((Circle) checkPoint.getShape()).getRadius();
+    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship) {
+        return getDistance(checkPoint, ship) <= ((Circle) checkPoint.getShape()).getRadius();
     }
 
-    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration){
-        double distance = getDistance(checkpoint,ship)-oarConfiguration.getSpeed();
+    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration) {
+        double distance = getDistance(checkpoint, ship) - oarConfiguration.getSpeed();
         return distance <= ((Circle) checkpoint.getShape()).getRadius();
     }
 
-    private double getBestAngle(){
+    private double getBestAngle() {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
 
         var boatPosition = nextRound.getShip().getPosition();
@@ -232,16 +232,16 @@ public class NavigationEngine {
         var checkpointPosition = checkpoints[nextCheckpointToReach].getPosition();
         double res = getGoalAngle();
 
-        if(checkpoints.length > nextCheckpointToReach+1){
-            var nextCheckpointPosition = checkpoints[nextCheckpointToReach+1].getPosition();
+        if (checkpoints.length > nextCheckpointToReach + 1) {
+            var nextCheckpointPosition = checkpoints[nextCheckpointToReach + 1].getPosition();
             double angleNextCheckpoint = Math.atan2(nextCheckpointPosition.getY() - boatPosition.getY(), nextCheckpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
-            if(clampAngle(angleNextCheckpoint)<0 && clampAngle(angleNextCheckpoint)>=clampAngle(-5*Math.PI/6)){
-                res = getGoalAngle() - (Math.atan2(((Circle)checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
-                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY()))/1.5);
+            if (clampAngle(angleNextCheckpoint) < 0 && clampAngle(angleNextCheckpoint) >= clampAngle(-5 * Math.PI / 6)) {
+                res = getGoalAngle() - (Math.atan2(((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
+                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY())) / 1.5);
             }
-            if(clampAngle(angleNextCheckpoint)>0 && clampAngle(angleNextCheckpoint)<=clampAngle(5*Math.PI/6)) {
+            if (clampAngle(angleNextCheckpoint) > 0 && clampAngle(angleNextCheckpoint) <= clampAngle(5 * Math.PI / 6)) {
                 res = getGoalAngle() + (Math.atan2(((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
-                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY()))/1.5);
+                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY())) / 1.5);
             }
         }
         return res;
