@@ -64,7 +64,7 @@ public class NavigationEngine {
         return actions;
     }
 
-    public List<Action> turnShipWithBestConfiguration() {
+    public List<Action> turnShipWithBestConfiguration() { //TODO too many lines!
         List<Action> actions = new ArrayList<>();
 
         OarConfiguration bestConf = findBestConfiguration();
@@ -116,7 +116,7 @@ public class NavigationEngine {
         return deckEngine.getSailorByEntity(sail);
     }
 
-    public List<Action> addSailAction() {
+    public List<Action> addSailAction() { //TODO too many lines!
         List<Action> actions = new ArrayList<>();
 
         Voile sail = findSail();
@@ -144,7 +144,7 @@ public class NavigationEngine {
                 + ((Rectangle) nextRound.getShip().getShape()).getHeight();
     }
 
-    public OarConfiguration findBestConfiguration() {
+    public OarConfiguration findBestConfiguration() { //TODO too many lines!
         double goalAngle = getGoalAngle();
         double bestGoalAngle = getBestAngle();
         var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
@@ -213,16 +213,16 @@ public class NavigationEngine {
                         (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle)ship.getShape()).getHeight()/2)));
     }
 
-    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){
+    public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship){ //TODO liskov substitution
         return getDistance(checkPoint,ship) <= ((Circle) checkPoint.getShape()).getRadius();
     }
 
-    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration){
+    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration){ //TODO liskov substitution
         double distance = getDistance(checkpoint,ship)-oarConfiguration.getSpeed();
         return distance <= ((Circle) checkpoint.getShape()).getRadius();
     }
 
-    private double getBestAngle(){
+    private double getBestAngle(){ //TODO too many lines! / liskov substitution
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
 
         var boatPosition = nextRound.getShip().getPosition();
@@ -247,7 +247,7 @@ public class NavigationEngine {
         return res;
     }
 
-    public double getGoalAngle() {
+    public double getGoalAngle() { //TODO too many lines!
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
 
         var boatPosition = nextRound.getShip().getPosition();

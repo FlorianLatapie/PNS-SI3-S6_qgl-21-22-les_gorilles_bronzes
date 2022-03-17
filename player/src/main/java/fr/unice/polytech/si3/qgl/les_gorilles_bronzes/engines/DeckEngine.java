@@ -52,7 +52,8 @@ public class DeckEngine {
     public List<Action> placeSailors(Entity entityToMatch) {
         return placeSailors(entities, entityToMatch);
     }
-    public List<Action> placeSailors(Entity[] search, Entity entityToMatch) {
+
+    public List<Action> placeSailors(Entity[] search, Entity entityToMatch) { //TODO too many lines
         List<Action> actions = new ArrayList<>();
 
         Arrays
