@@ -38,4 +38,21 @@ class RectangleTest {
         assertEquals(rectangle, rectangle2);
         assertEquals(rectangle.hashCode(), rectangle2.hashCode());
     }
+
+    @Test
+    void getWidthWithMarginTest(){
+        assertEquals(10, rectangle.getWidth());
+        assertEquals(20, rectangle.getWidthWithMargin());
+        rectangle.setMargin(5);
+        assertEquals(15, rectangle.getWidthWithMargin());
+    }
+
+    @Test
+    void getHeightWithMarginTest(){
+        assertEquals(20, rectangle.getHeight());
+        assertEquals(30, rectangle.getHeightWithMargin());
+        rectangle.setMargin(5);
+        assertEquals(25, rectangle.getHeightWithMargin());
+    }
+
 }

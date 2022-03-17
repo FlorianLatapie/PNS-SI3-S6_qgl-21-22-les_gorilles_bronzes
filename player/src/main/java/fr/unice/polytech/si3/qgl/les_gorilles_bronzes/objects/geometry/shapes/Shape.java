@@ -10,4 +10,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Rectangle.class, name = "rectangle")
 })
 public interface Shape {
+    double DEFAULT_MARGIN = 10;
 }
