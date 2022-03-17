@@ -25,4 +25,13 @@ jobs:
         java-version: 1.11
     - name: Run tests
       run: mvn test -P pitest
+    - name: Send email
+      uses: dawidd6/action-send-mail@v3.6.0
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        subject: Github Actions PITtest result
+        to: thomaspaul987@gmail.com
+        from: Thomas Paul
+        attachments: ./target/pit-reports/*
       
