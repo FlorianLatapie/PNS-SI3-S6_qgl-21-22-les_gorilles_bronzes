@@ -1,8 +1,9 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class GlobalEngine {
         actions.addAll(navigationEngine.computeNextRound(nextRound));
 
         round++;
-        System.out.println(actions);
+        Cockpit.log(actions);
         return actions.toArray(new Action[0]);
     }
 
