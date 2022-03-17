@@ -23,12 +23,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-    - name: Run tests
-      run: mvn test -P pitest
-    
     - name: Checkout
       uses: actions/checkout@v1
     - run: |
+        mvn test -P pitest
         zip -r pit-reports.zip target/pit-reports
         ls -l
     - name: Upload to slack step
