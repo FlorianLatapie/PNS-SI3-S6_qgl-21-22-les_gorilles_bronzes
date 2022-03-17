@@ -13,8 +13,10 @@ jobs:
   pitest:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
+    defaults:
+      run:
+        working-directory: ./player
     steps:
     - name: Run tests
-      run: |
-        pwd
+      run: mvn test -P pitest
       
