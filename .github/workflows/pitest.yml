@@ -31,5 +31,5 @@ jobs:
       uses: adrey/slack-file-upload-action@1.0.5
       with:
         token: xoxb-744038435863-3253611990165-l65US4wKUdXKcVfLVPHHPTI8
-        path: pit-reports.zip
+        path: player/pit-reports.zip
         channel: si3-qgl-21-22-les_gorilles_bronzes
