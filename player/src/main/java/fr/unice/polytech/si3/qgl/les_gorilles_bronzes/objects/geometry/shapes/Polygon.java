@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Polygon extends Shape {
     private double orientation;
     private Point[] vertices;
+    private double margin = -1;
 
     public double getOrientation() {
         return orientation;
@@ -34,19 +35,26 @@ public class Polygon extends Shape {
         for (var vertex : vertices) {
             if (vertex.getX() < leftMostValue) {
                 leftMostValue = vertex.getX();
-            }   else if (vertex.getX() > rightMostValue) {
+            } else if (vertex.getX() > rightMostValue) {
                 rightMostValue = vertex.getX();
-            }   else if (vertex.getY() < topMostValue) {
+            } else if (vertex.getY() < topMostValue) {
                 topMostValue = vertex.getY();
-            }   else if (vertex.getY() > bottomMostValue) {
+            } else if (vertex.getY() > bottomMostValue) {
                 bottomMostValue = vertex.getY();
             }
         }
 
         var width = rightMostValue - leftMostValue;
         var height = bottomMostValue - topMostValue;
-        
+
         return new Rectangle(width, height, orientation);
+    }
+
+    public double getMargin() {
+        if (margin == -1) {
+            margin = DEFAULT_MARGIN;
+        }
+        return margin;
     }
 
     @Override
