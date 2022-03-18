@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CircleTest {
     Circle circle;
+
     @BeforeEach
     void setUp() {
         circle = new Circle();
@@ -41,5 +43,17 @@ class CircleTest {
 
         circle.setMargin(0.5);
         assertEquals(1.5, circle.getRadiusWithMargin());
+    }
+
+    @Test
+    void toPolygonTest() {
+        int precision = 4;
+        Polygon polygon = circle.toPolygon(precision);
+        assertEquals(precision, polygon.getVertices().length);
+
+        assertEquals(new Point(1, 0), polygon.getVertices()[0]);
+        assertEquals(new Point(0, 1), polygon.getVertices()[1]);
+        assertEquals(new Point(-1, 0), polygon.getVertices()[2]);
+        assertEquals(new Point(0, -1), polygon.getVertices()[3]);
     }
 }

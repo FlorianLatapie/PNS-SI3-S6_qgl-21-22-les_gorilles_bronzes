@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
+
 import java.util.Objects;
 
 public class Circle extends Shape {
@@ -29,6 +31,22 @@ public class Circle extends Shape {
         return radius + getMargin();
     }
 
+    public Polygon toPolygon() {
+        return toPolygon(20);
+    }
+
+    public Polygon toPolygon(int nbOfPoints) {
+        Polygon polygon = new Polygon();
+        Point[] points = new Point[nbOfPoints];
+        double angle = 0;
+        for (int i = 0; i < nbOfPoints; i++) {
+            points[i] = new Point(radius * Math.cos(angle), radius * Math.sin(angle));
+            angle += 2 * Math.PI / nbOfPoints;
+        }
+        polygon.setVertices(points);
+        return polygon;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,4 +66,6 @@ public class Circle extends Shape {
                 "radius=" + radius +
                 '}';
     }
+
+
 }

@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
+
 import java.util.Objects;
 
 public class Rectangle extends Shape {
@@ -8,10 +10,10 @@ public class Rectangle extends Shape {
     private double orientation;
     private double margin = -1;
 
-    public Rectangle (){
+    public Rectangle() {
     }
 
-    public Rectangle (double width, double height, double orientation){
+    public Rectangle(double width, double height, double orientation) {
         this.width = width;
         this.height = height;
         this.orientation = orientation;
@@ -56,8 +58,20 @@ public class Rectangle extends Shape {
         return height + getMargin();
     }
 
-    public double getWidthWithMargin(){
+    public double getWidthWithMargin() {
         return width + getMargin();
+    }
+
+    public Polygon toPolygon() {
+        Polygon polygon = new Polygon();
+        Point[] vertices = new Point[4];
+        vertices[0] = new Point(-getWidth() / 2, -getHeight() / 2);
+        vertices[1] = new Point(getWidth() / 2, -getHeight() / 2);
+        vertices[2] = new Point(getWidth() / 2, getHeight() / 2);
+        vertices[3] = new Point(-getWidth() / 2, getHeight() / 2);
+        polygon.setVertices(vertices);
+        polygon.setOrientation(orientation);
+        return polygon;
     }
 
     @Override
