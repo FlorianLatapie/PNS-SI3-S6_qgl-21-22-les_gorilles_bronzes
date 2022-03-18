@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Polygon implements Shape {
+public class Polygon extends Shape {
     private double orientation;
     private Point[] vertices;
 
