@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 import java.util.Objects;
 
-public class Rectangle implements Shape {
+public class Rectangle extends Shape {
     private double width;
     private double height;
     private double orientation;

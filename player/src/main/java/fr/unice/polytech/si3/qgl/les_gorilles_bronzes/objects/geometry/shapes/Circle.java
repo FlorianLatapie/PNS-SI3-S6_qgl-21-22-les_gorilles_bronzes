@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 import java.util.Objects;
 
-public class Circle implements Shape {
+public class Circle extends Shape {
     private double radius;
     private double margin = -1;
 
