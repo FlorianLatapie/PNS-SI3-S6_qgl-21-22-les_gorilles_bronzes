@@ -62,4 +62,18 @@ class CircleTest {
         assertEquals(new Point(-1, 0), polygon.getVertices()[2]);
         assertEquals(new Point(0, -1), polygon.getVertices()[3]);
     }
+
+    @Test
+    void toPolygon2Test(){
+        int margin = 5;
+
+        circle.setMargin(margin);
+        Polygon polygon = circle.toPolygon();
+
+        assertEquals(margin, polygon.getMargin());
+
+        assertEquals(20, polygon.getVertices().length);
+
+        assertEquals(new Point(1, 0), polygon.getVertices()[0]);
+    }
 }

@@ -94,4 +94,9 @@ class PolygonTest {
         assertEquals(new Point(-7.499999999999997,-12.99038105676658), polygonWithMargin.getVertices()[2]);
     }
 
+    @Test
+    void toPolygonTest(){
+        assertEquals(polygon, polygon.toPolygon());
+    }
+
 }

@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,11 @@ class PointTest {
         Point point2 = new Point(1, 2);
         Point point3 = new Point(3, 4);
 
+        assertEquals(point, point);
+        assertEquals(point.hashCode(), point.hashCode());
+        assertNotEquals(point,null);
         assertEquals(point, point2);
+        assertEquals(point.hashCode(), point2.hashCode());
         assertNotEquals(point, point3);
     }
 
@@ -59,6 +64,11 @@ class PointTest {
     void normalizeTest(){
         Point point2 = new Point(4, 3);
         assertEquals(new Point(0.8,0.6), point2.normalize());
+
+
+        Point point3 = new Point(0, 0);
+        Throwable exception = assertThrows(Exception.class, () -> point3.normalize());
+        assertEquals("Cannot normalize a point with x and y equal to 0", exception.getMessage());
     }
 
     @Test
