@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PolygonTest {
     Polygon polygon;
@@ -37,8 +38,16 @@ class PolygonTest {
         polygon2.setOrientation(Math.PI / 2);
         polygon2.setVertices(new Point[]{new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 1)});
 
+        Polygon polygon3 = new Polygon();
+        polygon3.setOrientation(Math.PI / 2);
+        polygon3.setVertices(new Point[]{new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 2)});
+
+        assertEquals(polygon, polygon);
+        assertEquals(polygon.hashCode(), polygon.hashCode());
         assertEquals(polygon, polygon2);
         assertEquals(polygon.hashCode(), polygon2.hashCode());
+        assertNotEquals(polygon, polygon3);
+        assertNotEquals(polygon.hashCode(), polygon3.hashCode());
     }
 
     @Test

@@ -79,14 +79,14 @@ public class Rectangle extends Shape {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Rectangle)) return false;
         Rectangle rectangle = (Rectangle) o;
-        return Double.compare(rectangle.width, width) == 0 && Double.compare(rectangle.height, height) == 0 && Double.compare(rectangle.orientation, orientation) == 0;
+        return Double.compare(rectangle.getWidth(), getWidth()) == 0 && Double.compare(rectangle.getHeight(), getHeight()) == 0 && Double.compare(rectangle.getOrientation(), getOrientation()) == 0 && Double.compare(rectangle.getMargin(), getMargin()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(width, height, orientation);
+        return Objects.hash(getWidth(), getHeight(), getOrientation(), getMargin());
     }
 
     @Override

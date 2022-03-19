@@ -40,6 +40,7 @@ class PointTest {
         assertEquals(point, point2);
         assertEquals(point.hashCode(), point2.hashCode());
         assertNotEquals(point, point3);
+        assertNotEquals(point.hashCode(), point3.hashCode());
     }
 
     @Test

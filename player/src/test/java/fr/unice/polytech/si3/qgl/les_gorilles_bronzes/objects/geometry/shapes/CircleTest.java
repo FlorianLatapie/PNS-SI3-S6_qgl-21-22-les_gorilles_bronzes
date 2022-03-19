@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class CircleTest {
     Circle circle;
@@ -32,8 +33,16 @@ class CircleTest {
     void equalsTest() {
         Circle circle2 = new Circle();
         circle2.setRadius(1.0);
+
+        Circle circle3 = new Circle();
+        circle3.setRadius(2.0);
+
+        assertEquals(circle, circle);
+        assertEquals(circle.hashCode(), circle.hashCode());
         assertEquals(circle, circle2);
         assertEquals(circle.hashCode(), circle2.hashCode());
+        assertNotEquals(circle, circle3);
+        assertNotEquals(circle.hashCode(), circle3.hashCode());
     }
 
     @Test

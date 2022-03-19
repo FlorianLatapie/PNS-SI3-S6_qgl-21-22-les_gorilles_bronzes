@@ -76,15 +76,15 @@ public class Polygon extends Shape {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Polygon)) return false;
         Polygon polygon = (Polygon) o;
-        return Double.compare(polygon.orientation, orientation) == 0 && Arrays.equals(vertices, polygon.vertices);
+        return Double.compare(polygon.getOrientation(), getOrientation()) == 0 && Double.compare(polygon.getMargin(), getMargin()) == 0 && Arrays.equals(getVertices(), polygon.getVertices());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(orientation);
-        result = 31 * result + Arrays.hashCode(vertices);
+        int result = Objects.hash(getOrientation(), getMargin());
+        result = 31 * result + Arrays.hashCode(getVertices());
         return result;
     }
 
