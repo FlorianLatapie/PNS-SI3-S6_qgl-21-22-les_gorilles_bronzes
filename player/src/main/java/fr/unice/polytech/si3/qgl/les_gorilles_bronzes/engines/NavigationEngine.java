@@ -4,16 +4,19 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.ArrayList;
@@ -31,6 +34,9 @@ public class NavigationEngine {
     private NextRound nextRound;
     private DeckEngine deckEngine;
     private int nextCheckpointToReach = 0;
+    private Point nextPoint;
+    private double nextPointRadius;
+    private Point nextPoint2;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
@@ -43,6 +49,7 @@ public class NavigationEngine {
 
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
+        // TODO add vigie action
 
         return actions;
     }
@@ -206,19 +213,25 @@ public class NavigationEngine {
                 checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
     }
 
-    public double getDistance(Checkpoint checkPoint, Ship ship) {
-        return Math.hypot(checkPoint.getPosition().getX() - (ship.getPosition().getX() +
-                        (Math.sin(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2))
-                , checkPoint.getPosition().getY() - (ship.getPosition().getY() +
-                        (Math.cos(ship.getPosition().getOrientation()) * ((Rectangle) ship.getShape()).getHeight() / 2)));
+    public double getDistanceToCheckpoint(Checkpoint checkPoint, Ship ship) {
+        double checkX = checkPoint.getPosition().getX();
+        double checkY = checkPoint.getPosition().getY();
+
+        double shipX = ship.getPosition().getX();
+        double shipY = ship.getPosition().getY();
+        double shipOrientation = ship.getPosition().getOrientation();
+
+
+        return Math.hypot(checkX - (shipX + (Math.sin(shipOrientation) * ((Rectangle) ship.getShape()).getHeight() / 2)),
+                checkY - (shipY + (Math.cos(shipOrientation) * ((Rectangle) ship.getShape()).getHeight() / 2)));
     }
 
     public boolean isShipInsideCheckpoint(Checkpoint checkPoint, Ship ship) {
-        return getDistance(checkPoint, ship) <= ((Circle) checkPoint.getShape()).getRadius();
+        return getDistanceToCheckpoint(checkPoint, ship) <= ((Circle) checkPoint.getShape()).getRadius();
     }
 
     public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration) {
-        double distance = getDistance(checkpoint, ship) - oarConfiguration.getSpeed();
+        double distance = getDistanceToCheckpoint(checkpoint, ship) - oarConfiguration.getSpeed();
         return distance <= ((Circle) checkpoint.getShape()).getRadius();
     }
 
@@ -229,19 +242,20 @@ public class NavigationEngine {
 
         updateCheckPointToReach(checkpoints, nextRound.getShip());
 
-        var checkpointPosition = checkpoints[nextCheckpointToReach].getPosition();
+        var checkpointPosition = nextPoint;
         double res = getGoalAngle();
 
-        if (checkpoints.length > nextCheckpointToReach + 1) {
-            var nextCheckpointPosition = checkpoints[nextCheckpointToReach + 1].getPosition();
-            double angleNextCheckpoint = Math.atan2(nextCheckpointPosition.getY() - boatPosition.getY(), nextCheckpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
-            if (clampAngle(angleNextCheckpoint) < 0 && clampAngle(angleNextCheckpoint) >= clampAngle(-5 * Math.PI / 6)) {
-                res = getGoalAngle() - (Math.atan2(((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
-                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY())) / 1.5);
-            }
-            if (clampAngle(angleNextCheckpoint) > 0 && clampAngle(angleNextCheckpoint) <= clampAngle(5 * Math.PI / 6)) {
-                res = getGoalAngle() + (Math.atan2(((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius(), Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX()
-                        , checkpointPosition.getY() - nextRound.getShip().getPosition().getY())) / 1.5);
+        if (nextPoint2 != null) {
+            var nextCheckpointPosition = nextPoint2;
+            double angleNextCheckpoint =
+                    Math.atan2(nextCheckpointPosition.getY() - boatPosition.getY(), nextCheckpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
+            double delta = Math.atan2(nextPointRadius, Math.hypot(checkpointPosition.getX() - nextRound.getShip().getPosition().getX(),
+                    checkpointPosition.getY() - nextRound.getShip().getPosition().getY())) / 1.5;
+            double clamped = clampAngle(angleNextCheckpoint);
+            if (clamped < 0 && clamped >= clampAngle(-5 * Math.PI / 6)) {
+                res = getGoalAngle() - delta;
+            } else if (clamped > 0 && clamped <= clampAngle(5 * Math.PI / 6)) {
+                res = getGoalAngle() + delta;
             }
         }
         return res;
@@ -254,7 +268,7 @@ public class NavigationEngine {
 
         updateCheckPointToReach(checkpoints, nextRound.getShip());
 
-        var checkpointPosition = checkpoints[nextCheckpointToReach].getPosition();
+        var checkpointPosition = nextPoint;
 
         var res = Math.atan2(checkpointPosition.getY() - boatPosition.getY(), checkpointPosition.getX() - boatPosition.getX()) - boatPosition.getOrientation();
 
@@ -272,9 +286,58 @@ public class NavigationEngine {
                 }
             }
         }
+        nextPoint = checkpoints[nextCheckpointToReach].getPosition();
+        if (nextCheckpointToReach + 1 < checkpoints.length) {
+            nextPoint2 = checkpoints[nextCheckpointToReach + 1].getPosition();
+            nextPointRadius = ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius();
+        }else {
+            nextPoint2 = null;
+        }
+
+        // check whether the line (ship position ; nextPoint) intersects with something
+        if (false) { // intersectsWithSomething(shipPosition, nextPoint)
+            //TODO
+            // if yes: perform pathfinding and update nextPoint accordingly
+            updateGraph();
+        }
     }
 
     public int getNextCheckpointToReach() {
         return nextCheckpointToReach;
+    }
+
+    public void updateGraph() {
+        Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
+        List<Node> nodes = new ArrayList<>();
+
+        Node ship = new Node(nextRound.getShip().getPosition());
+        ship.g = 0;
+        nodes.add(ship);
+
+        Node checkpoint = new Node(checkpoints[nextCheckpointToReach].getPosition());
+        nodes.add(checkpoint);
+
+        ship.addBranch(1, checkpoint);
+
+        for (VisibleEntity visibleEntity : nextRound.getVisibleEntities()) {
+            for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin().getVertices()) {
+                nodes.add(new Node(point));
+            }
+        }
+
+        var path = ship.findPathTo(checkpoint);
+
+        nextPoint = path.get(1);
+        nextPoint2 = null;
+        /*if (path.size() > 2) {
+            nextPoint2 = path.get(2);
+            nextPointRadius = 0;
+        }
+        else {
+            nextPoint2 = null;
+            nextPointRadius = ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius();
+        }*/
+        // le bato doit aller à nextPoint
+        //printGraph(ship);
     }
 }

@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.enginesTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
@@ -11,9 +10,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -104,7 +101,7 @@ class NavigationEngineTest {
         position.setY(nextRound.getShip().getPosition().getY() + ((Rectangle)nextRound.getShip().getShape()).getHeight()/2 + 50);
         checkpoint.setPosition(position);
 
-        assertEquals(50, navigationEngine.getDistance(checkpoint, nextRound.getShip()));
+        assertEquals(50, navigationEngine.getDistanceToCheckpoint(checkpoint, nextRound.getShip()));
     }
 
     @Test
