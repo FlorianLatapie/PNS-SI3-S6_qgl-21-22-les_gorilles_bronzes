@@ -36,4 +36,39 @@ class PointTest {
         assertEquals(point, point2);
         assertNotEquals(point, point3);
     }
+
+    @Test
+    void distanceToTest(){
+        Point point2 = new Point(3, 4);
+        assertEquals(2.8284271247461903, point.distanceTo(point2));
+
+        point2 = new Point(1, 2);
+        assertEquals(0, point.distanceTo(point2));
+    }
+
+    @Test
+    void getAngleToTest(){
+        Point point2 = new Point(3, 4);
+        assertEquals(Math.PI/4, point.getAngleTo(point2));
+
+        point2 = new Point(1, 2);
+        assertEquals(0, point.getAngleTo(point2));
+    }
+
+    @Test
+    void normalizeTest(){
+        Point point2 = new Point(4, 3);
+        assertEquals(new Point(0.8,0.6), point2.normalize());
+    }
+
+    @Test
+    void addTest(){
+        Point point2 = new Point(3, 4);
+        assertEquals(new Point(4, 6), point.add(point2));
+    }
+
+    @Test
+    void multiplyTest(){
+        assertEquals(new Point(2, 4), point.multiply(2));
+    }
 }

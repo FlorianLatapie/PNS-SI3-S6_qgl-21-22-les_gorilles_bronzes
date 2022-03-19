@@ -59,8 +59,13 @@ class RectangleTest {
 
     @Test
     void toPolygonTest() {
+        int margin = 5;
+        rectangle.setMargin(margin);
         Polygon polygon = rectangle.toPolygon();
-        assertEquals(4, polygon.getVertices().length);
+
+        assertEquals(margin, polygon.getMargin());
+
+        assertEquals(4, polygon.getVertices().length);;
 
         assertEquals(new Point(-5, -10), polygon.getVertices()[0]);
         assertEquals(new Point(5, -10), polygon.getVertices()[1]);

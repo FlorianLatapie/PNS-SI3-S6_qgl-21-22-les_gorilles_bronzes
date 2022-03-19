@@ -44,6 +44,9 @@ class UtilTest {
     void areTheseDoubleAboutEqual() {
         assertEquals(true, Util.areTheseDoubleAboutEqual(0.0, 0.0));
         assertEquals(false, Util.areTheseDoubleAboutEqual(2e-6, 0.0));
-
+        assertEquals(false, Util.areTheseDoubleAboutEqual(1.0, 1e-6));
+        assertEquals(true, Util.areTheseDoubleAboutEqual(0.4e-6, 0.4e-6));
+        assertEquals(false, Util.areTheseDoubleAboutEqual(10, 50));
+        assertEquals(true, Util.areTheseDoubleAboutEqual(1e-6, 1e-6));
     }
 }

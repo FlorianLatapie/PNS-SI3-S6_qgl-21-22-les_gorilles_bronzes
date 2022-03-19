@@ -11,4 +11,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Shape {
     public static final double DEFAULT_MARGIN = 10;
+
+    public abstract Polygon toPolygon();
 }

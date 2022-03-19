@@ -31,6 +31,7 @@ public class Circle extends Shape {
         return radius + getMargin();
     }
 
+    @Override
     public Polygon toPolygon() {
         return toPolygon(20);
     }
@@ -44,6 +45,7 @@ public class Circle extends Shape {
             angle += 2 * Math.PI / nbOfPoints;
         }
         polygon.setVertices(points);
+        polygon.setMargin(margin);
         return polygon;
     }
 

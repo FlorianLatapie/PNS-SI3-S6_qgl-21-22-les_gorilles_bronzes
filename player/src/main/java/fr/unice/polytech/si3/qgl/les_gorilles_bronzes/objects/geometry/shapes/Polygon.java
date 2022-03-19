@@ -50,11 +50,27 @@ public class Polygon extends Shape {
         return new Rectangle(width, height, orientation);
     }
 
+    public void setMargin(double margin) {
+        this.margin = margin;
+    }
+
     public double getMargin() {
         if (margin == -1) {
             margin = DEFAULT_MARGIN;
         }
         return margin;
+    }
+
+    public Polygon getPolygonWithMargin() {
+        Point origin = new Point(0, 0);
+        Point[] verticesWithMargin = new Point[vertices.length];
+        for (int i = 0; i < vertices.length; i++) {
+            verticesWithMargin[i] = vertices[i].add(vertices[i].normalize().multiply(getMargin()));
+        }
+        Polygon result = new Polygon();
+        result.setVertices(verticesWithMargin);
+        result.orientation = orientation;
+        return result;
     }
 
     @Override
@@ -78,5 +94,10 @@ public class Polygon extends Shape {
                 "orientation=" + orientation +
                 ", vertices=" + Arrays.toString(vertices) +
                 '}';
+    }
+
+    @Override
+    public Polygon toPolygon() {
+        return this;
     }
 }
