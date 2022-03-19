@@ -295,15 +295,20 @@ public class NavigationEngine {
 
         // check whether the line (ship position ; nextPoint) intersects with something
         //if (checkInTheWay(ship.getPosition(), nextPoint)) {
-            updateGraph();
+        updateGraph();
         //}
     }
 
     private boolean checkInTheWay(Point a, Point b) {
-        return Arrays.stream(nextRound.getVisibleEntities()).anyMatch(e -> {
-            // TODO : handle streams
-            return e.intersects(a, b) && e instanceof EnemyEntity;
-        });
+        VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
+        if (visibleEntities != null) {
+            return Arrays.stream(visibleEntities).anyMatch(e -> {
+                // TODO : handle streams
+                return e.intersects(a, b) && e instanceof EnemyEntity;
+            });
+        } else {
+            return true;
+        }
     }
 
     public int getNextCheckpointToReach() {
@@ -321,9 +326,13 @@ public class NavigationEngine {
         Node checkpoint = new Node(checkpoints[nextCheckpointToReach].getPosition());
         nodes.add(checkpoint);
 
-        for (VisibleEntity visibleEntity : nextRound.getVisibleEntities()) {
-            for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
-                nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
+
+        VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
+        if (visibleEntities != null) {
+            for (VisibleEntity visibleEntity : visibleEntities) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
+                    nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
+                }
             }
         }
 
