@@ -48,7 +48,13 @@ class CircleTest {
     @Test
     void toPolygonTest() {
         int precision = 4;
+        int margin = 5;
+
+        circle.setMargin(margin);
         Polygon polygon = circle.toPolygon(precision);
+
+        assertEquals(margin, polygon.getMargin());
+
         assertEquals(precision, polygon.getVertices().length);
 
         assertEquals(new Point(1, 0), polygon.getVertices()[0]);

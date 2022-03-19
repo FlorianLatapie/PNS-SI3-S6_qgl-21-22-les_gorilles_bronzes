@@ -62,6 +62,7 @@ public class Rectangle extends Shape {
         return width + getMargin();
     }
 
+    @Override
     public Polygon toPolygon() {
         Polygon polygon = new Polygon();
         Point[] vertices = new Point[4];
@@ -71,6 +72,7 @@ public class Rectangle extends Shape {
         vertices[3] = new Point(-getWidth() / 2, getHeight() / 2);
         polygon.setVertices(vertices);
         polygon.setOrientation(orientation);
+        polygon.setMargin(margin);
         return polygon;
     }
 
