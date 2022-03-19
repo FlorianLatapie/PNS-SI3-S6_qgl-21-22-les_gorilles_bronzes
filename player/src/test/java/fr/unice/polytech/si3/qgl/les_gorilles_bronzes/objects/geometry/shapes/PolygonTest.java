@@ -90,10 +90,9 @@ class PolygonTest {
     void getPolygonWithMarginTest(){
         Circle circle = new Circle();
         circle.setRadius(10);
-        circle.setMargin(5);
 
         Polygon polygon = circle.toPolygon(3);
-        Polygon polygonWithMargin = polygon.getPolygonWithMargin();
+        Polygon polygonWithMargin = polygon.getPolygonWithMargin(5);
 
         assertEquals(3, polygon.getVertices().length);
         assertEquals(3, polygonWithMargin.getVertices().length);

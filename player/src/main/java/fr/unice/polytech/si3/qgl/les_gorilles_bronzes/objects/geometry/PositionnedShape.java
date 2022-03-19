@@ -21,4 +21,16 @@ public abstract class PositionnedShape {
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+
+    public boolean intersects(Point a, Point b) {
+        // convert points to local coordinates
+        a = a.substract(position).rotateBy(-position.getOrientation());
+        b = b.substract(position).rotateBy(-position.getOrientation());
+
+        return shape.intersects(a, b);
+    }
+
+    public Point toGlobalCoordinates(Point point) {
+        return point.rotateBy(position.getOrientation()).add(position);
+    }
 }

@@ -52,35 +52,21 @@ class RectangleTest {
     }
 
     @Test
-    void getWidthWithMarginTest() {
-        assertEquals(10, rectangle.getWidth());
-        assertEquals(20, rectangle.getWidthWithMargin());
-        rectangle.setMargin(5);
-        assertEquals(15, rectangle.getWidthWithMargin());
-    }
-
-    @Test
-    void getHeightWithMarginTest() {
-        assertEquals(20, rectangle.getHeight());
-        assertEquals(30, rectangle.getHeightWithMargin());
-        rectangle.setMargin(5);
-        assertEquals(25, rectangle.getHeightWithMargin());
-    }
-
-    @Test
     void toPolygonTest() {
-        int margin = 5;
-        rectangle.setMargin(margin);
         Polygon polygon = rectangle.toPolygon();
 
-        assertEquals(margin, polygon.getMargin());
         assertEquals(rectangle.getOrientation(), polygon.getOrientation());
 
         assertEquals(4, polygon.getVertices().length);;
 
-        assertEquals(new Point(-5, -10), polygon.getVertices()[0]);
+        /*assertEquals(new Point(-5, -10), polygon.getVertices()[0]);
         assertEquals(new Point(5, -10), polygon.getVertices()[1]);
         assertEquals(new Point(5, 10), polygon.getVertices()[2]);
-        assertEquals(new Point(-5, 10), polygon.getVertices()[3]);
+        assertEquals(new Point(-5, 10), polygon.getVertices()[3]);*/
+
+        assertEquals(new Point(-10, -5), polygon.getVertices()[0]);
+        assertEquals(new Point(10, -5), polygon.getVertices()[1]);
+        assertEquals(new Point(10, 5), polygon.getVertices()[2]);
+        assertEquals(new Point(-10, 5), polygon.getVertices()[3]);
     }
 }
