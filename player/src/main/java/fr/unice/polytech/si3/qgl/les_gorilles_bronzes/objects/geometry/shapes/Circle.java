@@ -52,14 +52,14 @@ public class Circle extends Shape {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Circle)) return false;
         Circle circle = (Circle) o;
-        return Double.compare(circle.radius, radius) == 0;
+        return Double.compare(circle.getRadius(), getRadius()) == 0 && Double.compare(circle.getMargin(), getMargin()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(radius);
+        return Objects.hash(getRadius(), getMargin());
     }
 
     @Override
