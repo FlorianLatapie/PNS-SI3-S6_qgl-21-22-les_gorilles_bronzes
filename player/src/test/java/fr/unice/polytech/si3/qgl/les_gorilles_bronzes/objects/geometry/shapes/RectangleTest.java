@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class RectangleTest {
     Rectangle rectangle;
@@ -37,8 +38,17 @@ class RectangleTest {
         rectangle2.setHeight(20);
         rectangle2.setOrientation(Math.PI / 2);
 
+        Rectangle rectangle3 = new Rectangle();
+        rectangle3.setWidth(11);
+        rectangle3.setHeight(21);
+        rectangle3.setOrientation(Math.PI / 3);
+
+        assertEquals(rectangle, rectangle);
+        assertEquals(rectangle.hashCode(), rectangle.hashCode());
         assertEquals(rectangle, rectangle2);
         assertEquals(rectangle.hashCode(), rectangle2.hashCode());
+        assertNotEquals(rectangle, rectangle3);
+        assertNotEquals(rectangle.hashCode(), rectangle3.hashCode());
     }
 
     @Test
@@ -64,6 +74,7 @@ class RectangleTest {
         Polygon polygon = rectangle.toPolygon();
 
         assertEquals(margin, polygon.getMargin());
+        assertEquals(rectangle.getOrientation(), polygon.getOrientation());
 
         assertEquals(4, polygon.getVertices().length);;
 
