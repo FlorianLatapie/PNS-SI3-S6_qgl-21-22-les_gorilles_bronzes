@@ -8,7 +8,6 @@ public class Rectangle extends Shape {
     private double width;
     private double height;
     private double orientation;
-    private double margin = -1;
 
     public Rectangle() {
     }
@@ -43,36 +42,16 @@ public class Rectangle extends Shape {
         this.orientation = orientation;
     }
 
-    public double getMargin() {
-        if (margin == -1) {
-            margin = DEFAULT_MARGIN;
-        }
-        return margin;
-    }
-
-    public void setMargin(double margin) {
-        this.margin = margin;
-    }
-
-    public double getHeightWithMargin() {
-        return height + getMargin();
-    }
-
-    public double getWidthWithMargin() {
-        return width + getMargin();
-    }
-
     @Override
     public Polygon toPolygon() {
         Polygon polygon = new Polygon();
         Point[] vertices = new Point[4];
-        vertices[0] = new Point(-getWidth() / 2, -getHeight() / 2);
-        vertices[1] = new Point(getWidth() / 2, -getHeight() / 2);
-        vertices[2] = new Point(getWidth() / 2, getHeight() / 2);
-        vertices[3] = new Point(-getWidth() / 2, getHeight() / 2);
+        vertices[0] = new Point(-getHeight() / 2, -getWidth() / 2);
+        vertices[1] = new Point(getHeight() / 2, -getWidth() / 2);
+        vertices[2] = new Point(getHeight() / 2, getWidth() / 2);
+        vertices[3] = new Point(-getHeight() / 2, getWidth() / 2);
         polygon.setVertices(vertices);
         polygon.setOrientation(orientation);
-        polygon.setMargin(margin);
         return polygon;
     }
 
@@ -81,12 +60,12 @@ public class Rectangle extends Shape {
         if (this == o) return true;
         if (!(o instanceof Rectangle)) return false;
         Rectangle rectangle = (Rectangle) o;
-        return Double.compare(rectangle.getWidth(), getWidth()) == 0 && Double.compare(rectangle.getHeight(), getHeight()) == 0 && Double.compare(rectangle.getOrientation(), getOrientation()) == 0 && Double.compare(rectangle.getMargin(), getMargin()) == 0;
+        return Double.compare(rectangle.getWidth(), getWidth()) == 0 && Double.compare(rectangle.getHeight(), getHeight()) == 0 && Double.compare(rectangle.getOrientation(), getOrientation()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getWidth(), getHeight(), getOrientation(), getMargin());
+        return Objects.hash(getWidth(), getHeight(), getOrientation());
     }
 
     @Override
@@ -96,5 +75,10 @@ public class Rectangle extends Shape {
                 ", height=" + height +
                 ", orientation=" + orientation +
                 '}';
+    }
+
+    @Override
+    public boolean intersects(Point a, Point b) {
+        return toPolygon().intersects(a, b);
     }
 }

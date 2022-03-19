@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Rectangle.class, name = "rectangle")
 })
 public abstract class Shape {
-    public static final double DEFAULT_MARGIN = 10;
-
     public abstract Polygon toPolygon();
+
+    public abstract boolean intersects(Point a, Point b);
 }

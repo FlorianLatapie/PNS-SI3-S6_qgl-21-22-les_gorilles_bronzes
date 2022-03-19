@@ -33,8 +33,7 @@ class DeckEngineTest {
     Path pathInitGame = Paths.get((System.getProperty("user.dir")+ "/src/test/java/fr/unice/polytech/si3/qgl/les_gorilles_bronzes/jsonForTest/InitGame.json"));
     Cockpit cockpit;
 
-    public static String readFileAsString(Path file)throws Exception
-    {
+    public static String readFileAsString(Path file)throws Exception {
         return new String(Files.readAllBytes(file));
     }
 

@@ -2,29 +2,24 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
-
+import java.util.*;
+//https://stackabuse.com/graphs-in-java-a-star-algorithm/
 public class Node implements Comparable<Node> {
     // Id for readability of result purposes
     private static int idCounter = 0;
-    public Point id;
-
+    public Point point;
+    private int internalId;
     // Parent in the path
     public Node parent = null;
 
-    public List<Edge> neighbors;
+    public Map<Node, Double> neighbors;
 
-    // Evaluation functions
-    public double f = Double.MAX_VALUE;
     public double g = Double.MAX_VALUE;
 
-
     public Node(Point id){
-        this.id = id;
-        this.neighbors = new ArrayList<>();
+        this.point = id;
+        this.neighbors = new HashMap<>();
+        this.internalId = idCounter++;
     }
 
     public List<Point> findPathTo(Node target) {
@@ -36,23 +31,23 @@ public class Node implements Comparable<Node> {
         while (!openList.isEmpty()) {
             Node n = openList.peek();
             if (n == target) {
-                Node n1 = this;
+                Node n1 = target;
 
                 List<Point> ids = new ArrayList<>();
 
                 while (n1.parent != null) {
-                    ids.add(n1.id);
+                    ids.add(n1.point);
                     n1 = n1.parent;
                 }
-                ids.add(n1.id);
+                ids.add(n1.point);
                 Collections.reverse(ids);
 
                 return ids;
             }
 
-            for (Edge edge : n.neighbors) {
-                Node m = edge.node;
-                double totalWeight = n.g + edge.weight;
+            for (var edge : n.neighbors.entrySet()) {
+                Node m = edge.getKey();
+                double totalWeight = n.g + edge.getValue();
 
                 if (!openList.contains(m) && !closedList.contains(m)) {
                     m.parent = n;
@@ -79,21 +74,20 @@ public class Node implements Comparable<Node> {
 
     @Override
     public int compareTo(Node n) {
-        return Double.compare(this.g, n.g);
+        return (this == n) ? 0 : Comparator.<Node>comparingDouble(x -> x.g)
+                .thenComparingInt(x -> x.internalId).compare(this, n);
     }
 
-    public static class Edge {
-        Edge(double weight, Node node){
-            this.weight = weight;
-            this.node = node;
+    public boolean addBranch(Node node){
+        if (neighbors.containsKey(node)){
+            return false;
         }
-
-        public double weight;
-        public Node node;
+        neighbors.put(node, point.distanceTo(node.point));
+        return true;
     }
 
-    public void addBranch(double weight, Node node){
-        Edge newEdge = new Edge(weight, node);
-        neighbors.add(newEdge);
+    @Override
+    public int hashCode() {
+        return internalId;
     }
 }

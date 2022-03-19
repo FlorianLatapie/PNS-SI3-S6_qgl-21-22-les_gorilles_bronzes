@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class Circle extends Shape {
     private double radius;
-    private double margin = -1;
 
     public double getRadius() {
         return radius;
@@ -14,21 +13,6 @@ public class Circle extends Shape {
 
     public void setRadius(double radius) {
         this.radius = radius;
-    }
-
-    public double getMargin() {
-        if (margin == -1) {
-            margin = DEFAULT_MARGIN;
-        }
-        return margin;
-    }
-
-    public void setMargin(double margin) {
-        this.margin = margin;
-    }
-
-    public double getRadiusWithMargin() {
-        return radius + getMargin();
     }
 
     @Override
@@ -45,7 +29,6 @@ public class Circle extends Shape {
             angle += 2 * Math.PI / nbOfPoints;
         }
         polygon.setVertices(points);
-        polygon.setMargin(margin);
         return polygon;
     }
 
@@ -54,12 +37,12 @@ public class Circle extends Shape {
         if (this == o) return true;
         if (!(o instanceof Circle)) return false;
         Circle circle = (Circle) o;
-        return Double.compare(circle.getRadius(), getRadius()) == 0 && Double.compare(circle.getMargin(), getMargin()) == 0;
+        return Double.compare(circle.getRadius(), getRadius()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRadius(), getMargin());
+        return Objects.hash(radius);
     }
 
     @Override
@@ -69,5 +52,38 @@ public class Circle extends Shape {
                 '}';
     }
 
+    //https://www.desmos.com/calculator/qagzzrbcx1?lang=fr
+    @Override
+    public boolean intersects(Point e, Point l) {
+        var rad = radius ;
+        var d = l.substract(e);
 
+        // find intersection point between line and perpendicular line crossing the center
+        double a = d.dotProduct(d);
+        double b = 2 * e.dotProduct(d);
+        double c = e.dotProduct(e) - rad * rad;
+
+        double discriminant = b * b - 4 * a * c;
+
+        // if line intersects then the point is inside the circle and discriminant is positive
+        if (discriminant >= 0) {
+            discriminant = Math.sqrt(discriminant);
+
+            // t1 gives first intersection point
+            double t1 = (-b - discriminant) / (2 * a);
+
+            // if t1 is in [0,1] then intersection point is valid
+            if (t1 >= 0 && t1 <= 1) {
+                return true;
+            }
+            // t2 gives second intersection point
+            double t2 = (-b + discriminant) / (2 * a);
+
+            if (t2 >= 0 && t2 <= 1) {
+                return true;
+            }
+            // if both intersection points are outside [0,1] then line is not intersecting
+        }
+        return false;
+    }
 }

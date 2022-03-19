@@ -73,7 +73,28 @@ public class Point {
         return new Point(this.getX() + p.getX(), this.getY() + p.getY());
     }
 
+    public Point substract(Point p) {
+        return new Point(this.getX() - p.getX(), this.getY() - p.getY());
+    }
+
     public Point multiply(double d) {
         return new Point(this.getX() * d, this.getY() * d);
+    }
+
+    public double dotProduct(Point p) {
+        return this.getX() * p.getX() + this.getY() * p.getY();
+    }
+
+    public double crossProduct(Point other) {
+        return this.getX() * other.getY() - this.getY() * other.getX();
+    }
+
+    public Point rotateBy(double theta) {
+        if (theta == 0) {
+            return this;
+        }
+        double cos = Math.cos(theta);
+        double sin = Math.sin(theta);
+        return new Point(this.getX() * cos - this.getY() * sin, this.getX() * sin + this.getY() * cos);
     }
 }

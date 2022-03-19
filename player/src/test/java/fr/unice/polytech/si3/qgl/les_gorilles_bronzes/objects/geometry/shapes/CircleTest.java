@@ -46,23 +46,11 @@ class CircleTest {
     }
 
     @Test
-    void getRadiusWithMarginTest() {
-        circle.setRadius(1.0);
-        assertEquals(11.0, circle.getRadiusWithMargin());
-
-        circle.setMargin(0.5);
-        assertEquals(1.5, circle.getRadiusWithMargin());
-    }
-
-    @Test
     void toPolygonTest() {
         int precision = 4;
         int margin = 5;
 
-        circle.setMargin(margin);
         Polygon polygon = circle.toPolygon(precision);
-
-        assertEquals(margin, polygon.getMargin());
 
         assertEquals(precision, polygon.getVertices().length);
 
@@ -76,10 +64,7 @@ class CircleTest {
     void toPolygon2Test(){
         int margin = 5;
 
-        circle.setMargin(margin);
         Polygon polygon = circle.toPolygon();
-
-        assertEquals(margin, polygon.getMargin());
 
         assertEquals(20, polygon.getVertices().length);
 

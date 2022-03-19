@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Polygon extends Shape {
     private double orientation;
     private Point[] vertices;
-    private double margin = -1;
 
     public double getOrientation() {
         return orientation;
@@ -50,22 +49,10 @@ public class Polygon extends Shape {
         return new Rectangle(width, height, orientation);
     }
 
-    public void setMargin(double margin) {
-        this.margin = margin;
-    }
-
-    public double getMargin() {
-        if (margin == -1) {
-            margin = DEFAULT_MARGIN;
-        }
-        return margin;
-    }
-
-    public Polygon getPolygonWithMargin() {
-        Point origin = new Point(0, 0);
+    public Polygon getPolygonWithMargin(double margin) {
         Point[] verticesWithMargin = new Point[vertices.length];
         for (int i = 0; i < vertices.length; i++) {
-            verticesWithMargin[i] = vertices[i].add(vertices[i].normalize().multiply(getMargin()));
+            verticesWithMargin[i] = vertices[i].add(vertices[i].normalize().multiply(margin));
         }
         Polygon result = new Polygon();
         result.setVertices(verticesWithMargin);
@@ -78,12 +65,12 @@ public class Polygon extends Shape {
         if (this == o) return true;
         if (!(o instanceof Polygon)) return false;
         Polygon polygon = (Polygon) o;
-        return Double.compare(polygon.getOrientation(), getOrientation()) == 0 && Double.compare(polygon.getMargin(), getMargin()) == 0 && Arrays.equals(getVertices(), polygon.getVertices());
+        return Double.compare(polygon.getOrientation(), getOrientation()) == 0 && Arrays.equals(getVertices(), polygon.getVertices());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getOrientation(), getMargin());
+        int result = Objects.hash(getOrientation());
         result = 31 * result + Arrays.hashCode(getVertices());
         return result;
     }
@@ -99,5 +86,27 @@ public class Polygon extends Shape {
     @Override
     public Polygon toPolygon() {
         return this;
+    }
+
+    private static double distanceToLine(Point a, Point b, Point p) {
+        var ba = b.substract(a);
+        var pa = p.substract(a);
+        return ba.crossProduct(pa);
+    }
+
+    @Override
+    public boolean intersects(Point p1, Point p2) {
+        int j = vertices.length - 1;
+        for (int i = 0; i < vertices.length; j = i++) {
+            Point current = vertices[i];
+            Point next = vertices[j];
+
+            if (distanceToLine(current, p1, p2) * distanceToLine(next, p1, p2) < 0 &&
+                    distanceToLine(current, next, p1) * distanceToLine(current, next, p2) < 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

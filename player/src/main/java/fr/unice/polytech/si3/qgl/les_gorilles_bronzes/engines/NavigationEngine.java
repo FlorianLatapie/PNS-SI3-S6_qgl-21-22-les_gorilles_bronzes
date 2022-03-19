@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
@@ -10,6 +11,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Re
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.EnemyEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
@@ -19,10 +21,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -290,16 +289,21 @@ public class NavigationEngine {
         if (nextCheckpointToReach + 1 < checkpoints.length) {
             nextPoint2 = checkpoints[nextCheckpointToReach + 1].getPosition();
             nextPointRadius = ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius();
-        }else {
+        } else {
             nextPoint2 = null;
         }
 
         // check whether the line (ship position ; nextPoint) intersects with something
-        if (false) { // intersectsWithSomething(shipPosition, nextPoint)
-            //TODO
-            // if yes: perform pathfinding and update nextPoint accordingly
+        //if (checkInTheWay(ship.getPosition(), nextPoint)) {
             updateGraph();
-        }
+        //}
+    }
+
+    private boolean checkInTheWay(Point a, Point b) {
+        return Arrays.stream(nextRound.getVisibleEntities()).anyMatch(e -> {
+            // TODO : handle streams
+            return e.intersects(a, b) && e instanceof EnemyEntity;
+        });
     }
 
     public int getNextCheckpointToReach() {
@@ -317,27 +321,43 @@ public class NavigationEngine {
         Node checkpoint = new Node(checkpoints[nextCheckpointToReach].getPosition());
         nodes.add(checkpoint);
 
-        ship.addBranch(1, checkpoint);
-
         for (VisibleEntity visibleEntity : nextRound.getVisibleEntities()) {
-            for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin().getVertices()) {
-                nodes.add(new Node(point));
+            for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
+                nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
+            }
+        }
+
+        var x = new LinkedList<Node>();
+        x.add(ship);
+
+        while (!x.isEmpty()) {
+            var current = x.poll();
+
+            for (Node node : nodes) {
+                if (node == current) { // don't link a node with itself
+                    continue;
+                }
+
+                var pos = node.point;
+
+                if (checkInTheWay(current.point, pos)) {
+                    continue; // the node is not reachable
+                }
+
+                if (current.addBranch(node)) {
+                    x.add(node);
+                }
             }
         }
 
         var path = ship.findPathTo(checkpoint);
 
-        nextPoint = path.get(1);
-        nextPoint2 = null;
-        /*if (path.size() > 2) {
-            nextPoint2 = path.get(2);
-            nextPointRadius = 0;
-        }
-        else {
+        if (path != null) {
+            nextPoint = path.get(1);
             nextPoint2 = null;
-            nextPointRadius = ((Circle) checkpoints[nextCheckpointToReach].getShape()).getRadius();
-        }*/
-        // le bato doit aller à nextPoint
-        //printGraph(ship);
+        } else {
+            // TODO : try to go straight
+            Cockpit.log("NO PATH FOUND, THIS SHOULD NOT HAPPEN");
+        }
     }
 }
