@@ -11,7 +11,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Re
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.EnemyEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
@@ -304,7 +303,7 @@ public class NavigationEngine {
         if (visibleEntities != null) {
             return Arrays.stream(visibleEntities).anyMatch(e -> {
                 // TODO : handle streams
-                return e.intersects(a, b) && e instanceof EnemyEntity;
+                return e.intersects(a, b) && !e.shouldGoInto();
             });
         } else {
             return true;

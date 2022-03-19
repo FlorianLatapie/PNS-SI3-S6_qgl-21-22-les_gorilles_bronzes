@@ -5,6 +5,10 @@ import java.util.Objects;
 public class Stream extends VisibleEntity {
     private double strength;
 
+    public Stream(){
+        this.setShouldGoInto(true);
+    }
+
     public double getStrength() {
         return strength;
     }

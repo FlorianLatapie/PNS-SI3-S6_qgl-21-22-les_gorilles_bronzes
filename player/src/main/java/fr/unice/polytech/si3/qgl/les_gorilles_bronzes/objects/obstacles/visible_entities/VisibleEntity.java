@@ -13,6 +13,16 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = Reef.class, name = "reef")
 })
 public abstract class VisibleEntity extends PositionnedShape {
+    private boolean shouldGoInto = false;
+
+    public boolean shouldGoInto() {
+        return shouldGoInto;
+    }
+
+    public void setShouldGoInto(boolean shouldGoInto) {
+        this.shouldGoInto = shouldGoInto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
