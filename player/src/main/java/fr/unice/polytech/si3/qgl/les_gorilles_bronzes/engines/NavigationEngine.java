@@ -28,6 +28,7 @@ import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
 
 public class NavigationEngine {
+    private boolean displayGraph;
     private InitGame initGame;
     private NextRound nextRound;
     private DeckEngine deckEngine;
@@ -36,9 +37,22 @@ public class NavigationEngine {
     private double nextPointRadius;
     private Point nextPoint2;
 
+    private Node.Display nodesDisplay;
+
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
+        if (displayGraph) {
+            nodesDisplay = Node.Display.getInstance();
+        }
+    }
+
+    public NavigationEngine(InitGame initGame, DeckEngine deckEngine, boolean displayGraph) {
+        this(initGame, deckEngine);
+        this.displayGraph = displayGraph;
+        if (displayGraph) {
+            nodesDisplay = Node.Display.getInstance();
+        }
     }
 
     public List<Action> computeNextRound(NextRound nextRound) {
@@ -363,9 +377,17 @@ public class NavigationEngine {
         if (path != null) {
             nextPoint = path.get(1);
             nextPoint2 = null;
+            if (displayGraph) {
+                nodesDisplay.paintTheseNodes(nodes);
+            }
         } else {
-            // TODO : try to go straight
-            Cockpit.log("NO PATH FOUND, THIS SHOULD NOT HAPPEN");
+            // TODO : try to go straight instead
+            Cockpit.log("NO PATH FOUND");
         }
+    }
+
+
+    public void setNextCheckpointToReach(int nextCheckpointToReach) {
+        this.nextCheckpointToReach = nextCheckpointToReach;
     }
 }

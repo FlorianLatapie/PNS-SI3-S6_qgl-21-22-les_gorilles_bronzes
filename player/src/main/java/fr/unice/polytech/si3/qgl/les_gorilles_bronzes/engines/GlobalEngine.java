@@ -18,6 +18,11 @@ public class GlobalEngine {
         this.navigationEngine = new NavigationEngine(initGame, deckEngine);
     }
 
+    public GlobalEngine(InitGame initGame, boolean displayGraph){
+        this.deckEngine = new DeckEngine(initGame);
+        this.navigationEngine = new NavigationEngine(initGame, deckEngine, displayGraph);
+    }
+
     public Action[] computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList<>();
         this.deckEngine.beforeEachRound();
