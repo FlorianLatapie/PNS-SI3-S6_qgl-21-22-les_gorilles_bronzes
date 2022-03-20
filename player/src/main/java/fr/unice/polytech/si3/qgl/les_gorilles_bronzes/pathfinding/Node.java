@@ -2,9 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
-import javax.annotation.processing.Generated;
-import javax.swing.*;
-import java.awt.*;
+
 import java.util.List;
 import java.util.*;
 
@@ -12,12 +10,12 @@ import java.util.*;
 public class Node implements Comparable<Node> {
     // Id for readability of result purposes
     private static int idCounter = 0;
-    public Point point;
+    private Point point;
     private int internalId;
     // Parent in the path
-    public Node parent = null;
+    private Node parent = null;
 
-    public Map<Node, Double> neighbors;
+    private Map<Node, Double> neighbors;
 
     public double g = Double.MAX_VALUE;
 
@@ -74,7 +72,7 @@ public class Node implements Comparable<Node> {
             openList.remove(n);
             closedList.add(n);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -114,5 +112,28 @@ public class Node implements Comparable<Node> {
                 '}';
     }
 
+    public Point getPoint() {
+        return point;
+    }
+
+    public void setPoint(Point point) {
+        this.point = point;
+    }
+
+    public Map<Node, Double> getNeighbors() {
+        return neighbors;
+    }
+
+    public void setNeighbors(Map<Node, Double> neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
 }
 

@@ -30,6 +30,7 @@ public class Display extends JFrame {
         repaint();
     }
 
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.RED);
@@ -44,31 +45,31 @@ public class Display extends JFrame {
                     g.setColor(Color.BLUE);
                 }
                 Node node = nodes.get(i);
-                int x = (int) (node.point.getX() / ratio) + offset;
-                int y = (int) (node.point.getY() / ratio) + offset;
+                int x = (int) (node.getPoint().getX() / ratio) + offset;
+                int y = (int) (node.getPoint().getY() / ratio) + offset;
 
-                int xCicle = (int) (node.point.getX() / ratio) + offset - circleSize / 2;
-                int yCicle = (int) (node.point.getY() / ratio) + offset - circleSize / 2;
+                int xCicle = (int) (node.getPoint().getX() / ratio) + offset - circleSize / 2;
+                int yCicle = (int) (node.getPoint().getY() / ratio) + offset - circleSize / 2;
 
                 g.fillOval(xCicle, yCicle, circleSize, circleSize);
 
                 g.setColor(Color.BLACK);
-                for (var edge : node.neighbors.entrySet()) {
+                for (var edge : node.getNeighbors().entrySet()) {
                     if (fullLinks) {
-                        if (edge.getKey().parent != null && edge.getKey().parent == nodes.get(0)) {
+                        if (edge.getKey().getParent() != null && edge.getKey().getParent() == nodes.get(0)) {
                             g.setColor(Color.BLUE);
                         } else {
                             g.setColor(Color.BLACK);
                         }
-                        int x1 = (int) (edge.getKey().point.getX() / ratio) + offset;
-                        int y1 = (int) (edge.getKey().point.getY() / ratio) + offset;
+                        int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offset;
+                        int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offset;
                         g.drawLine(x, y, x1, y1);
                     } else {
-                        if (edge.getKey().parent != null && edge.getKey().parent.equals(nodes.get(0))) {
+                        if (edge.getKey().getParent() != null && edge.getKey().getParent().equals(nodes.get(0))) {
                             g.setColor(Color.BLUE);
 
-                            int x1 = (int) (edge.getKey().point.getX() / ratio) + offset;
-                            int y1 = (int) (edge.getKey().point.getY() / ratio) + offset;
+                            int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offset;
+                            int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offset;
                             g.drawLine(x, y, x1, y1);
                         }
                     }

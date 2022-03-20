@@ -4,7 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
 import java.util.Objects;
 
-public class Rectangle extends Shape {
+public class Rectangle implements Shape {
     private double width;
     private double height;
     private double orientation;
@@ -46,10 +46,20 @@ public class Rectangle extends Shape {
     public Polygon toPolygon() {
         Polygon polygon = new Polygon();
         Point[] vertices = new Point[4];
-        vertices[0] = new Point(-getHeight() / 2, -getWidth() / 2);
-        vertices[1] = new Point(getHeight() / 2, -getWidth() / 2);
-        vertices[2] = new Point(getHeight() / 2, getWidth() / 2);
-        vertices[3] = new Point(-getHeight() / 2, getWidth() / 2);
+
+        double halfWidth = width / 2;
+        double halfHeight = height / 2;
+
+        vertices[0] = new Point(-halfHeight, -halfWidth);
+        vertices[1] = new Point(halfHeight, -halfWidth);
+        vertices[2] = new Point(halfHeight, halfWidth);
+        vertices[3] = new Point(-halfHeight, halfWidth);
+
+        /*vertices[4] = new Point(-halfHeight, 0);
+        vertices[5] = new Point(0, -halfWidth);
+        vertices[6] = new Point(halfHeight, 0);
+        vertices[7] = new Point(0, halfWidth);*/
+
         polygon.setVertices(vertices);
         polygon.setOrientation(orientation);
         return polygon;

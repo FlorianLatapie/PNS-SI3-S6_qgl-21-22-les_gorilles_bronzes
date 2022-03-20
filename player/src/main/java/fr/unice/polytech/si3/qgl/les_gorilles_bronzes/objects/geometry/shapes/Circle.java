@@ -4,7 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
 import java.util.Objects;
 
-public class Circle extends Shape {
+public class Circle implements Shape {
     private double radius;
 
     public double getRadius() {

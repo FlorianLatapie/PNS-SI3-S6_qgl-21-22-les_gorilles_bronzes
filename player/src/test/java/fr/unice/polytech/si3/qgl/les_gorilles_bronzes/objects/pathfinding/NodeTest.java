@@ -36,7 +36,7 @@ class NodeTest {
         nodes.get(0).addBranch(nodes.get(2));
         nodes.get(0).addBranch(nodes.get(3));
         nodes.get(0).addBranch(nodes.get(3));
-        assertEquals(3, nodes.get(0).neighbors.size());
+        assertEquals(3, nodes.get(0).getNeighbors().size());
     }
 
     @Test
