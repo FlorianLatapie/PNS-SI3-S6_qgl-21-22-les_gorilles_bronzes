@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
+import javax.annotation.processing.Generated;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -112,7 +113,6 @@ public class Node implements Comparable<Node> {
                 ", g=" + g +
                 '}';
     }
-
     public static class Display extends JFrame {
         private static Display instance;
         private List<Node> nodes;
