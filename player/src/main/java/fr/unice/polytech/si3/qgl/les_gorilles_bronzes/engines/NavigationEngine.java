@@ -307,9 +307,7 @@ public class NavigationEngine {
         }
 
         // check whether the line (ship position ; nextPoint) intersects with something
-        //if (checkInTheWay(ship.getPosition(), nextPoint)) {
         updateGraph();
-        //}
     }
 
     private boolean checkInTheWay(Point a, Point b) {
@@ -339,6 +337,12 @@ public class NavigationEngine {
         Node checkpoint = new Node(checkpoints[nextCheckpointToReach].getPosition());
         nodes.add(checkpoint);
 
+        try {
+            Node nextCheckpoint = new Node(checkpoints[nextCheckpointToReach + 1].getPosition());
+            nodes.add(nextCheckpoint);
+        } catch (IndexOutOfBoundsException e) {
+            // do nothing
+        }
 
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
         if (visibleEntities != null) {

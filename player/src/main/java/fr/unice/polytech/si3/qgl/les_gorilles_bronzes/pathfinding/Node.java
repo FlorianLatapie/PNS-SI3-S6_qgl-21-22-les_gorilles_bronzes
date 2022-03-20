@@ -149,13 +149,15 @@ public class Node implements Comparable<Node> {
                     int xCicle = (int) (node.point.getX() / ratio) + offset - circleSize / 2;
                     int yCicle = (int) (node.point.getY() / ratio) + offset - circleSize / 2;
 
-                    g.drawOval(xCicle, yCicle, circleSize, circleSize);
+                    g.fillOval(xCicle, yCicle, circleSize, circleSize);
 
                     g.setColor(Color.BLACK);
                     for (var edge : node.neighbors.entrySet()) {
                         if (fullLinks) {
                             if (edge.getKey().parent != null && edge.getKey().parent == nodes.get(0)) {
                                 g.setColor(Color.BLUE);
+                            } else {
+                                g.setColor(Color.BLACK);
                             }
                             int x1 = (int) (edge.getKey().point.getX() / ratio) + offset;
                             int y1 = (int) (edge.getKey().point.getY() / ratio) + offset;

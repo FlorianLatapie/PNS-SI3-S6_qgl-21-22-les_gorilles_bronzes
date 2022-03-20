@@ -48,7 +48,6 @@ class CircleTest {
     @Test
     void toPolygonTest() {
         int precision = 4;
-        int margin = 5;
 
         Polygon polygon = circle.toPolygon(precision);
 
