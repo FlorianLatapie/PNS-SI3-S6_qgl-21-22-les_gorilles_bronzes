@@ -36,7 +36,6 @@ class PointTest {
 
         assertEquals(point, point);
         assertEquals(point.hashCode(), point.hashCode());
-        assertNotEquals(point,null);
         assertEquals(point, point2);
         assertEquals(point.hashCode(), point2.hashCode());
         assertNotEquals(point, point3);
@@ -81,5 +80,16 @@ class PointTest {
     @Test
     void multiplyTest(){
         assertEquals(new Point(2, 4), point.multiply(2));
+    }
+
+    @Test
+    void dotProductTest(){
+        Point point2 = new Point(3, 4);
+        assertEquals(11, point.dotProduct(point2));
+    }
+
+    @Test
+    void rotateByTest(){
+        assertEquals(new Point(-2, 1), point.rotateBy(Math.PI/2));
     }
 }

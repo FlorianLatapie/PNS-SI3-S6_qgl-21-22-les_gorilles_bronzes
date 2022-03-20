@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class NavigationEngineTest {
@@ -61,12 +61,12 @@ class NavigationEngineTest {
 
         Boolean shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
 
-        assertEquals(false, shouldNotBe);
+        assertFalse(shouldNotBe);
 
         nextRound.getShip().getPosition().setX(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getX());
         nextRound.getShip().getPosition().setY(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getY());
         Boolean shouldBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
-        assertEquals(true, shouldBe);
+        assertTrue(shouldBe);
     }
 
     @Test
@@ -77,14 +77,14 @@ class NavigationEngineTest {
 
         Boolean shouldNotBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
 
-        assertEquals(false, shouldNotBe);
+        assertFalse(shouldNotBe);
 
         nextRound.getShip().getPosition().setX(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getX() - (bestConf.getSpeed() * Math.cos(nextRound.getShip().getPosition().getOrientation())));
         nextRound.getShip().getPosition().setY(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getY() - (bestConf.getSpeed() * Math.sin(nextRound.getShip().getPosition().getOrientation())));
         shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
-        assertEquals(false, shouldNotBe);
+        assertFalse(shouldNotBe);
         Boolean shouldBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
-        assertEquals(true, shouldBe);
+        assertTrue(shouldBe);
 
 
     }
@@ -147,13 +147,13 @@ class NavigationEngineTest {
         initGame.getShip().setPosition(zero);
 
         nextRound.getShip().setPosition(zero);
-        assertEquals(true, navigationEngine.shouldLiftSail());
+        assertTrue(navigationEngine.shouldLiftSail());
 
         nextRound.getShip().setPosition(fiftyDegrees);
-        assertEquals(true, navigationEngine.shouldLiftSail());
+        assertTrue(navigationEngine.shouldLiftSail());
 
         nextRound.getShip().setPosition(ninetyDegrees);
-        assertEquals(false, navigationEngine.shouldLiftSail());
+        assertFalse(navigationEngine.shouldLiftSail());
     }
 
 

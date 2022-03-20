@@ -2,8 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UtilTest {
     @Test
@@ -42,11 +41,11 @@ class UtilTest {
 
     @Test
     void areTheseDoubleAboutEqual() {
-        assertEquals(true, Util.areTheseDoubleAboutEqual(0.0, 0.0));
-        assertEquals(false, Util.areTheseDoubleAboutEqual(2e-6, 0.0));
-        assertEquals(false, Util.areTheseDoubleAboutEqual(1.0, 1e-6));
-        assertEquals(true, Util.areTheseDoubleAboutEqual(0.4e-6, 0.4e-6));
-        assertEquals(false, Util.areTheseDoubleAboutEqual(10, 50));
-        assertEquals(true, Util.areTheseDoubleAboutEqual(1e-6, 1e-6));
+        assertTrue(Util.areTheseDoubleAboutEqual(0.0, 0.0));
+        assertFalse(Util.areTheseDoubleAboutEqual(2e-6, 0.0));
+        assertFalse(Util.areTheseDoubleAboutEqual(1.0, 1e-6));
+        assertTrue(Util.areTheseDoubleAboutEqual(0.4e-6, 0.4e-6));
+        assertFalse(Util.areTheseDoubleAboutEqual(10, 50));
+        assertTrue(Util.areTheseDoubleAboutEqual(1e-6, 1e-6));
     }
 }
