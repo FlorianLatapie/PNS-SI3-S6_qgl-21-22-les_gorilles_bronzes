@@ -20,6 +20,7 @@ public class Cockpit implements ICockpit {
     private GlobalEngine globalEngine;
     private static Logger logger = Logger.getLogger(Cockpit.class.getName());
     private static List<String> logs = new ArrayList<>();
+    private static boolean displayGraph;
 
     public Cockpit() {
         /**
@@ -29,10 +30,15 @@ public class Cockpit implements ICockpit {
         log("Cockpit initialized");
     }
 
+    public Cockpit(boolean displayGraph) {
+        this();
+        this.displayGraph = displayGraph;
+    }
+
     public void initGame(String jsonGame) {
         try {
             this.initGame = OBJECT_MAPPER.readValue(jsonGame, InitGame.class);
-            this.globalEngine = new GlobalEngine(initGame);
+            this.globalEngine = new GlobalEngine(initGame, displayGraph);
         } catch (JsonProcessingException e) {
             e.getMessage();
         }
