@@ -96,6 +96,14 @@ public class Node implements Comparable<Node> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node)) return false;
+        Node node = (Node) o;
+        return internalId == node.internalId && Double.compare(node.g, g) == 0 && Objects.equals(point, node.point) && Objects.equals(parent, node.parent) && Objects.equals(neighbors, node.neighbors);
+    }
+
+    @Override
     public String toString() {
         return "Node{" +
                 "point=" + point +
@@ -107,7 +115,7 @@ public class Node implements Comparable<Node> {
 
     public static class Display extends JFrame {
         private static Display instance;
-        private static List<Node> nodes;
+        private List<Node> nodes;
         private boolean fullLinks = true;
 
         public static Display getInstance() {
@@ -120,7 +128,7 @@ public class Node implements Comparable<Node> {
         private Display() {
             setTitle("JFrame Canvas Example");
             setSize(1800, 900);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
             setVisible(true);
         }
 

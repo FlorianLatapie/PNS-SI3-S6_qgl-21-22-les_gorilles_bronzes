@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class SailorTest {
     @Test
@@ -27,7 +28,7 @@ class SailorTest {
         assertEquals("Sailor2", sailor.getName());
 
         sailor.setFree(false);
-        assertEquals(false, sailor.isFree());
+        assertFalse(sailor.isFree());
     }
 
     @Test

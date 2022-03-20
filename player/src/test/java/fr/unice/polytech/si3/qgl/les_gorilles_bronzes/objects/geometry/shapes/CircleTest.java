@@ -4,8 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CircleTest {
     Circle circle;
@@ -68,5 +67,15 @@ class CircleTest {
         assertEquals(20, polygon.getVertices().length);
 
         assertEquals(new Point(1, 0), polygon.getVertices()[0]);
+    }
+
+    @Test
+    void intersectsTest(){
+        assertTrue(circle.intersects(new Point(1,0), new Point(10,10)));
+        assertFalse(circle.intersects(new Point(-4,2), new Point(4,2)));
+        assertTrue(circle.intersects(new Point(0,0), new Point(1,1)));
+        assertTrue(circle.intersects(new Point(1,1), new Point(0,0)));
+        assertFalse(circle.intersects(new Point(2,2), new Point(3,3)));
+
     }
 }
