@@ -18,6 +18,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.display.Display;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.*;
@@ -37,13 +38,13 @@ public class NavigationEngine {
     private double nextPointRadius;
     private Point nextPoint2;
 
-    private Node.Display nodesDisplay;
+    private Display nodesDisplay;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
         if (displayGraph) {
-            nodesDisplay = Node.Display.getInstance();
+            nodesDisplay = Display.getInstance();
         }
     }
 
@@ -51,7 +52,7 @@ public class NavigationEngine {
         this(initGame, deckEngine);
         this.displayGraph = displayGraph;
         if (displayGraph) {
-            nodesDisplay = Node.Display.getInstance();
+            nodesDisplay = Display.getInstance();
         }
     }
 
