@@ -365,9 +365,9 @@ public class NavigationEngine {
                     continue;
                 }
 
-                var pos = node.point;
+                var pos = node.getPoint();
 
-                if (checkInTheWay(current.point, pos)) {
+                if (checkInTheWay(current.getPoint(), pos)) {
                     continue; // the node is not reachable
                 }
 
@@ -379,7 +379,7 @@ public class NavigationEngine {
 
         var path = ship.findPathTo(checkpoint);
 
-        if (path != null) {
+        if (path != null && path.size() > 1) {
             nextPoint = path.get(1);
             nextPoint2 = null;
             if (displayGraph) {

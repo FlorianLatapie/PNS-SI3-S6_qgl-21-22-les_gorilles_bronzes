@@ -68,5 +68,10 @@ class RectangleTest {
         assertEquals(new Point(10, -5), polygon.getVertices()[1]);
         assertEquals(new Point(10, 5), polygon.getVertices()[2]);
         assertEquals(new Point(-10, 5), polygon.getVertices()[3]);
+
+        /*assertEquals(new Point(-10, 0), polygon.getVertices()[4]);
+        assertEquals(new Point(0, -5), polygon.getVertices()[5]);
+        assertEquals(new Point(10, 0), polygon.getVertices()[6]);
+        assertEquals(new Point(0, 5), polygon.getVertices()[7]);*/
     }
 }
