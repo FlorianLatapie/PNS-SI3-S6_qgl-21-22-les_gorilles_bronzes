@@ -308,7 +308,9 @@ public class NavigationEngine {
         }
 
         // check whether the line (ship position ; nextPoint) intersects with something
-        updateGraph();
+        if (checkInTheWay(ship.getPosition(), nextPoint)) {
+            updateGraph();
+        }
     }
 
     private boolean checkInTheWay(Point a, Point b) {
