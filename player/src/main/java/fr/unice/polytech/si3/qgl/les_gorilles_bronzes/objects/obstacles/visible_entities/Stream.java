@@ -33,7 +33,9 @@ public class Stream extends VisibleEntity {
     @Override
     public String toString() {
         return "Stream{" +
-                "strength=" + strength +
+                "position=" + getPosition() +
+                ", shape=" + getShape() +
+                ", strength=" + getStrength() +
                 '}';
     }
 }
