@@ -39,17 +39,19 @@ public class Display extends JFrame {
         int circleSize = 10;
         int ratio = 7;
         int offset = 200;
+        int offsetX = offset;
+        int offsetY = offset*2;
         if (nodes != null) {
             for (int i = 0; i < nodes.size(); i++) {
                 if (i == 0 || i == 1) {
                     g.setColor(Color.BLUE);
                 }
                 Node node = nodes.get(i);
-                int x = (int) (node.getPoint().getX() / ratio) + offset;
-                int y = (int) (node.getPoint().getY() / ratio) + offset;
+                int x = (int) (node.getPoint().getX() / ratio) + offsetX;
+                int y = (int) (node.getPoint().getY() / ratio) + offsetY;
 
-                int xCicle = (int) (node.getPoint().getX() / ratio) + offset - circleSize / 2;
-                int yCicle = (int) (node.getPoint().getY() / ratio) + offset - circleSize / 2;
+                int xCicle = (int) (node.getPoint().getX() / ratio) + offsetX - circleSize / 2;
+                int yCicle = (int) (node.getPoint().getY() / ratio) + offsetY - circleSize / 2;
 
                 g.fillOval(xCicle, yCicle, circleSize, circleSize);
 
@@ -61,8 +63,8 @@ public class Display extends JFrame {
                         } else {
                             g.setColor(Color.BLACK);
                         }
-                        int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offset;
-                        int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offset;
+                        int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offsetX;
+                        int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offsetY;
                         g.drawLine(x, y, x1, y1);
                     } else {
                         if (edge.getKey().getParent() != null && edge.getKey().getParent().equals(nodes.get(0))) {
