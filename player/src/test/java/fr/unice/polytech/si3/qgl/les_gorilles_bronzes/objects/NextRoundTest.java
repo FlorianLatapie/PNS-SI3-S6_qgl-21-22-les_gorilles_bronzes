@@ -34,6 +34,6 @@ class NextRoundTest {
 
     @Test
     void toStringTest() {
-        assertEquals("NextRound{ship=Ship{type='null', life=0, position=null, name='null', deck=null, entities=null, shape=null}, wind=Wind{orientation=0.0, strength=0.0}, visibleEntities=[Stream{strength=0.0}, VisibleEntity{position=null, shape=null}]}",nextRound.toString());
+        assertEquals("NextRound{ship=Ship{type='null', life=0, position=null, name='null', deck=null, entities=null, shape=null}, wind=Wind{orientation=0.0, strength=0.0}, visibleEntities=[Stream{position=null, shape=null, strength=0.0}, VisibleEntity{position=null, shape=null}]}",nextRound.toString());
     }
 }
