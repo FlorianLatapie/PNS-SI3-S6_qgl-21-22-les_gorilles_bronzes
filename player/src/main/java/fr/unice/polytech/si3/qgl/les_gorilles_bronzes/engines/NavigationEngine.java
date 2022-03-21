@@ -315,8 +315,14 @@ public class NavigationEngine {
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
         if (visibleEntities != null) {
             return Arrays.stream(visibleEntities).anyMatch(e -> {
-                // TODO : handle streams
-                return e.intersects(a, b) && !e.shouldGoInto();
+                if (e instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
+                    double angle = a.getAngleTo(b);
+                    fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream stream = (fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) e;
+
+                    boolean condition = Math.cos(stream.getPosition().getOrientation() - angle) > 0;
+                    stream.setShouldGoInto(condition);
+                }
+                return !e.shouldGoInto() && e.intersects(a, b);
             });
         } else {
             return true;
