@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.under_engines.OarEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.under_engines.SailEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Oar;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
@@ -75,7 +78,7 @@ class NavigationEngineTest {
 
         OarConfiguration bestConf = new OarConfiguration(2,2,4);
 
-        Boolean shouldNotBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
+        Boolean shouldNotBe = new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf, navigationEngine.getDistanceToCheckpoint(((RegattaGoal) initGame.getGoal()).getCheckpoints()[navigationEngine.getNextCheckpointToReach()], nextRound.getShip()));
 
         assertFalse(shouldNotBe);
 
@@ -83,7 +86,7 @@ class NavigationEngineTest {
         nextRound.getShip().getPosition().setY(checkpoints[navigationEngine.getNextCheckpointToReach()].getPosition().getY() - (bestConf.getSpeed() * Math.sin(nextRound.getShip().getPosition().getOrientation())));
         shouldNotBe = navigationEngine.isShipInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip());
         assertFalse(shouldNotBe);
-        Boolean shouldBe = navigationEngine.willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf);
+        Boolean shouldBe = new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).willBeInsideCheckpoint(checkpoints[navigationEngine.getNextCheckpointToReach()], nextRound.getShip(), bestConf, navigationEngine.getDistanceToCheckpoint(((RegattaGoal) initGame.getGoal()).getCheckpoints()[navigationEngine.getNextCheckpointToReach()], nextRound.getShip()));
         assertTrue(shouldBe);
 
 
@@ -123,7 +126,7 @@ class NavigationEngineTest {
     @Test
     void getPossibleAnglesWithOarsTest(){
         deckEngine.placeSailors();
-        List<OarConfiguration> angles = navigationEngine.getPossibleAnglesWithOars();
+        List<OarConfiguration> angles = new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).getPossibleAnglesWithOars();
         assertEquals(9, angles.size());
     }
 
@@ -147,13 +150,13 @@ class NavigationEngineTest {
         initGame.getShip().setPosition(zero);
 
         nextRound.getShip().setPosition(zero);
-        assertTrue(navigationEngine.shouldLiftSail());
+        assertTrue(new SailEngine(initGame, deckEngine, nextRound).shouldLiftSail(new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).findBestConfiguration(navigationEngine.getBestAngle(), navigationEngine.getDistanceToCheckpoint(((RegattaGoal) initGame.getGoal()).getCheckpoints()[navigationEngine.getNextCheckpointToReach()], nextRound.getShip())).getSpeed(), navigationEngine.getGoalSpeed()));
 
         nextRound.getShip().setPosition(fiftyDegrees);
-        assertTrue(navigationEngine.shouldLiftSail());
+        assertTrue(new SailEngine(initGame, deckEngine, nextRound).shouldLiftSail(new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).findBestConfiguration(navigationEngine.getBestAngle(), navigationEngine.getDistanceToCheckpoint(((RegattaGoal) initGame.getGoal()).getCheckpoints()[navigationEngine.getNextCheckpointToReach()], nextRound.getShip())).getSpeed(), navigationEngine.getGoalSpeed()));
 
         nextRound.getShip().setPosition(ninetyDegrees);
-        assertFalse(navigationEngine.shouldLiftSail());
+        assertFalse(new SailEngine(initGame, deckEngine, nextRound).shouldLiftSail(new OarEngine(initGame, deckEngine, nextRound, navigationEngine.getNextCheckpointToReach()).findBestConfiguration(navigationEngine.getBestAngle(), navigationEngine.getDistanceToCheckpoint(((RegattaGoal) initGame.getGoal()).getCheckpoints()[navigationEngine.getNextCheckpointToReach()], nextRound.getShip())).getSpeed(), navigationEngine.getGoalSpeed()));
     }
 
 
