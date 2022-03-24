@@ -5,11 +5,12 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
 public class Display extends JFrame {
     private static Display instance;
     private List<Node> nodes;
-    private boolean fullLinks = true;
+    private List<Point> path;
 
     public static Display getInstance() {
         if (instance == null) {
@@ -25,8 +26,9 @@ public class Display extends JFrame {
         setVisible(true);
     }
 
-    public void paintTheseNodes(List<Node> nodes) {
+    public void paintTheseNodes(List<Node> nodes, List<Point> path) {
         this.nodes = nodes;
+        this.path = path;
         repaint();
     }
 
@@ -40,13 +42,16 @@ public class Display extends JFrame {
         int ratio = 7;
         int offset = 200;
         int offsetX = offset;
-        int offsetY = offset*2;
+        int offsetY = offset * 2;
         if (nodes != null) {
             for (int i = 0; i < nodes.size(); i++) {
+                Node node = nodes.get(i);
+
                 if (i == 0 || i == 1) {
                     g.setColor(Color.BLUE);
+                } else if (path.contains(node.getPoint())){
+                    g.setColor(Color.GREEN);
                 }
-                Node node = nodes.get(i);
                 int x = (int) (node.getPoint().getX() / ratio) + offsetX;
                 int y = (int) (node.getPoint().getY() / ratio) + offsetY;
 
@@ -57,27 +62,13 @@ public class Display extends JFrame {
 
                 g.setColor(Color.BLACK);
                 for (var edge : node.getNeighbors().entrySet()) {
-                    if (fullLinks) {
-                        if (edge.getKey().getParent() != null && edge.getKey().getParent() == nodes.get(0)) {
-                            g.setColor(Color.BLUE);
-                        } else {
-                            g.setColor(Color.BLACK);
-                        }
-                        int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offsetX;
-                        int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offsetY;
-                        g.drawLine(x, y, x1, y1);
-                    } else {
-                        if (edge.getKey().getParent() != null && edge.getKey().getParent().equals(nodes.get(0))) {
-                            g.setColor(Color.BLUE);
+                    int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offsetX;
+                    int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offsetY;
+                    g.drawLine(x, y, x1, y1);
 
-                            int x1 = (int) (edge.getKey().getPoint().getX() / ratio) + offset;
-                            int y1 = (int) (edge.getKey().getPoint().getY() / ratio) + offset;
-                            g.drawLine(x, y, x1, y1);
-                        }
-                    }
                 }
-                g.setColor(Color.RED);
             }
+            g.setColor(Color.RED);
         }
     }
 }

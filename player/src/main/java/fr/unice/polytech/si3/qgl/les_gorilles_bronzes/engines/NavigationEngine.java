@@ -389,7 +389,7 @@ public class NavigationEngine {
             nextPoint = path.get(1);
             nextPoint2 = null;
             if (displayGraph) {
-                nodesDisplay.paintTheseNodes(nodes);
+                nodesDisplay.paintTheseNodes(nodes, path);
             }
         } else {
             // TODO : try to go straight instead
