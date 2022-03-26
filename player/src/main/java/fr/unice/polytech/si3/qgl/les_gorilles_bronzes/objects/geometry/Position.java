@@ -28,12 +28,12 @@ public class Position extends Point{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
-        return Double.compare(position.orientation, orientation) == 0;
+        return Double.compare(position.orientation, orientation) == 0 && position.getX() == getX() && position.getY() == getY();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orientation);
+        return Objects.hash(getX(), getY(), orientation);
     }
 
     @Override
