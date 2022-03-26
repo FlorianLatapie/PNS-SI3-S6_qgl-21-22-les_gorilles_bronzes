@@ -40,6 +40,8 @@ public class NavigationEngine {
 
     private Display nodesDisplay;
 
+    private double bestAngle;
+
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
@@ -59,6 +61,7 @@ public class NavigationEngine {
     public List<Action> computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList<>();
         this.nextRound = nextRound;
+        bestAngle = getBestAngle();
 
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
@@ -95,7 +98,7 @@ public class NavigationEngine {
         //rudder action
         Gouvernail rudder = findRudder();
         Optional<Sailor> sailorOnRudder = findSailorOnRudder(rudder);
-        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(getBestAngle() - bestConf.getAngle(), sailor)));
+        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(bestAngle - bestConf.getAngle(), sailor)));
 
         //oar action
         addOarAction(actions, bestConf);
@@ -167,7 +170,7 @@ public class NavigationEngine {
     }
 
     public OarConfiguration findBestConfiguration() {
-        double bestGoalAngle = getBestAngle();
+        double bestGoalAngle = bestAngle;
         var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
 
         List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
