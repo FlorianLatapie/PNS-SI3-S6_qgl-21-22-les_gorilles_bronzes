@@ -40,28 +40,28 @@ public class NavigationEngine {
 
     private Display nodesDisplay;
 
+    // cached values for performance
+    private Set<VisibleEntity> visibleEntitiesCache;
     private double bestAngle;
-
-    public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
-        this.initGame = initGame;
-        this.deckEngine = deckEngine;
-        if (displayGraph) {
-            nodesDisplay = Display.getInstance();
-        }
-    }
+    private boolean shouldLiftSailValue;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine, boolean displayGraph) {
-        this(initGame, deckEngine);
+        this.initGame = initGame;
+        this.deckEngine = deckEngine;
+
         this.displayGraph = displayGraph;
         if (displayGraph) {
             nodesDisplay = Display.getInstance();
         }
+
+        visibleEntitiesCache = new HashSet<>();
     }
 
     public List<Action> computeNextRound(NextRound nextRound) {
         List<Action> actions = new ArrayList<>();
         this.nextRound = nextRound;
         bestAngle = getBestAngle();
+        shouldLiftSailValue = shouldLiftSail();
 
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
@@ -93,7 +93,7 @@ public class NavigationEngine {
     public List<Action> turnShipWithBestConfiguration() {
         List<Action> actions = new ArrayList<>();
 
-        OarConfiguration bestConf = findBestConfiguration();
+        OarConfiguration bestConf = findBestOarConfiguration();
 
         //rudder action
         Gouvernail rudder = findRudder();
@@ -117,7 +117,7 @@ public class NavigationEngine {
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
 
-        if (getWindSpeedRelativeToShip(wind) + findBestConfiguration().getSpeed() >= getGoalSpeed()) return false;
+        if (getWindSpeedRelativeToShip(wind) + findBestOarConfiguration().getSpeed() >= getGoalSpeed()) return false;
 
         return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
     }
@@ -147,10 +147,10 @@ public class NavigationEngine {
         Voile sail = findSail();
         Optional<Sailor> sailorOnSail = findSailorOnSail(sail);
 
-        if (sailorOnSail.isPresent() && shouldLiftSail()) {
+        if (sailorOnSail.isPresent() && shouldLiftSailValue) {
             actions.add(new LiftSail(sailorOnSail.get().getId()));
         }
-        if (sailorOnSail.isPresent() && !(shouldLiftSail())) {
+        if (sailorOnSail.isPresent() && !(shouldLiftSailValue)) {
             actions.add(new LowerSail(sailorOnSail.get().getId()));
         }
 
@@ -169,7 +169,7 @@ public class NavigationEngine {
                 + ((Rectangle) nextRound.getShip().getShape()).getHeight();
     }
 
-    public OarConfiguration findBestConfiguration() {
+    public OarConfiguration findBestOarConfiguration() {
         double bestGoalAngle = bestAngle;
         var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
 
@@ -340,9 +340,11 @@ public class NavigationEngine {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
         List<Node> nodes = new ArrayList<>();
 
-        Node ship = new Node(nextRound.getShip().getPosition());
-        ship.g = 0;
-        nodes.add(ship);
+
+        Ship ship = nextRound.getShip();
+        Node shipNode = new Node(ship.getPosition());
+        shipNode.g = 0;
+        nodes.add(shipNode);
 
         Node checkpoint = new Node(checkpoints[nextCheckpointToReach].getPosition());
         nodes.add(checkpoint);
@@ -354,17 +356,20 @@ public class NavigationEngine {
             // do nothing
         }
 
+
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
+
         if (visibleEntities != null) {
-            for (VisibleEntity visibleEntity : visibleEntities) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
+            visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
+            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(ship.getLargestSideSize()).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
             }
         }
 
         var x = new LinkedList<Node>();
-        x.add(ship);
+        x.add(shipNode);
 
         while (!x.isEmpty()) {
             var current = x.poll();
@@ -386,7 +391,7 @@ public class NavigationEngine {
             }
         }
 
-        var path = ship.findPathTo(checkpoint);
+        var path = shipNode.findPathTo(checkpoint);
 
         if (path != null && path.size() > 1) {
             nextPoint = path.get(1);

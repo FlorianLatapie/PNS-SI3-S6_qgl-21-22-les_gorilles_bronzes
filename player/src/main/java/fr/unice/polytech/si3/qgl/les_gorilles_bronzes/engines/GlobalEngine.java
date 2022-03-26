@@ -15,7 +15,7 @@ public class GlobalEngine {
 
     public GlobalEngine(InitGame initGame) {
         this.deckEngine = new DeckEngine(initGame);
-        this.navigationEngine = new NavigationEngine(initGame, deckEngine);
+        this.navigationEngine = new NavigationEngine(initGame, deckEngine, false);
     }
 
     public GlobalEngine(InitGame initGame, boolean displayGraph){
