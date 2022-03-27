@@ -315,9 +315,8 @@ public class NavigationEngine {
     }
 
     private boolean checkInTheWay(Point a, Point b) {
-        VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
-        if (visibleEntities != null) {
-            return Arrays.stream(visibleEntities).anyMatch(e -> {
+        if (visibleEntitiesCache != null) {
+            return visibleEntitiesCache.stream().anyMatch(e -> {
                 if (e instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
                     double angle = a.getAngleTo(b);
                     fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream stream = (fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) e;
@@ -362,7 +361,7 @@ public class NavigationEngine {
         if (visibleEntities != null) {
             visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
             for (VisibleEntity visibleEntity : visibleEntitiesCache) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(ship.getLargestSideSize()).getVertices()) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(ship.getLargestSideSize()*3).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
             }
