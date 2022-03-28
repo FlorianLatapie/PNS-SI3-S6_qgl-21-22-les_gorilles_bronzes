@@ -34,4 +34,12 @@ public class Deck {
     public int hashCode() {
         return Objects.hash(width, length);
     }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "width=" + width +
+                ", length=" + length +
+                '}';
+    }
 }
