@@ -359,9 +359,15 @@ public class NavigationEngine {
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
 
         if (visibleEntities != null) {
-            visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
+            //visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
+            for (VisibleEntity visibleEntity : visibleEntities) {
+                if (!visibleEntitiesCache.contains(visibleEntity)) {
+                    visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
+                    visibleEntitiesCache.add(visibleEntity);
+                }
+            }
             for (VisibleEntity visibleEntity : visibleEntitiesCache) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(ship.getLargestSideSize()*3).getVertices()) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(2).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
             }
