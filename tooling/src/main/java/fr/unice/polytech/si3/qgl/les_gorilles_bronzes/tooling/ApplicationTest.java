@@ -3,9 +3,8 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.tooling;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import simulator.SimulatorInfos;
-import simulator.display.Simulator;
+import simulator.Simulator;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

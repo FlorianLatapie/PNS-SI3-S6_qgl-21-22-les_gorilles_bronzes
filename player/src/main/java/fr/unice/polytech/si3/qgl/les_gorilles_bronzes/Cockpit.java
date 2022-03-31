@@ -80,4 +80,13 @@ public class Cockpit implements ICockpit {
     public void wipeLogs() {
         logs.clear();
     }
+
+    @Override
+    public String toString() {
+        return "Cockpit{" +
+                "initGame=" + initGame + System.lineSeparator() +
+                ", nextRound=" + nextRound + System.lineSeparator() +
+                ", globalEngine=" + globalEngine + System.lineSeparator() +
+                '}';
+    }
 }

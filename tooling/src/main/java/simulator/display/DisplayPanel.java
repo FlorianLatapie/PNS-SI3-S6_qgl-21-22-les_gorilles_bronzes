@@ -1,65 +1,15 @@
 package simulator.display;
 
-
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Reef;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import simulator.SimulatorInfos;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 
-public class Simulator extends JFrame {
-
-    private SimulatorInfos simulatorInfos;
-    private Cockpit cockpit;
-
-    private DisplayPanel panel;
-
-
-    public Simulator(SimulatorInfos simulatorInfos, Cockpit cockpit) {
-        setTitle("oui");
-        setSize(500, 500);
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.simulatorInfos = simulatorInfos;
-        initSimulatorInfos();
-
-        this.cockpit = cockpit;
-
-
-        setLayout(new BorderLayout());
-        panel = new DisplayPanel(simulatorInfos);
-        add(panel, BorderLayout.CENTER);
-        setSize(1800, 900);
-
-        new Thread(() -> {
-            try {
-                while (true) {
-                    panel.repaint();
-                    Thread.sleep(1000);
-                }
-            } catch (final InterruptedException e) {
-
-            }
-        }).start();
-
-
-    }
-
-    private void initSimulatorInfos() {
-        var pos = simulatorInfos.getStartingPositions();
-        var ship = simulatorInfos.getShip();
-        ship.setPosition(pos[0]);
-        ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(),ship.getPosition().getOrientation()));
-    }
-
-    private static class DisplayPanel extends JPanel {
+    public class DisplayPanel extends JPanel {
         private double offsetX = 0, offsetY = 0, scale = 0.5;
         private IntPoint mouseOrigin;
 
@@ -71,7 +21,7 @@ public class Simulator extends JFrame {
             addMouseWheelListener(e -> {
                 var wheelRotation = e.getPreciseWheelRotation() < 0 ? 1.1 : (1 / 1.1);
                 scale = scale * wheelRotation;
-                repaint();
+                //repaint();
             });
 
 
@@ -98,7 +48,7 @@ public class Simulator extends JFrame {
                         offsetX -= (e.getX() - mouseOrigin.x) / scale;
                         offsetY -= (e.getY() - mouseOrigin.y) / scale;
                         mouseOrigin = new IntPoint(e.getX(), e.getY());
-                        repaint();
+                        //repaint();
                     }
                 }
             });
@@ -108,7 +58,7 @@ public class Simulator extends JFrame {
         public void paintComponent(Graphics _g) {
             var g = (Graphics2D) _g;
 
-            g.setColor(new Color(202, 219, 255));
+            g.setColor(new Color(206, 226, 255));
             g.fillRect(0, 0, getWidth(), getHeight());
 
             g.setPaintMode();
@@ -116,24 +66,25 @@ public class Simulator extends JFrame {
             var visibleEntities = simulatorInfos.getSeaEntities();
             for (var entity : visibleEntities) {
                 if (entity instanceof Reef) {
-                    g.setColor(Color.GREEN);
+                    g.setColor(new Color(1,75,44));
                 } else if (entity instanceof Stream) {
-                    g.setColor(Color.BLUE);
+                    g.setColor(new Color(102,159,244));
                 } else {
                     g.setColor(Color.RED);
                 }
-                drawShapedThing(g, entity.getPosition(), entity.getShape(), true);
+                drawShapedThing(g, entity.getPosition(), entity.getShape(), true, Color.BLACK);
             }
             var ship = simulatorInfos.getShip();
-            drawShapedThing(g, ship.getPosition(), ship.getShape(), true);
+            drawShapedThing(g, ship.getPosition(), ship.getShape(), true, Color.yellow);
+
         }
 
-        private void drawShapedThing(Graphics gp, Position p, Shape shape, boolean showArrow) {
+        private void drawShapedThing(Graphics gp, Position p, fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape shape, boolean showArrow, Color color) {
             gp = (Graphics2D) gp.create();
             var point = getPoint(p);
             gp.translate(point.x, point.y);
             ((Graphics2D) gp).rotate(p.getOrientation(), 0, 0);
-            var ap = new java.awt.Polygon();
+            var ap = new Polygon();
             var shp = shape.toPolygon();
             for (var pt : shp.getVertices()) {
                 ap.addPoint((int) (pt.getX() * scale), (int) (pt.getY() * scale));
@@ -141,7 +92,7 @@ public class Simulator extends JFrame {
             gp.fillPolygon(ap);
             if (showArrow) {
                 ((Graphics2D) gp).setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
-                gp.setColor(Color.BLACK);
+                gp.setColor(color);
                 gp.drawPolygon(new Polygon(new int[]{-10, -10, 20}, new int[]{-10, 10, 0}, 3));
             }
         }
@@ -162,4 +113,4 @@ public class Simulator extends JFrame {
             );
         }
     }
-}
+
