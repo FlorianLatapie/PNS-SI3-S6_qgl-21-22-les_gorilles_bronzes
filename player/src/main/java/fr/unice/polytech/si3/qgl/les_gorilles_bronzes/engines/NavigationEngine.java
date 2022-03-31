@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
@@ -99,13 +100,18 @@ public class NavigationEngine {
 
         //rudder action
         Gouvernail rudder = findRudder();
-        Optional<Sailor> sailorOnRudder = findSailorOnRudder(rudder);
+        Optional<Sailor> sailorOnRudder = findSailorOn(rudder);
         sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(bestAngle - bestConf.getAngle(), sailor)));
 
         //oar action
         addOarAction(actions, bestConf);
 
         return actions;
+    }
+
+    public Optional<Sailor> findSailorOn(Entity entity) {
+        if (entity == null) return Optional.empty();
+        return deckEngine.getSailorByEntity(entity);
     }
 
 
@@ -138,16 +144,11 @@ public class NavigationEngine {
         return (Voile) deckEngine.getEntitiesByClass(new Voile()).get(0);
     }
 
-    public Optional<Sailor> findSailorOnSail(Voile sail) {
-        if (sail == null) return Optional.empty();
-        return deckEngine.getSailorByEntity(sail);
-    }
-
     public List<Action> addSailAction() {
         List<Action> actions = new ArrayList<>();
 
         Voile sail = findSail();
-        Optional<Sailor> sailorOnSail = findSailorOnSail(sail);
+        Optional<Sailor> sailorOnSail = findSailorOn(sail);
 
         if (sailorOnSail.isPresent() && shouldLiftSailValue) {
             actions.add(new LiftSail(sailorOnSail.get().getId()));
@@ -169,16 +170,14 @@ public class NavigationEngine {
         return (Vigie) deckEngine.getEntitiesByClass(new Vigie()).get(0);
     }
 
-    public Optional<Sailor> findSailorOnVigie(Vigie vigie) {
-        if (vigie == null) return Optional.empty();
-        return deckEngine.getSailorByEntity(vigie);
-    }
+
+
 
     public List<Action> addVigieAction(){
         List<Action> actions = new ArrayList<>();
 
         Vigie vigie = findVigie();
-        Optional<Sailor> sailorOnVigie = findSailorOnVigie(vigie);
+        Optional<Sailor> sailorOnVigie = findSailorOn(vigie);
 
         if (sailorOnVigie.isPresent()){
             actions.add(new UseWatch(sailorOnVigie.get().getId()));
@@ -230,12 +229,6 @@ public class NavigationEngine {
         if (rechercheGouvernail.isEmpty()) return null;
         return (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
     }
-
-    public Optional<Sailor> findSailorOnRudder(Gouvernail rudder) {
-        if (rudder == null) return Optional.empty();
-        return deckEngine.getSailorByEntity(rudder);
-    }
-
 
     public void addOarAction(List<Action> actions, OarConfiguration bestConf) {
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
