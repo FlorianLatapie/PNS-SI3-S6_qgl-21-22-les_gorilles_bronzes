@@ -16,6 +16,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfigurat
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.display.Display;
@@ -65,6 +66,7 @@ public class NavigationEngine {
 
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
+        actions.addAll(addVigieAction());
         // TODO add vigie action
 
         return actions;
@@ -157,6 +159,34 @@ public class NavigationEngine {
         return actions;
     }
 
+    /**
+     * Using vigie in any case
+     */
+
+    public Vigie findVigie() {// TODO: use an optional
+        var searchForVigie = deckEngine.getEntitiesByClass(new Vigie());
+        if (searchForVigie.isEmpty()) return null;
+        return (Vigie) deckEngine.getEntitiesByClass(new Vigie()).get(0);
+    }
+
+    public Optional<Sailor> findSailorOnVigie(Vigie vigie) {
+        if (vigie == null) return Optional.empty();
+        return deckEngine.getSailorByEntity(vigie);
+    }
+
+    public List<Action> addVigieAction(){
+        List<Action> actions = new ArrayList<>();
+
+        Vigie vigie = findVigie();
+        Optional<Sailor> sailorOnVigie = findSailorOnVigie(vigie);
+
+        if (sailorOnVigie.isPresent()){
+            actions.add(new UseWatch(sailorOnVigie.get().getId()));
+        }
+
+        return actions;
+    }
+
     public Checkpoint getCheckpoint() {
         return ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
 
@@ -205,6 +235,7 @@ public class NavigationEngine {
         if (rudder == null) return Optional.empty();
         return deckEngine.getSailorByEntity(rudder);
     }
+
 
     public void addOarAction(List<Action> actions, OarConfiguration bestConf) {
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
