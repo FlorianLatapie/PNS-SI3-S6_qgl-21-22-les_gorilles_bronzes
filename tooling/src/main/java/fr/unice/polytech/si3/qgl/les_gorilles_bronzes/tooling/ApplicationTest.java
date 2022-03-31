@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 
 public class ApplicationTest {
-    static Path pathSimuInfos = Paths.get(System.getProperty("user.dir")+"/tooling/src/main/java/simulator/weeks/WEEK8-PREVIEW.json");
+    static Path pathSimuInfos = Paths.get(System.getProperty("user.dir")+"/tooling/src/main/java/simulator/weeks/WEEK9-PREVIEW.json");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws Exception {
