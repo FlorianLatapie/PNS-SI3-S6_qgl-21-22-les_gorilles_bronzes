@@ -138,23 +138,37 @@ public class NavigationEngine {
         return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
     }
 
-    public Voile findSail() {// TODO: use an optional
+    public List<Voile> findSail() {// TODO: use an optional
+        List<Voile> voiles = new ArrayList<>();
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
         if (searchForSail.isEmpty()) return null;
-        return (Voile) deckEngine.getEntitiesByClass(new Voile()).get(0);
+        for(int i=0; i < searchForSail.size(); i++){
+            voiles.add((Voile) deckEngine.getEntitiesByClass(new Voile()).get(i));
+        }
+        return voiles;
     }
 
     public List<Action> addSailAction() {
         List<Action> actions = new ArrayList<>();
 
-        Voile sail = findSail();
-        Optional<Sailor> sailorOnSail = findSailorOn(sail);
+        List<Voile> sails = new ArrayList<>();
+        sails.addAll(findSail());
 
-        if (sailorOnSail.isPresent() && shouldLiftSailValue) {
-            actions.add(new LiftSail(sailorOnSail.get().getId()));
+        List<Sailor> sailorsOnSail = new ArrayList<>();
+
+        for(Entity sail : sails){
+            deckEngine.getSailorByEntity(sail).ifPresent(sailor -> {
+                sailorsOnSail.add(sailor);
+            });
         }
-        if (sailorOnSail.isPresent() && !(shouldLiftSailValue)) {
-            actions.add(new LowerSail(sailorOnSail.get().getId()));
+
+        for(Sailor sailorOnSail : sailorsOnSail){
+            if(shouldLiftSailValue){
+                actions.add(new LiftSail(sailorOnSail.getId()));
+            }
+            if(!(shouldLiftSailValue)){
+                actions.add(new LowerSail(sailorOnSail.getId()));
+            }
         }
 
         return actions;
