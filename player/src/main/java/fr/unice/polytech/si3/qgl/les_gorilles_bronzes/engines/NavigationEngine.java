@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Re
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.OtherShip;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
@@ -398,13 +399,19 @@ public class NavigationEngine {
 
         if (visibleEntities != null) {
             //visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
+            List<VisibleEntity> allEntities = new ArrayList<>();
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
                     visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
-                    visibleEntitiesCache.add(visibleEntity);
+                    if(!(visibleEntity instanceof OtherShip)){
+                        visibleEntitiesCache.add(visibleEntity);
+                    } else {
+                        allEntities.add(visibleEntity);
+                    }
                 }
             }
-            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+            allEntities.addAll(visibleEntitiesCache);
+            for (VisibleEntity visibleEntity : allEntities) {
                 for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(2).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
