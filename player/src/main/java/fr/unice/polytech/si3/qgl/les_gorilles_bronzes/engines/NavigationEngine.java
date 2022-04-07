@@ -143,7 +143,7 @@ public class NavigationEngine {
         List<Voile> voiles = new ArrayList<>();
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
         if (searchForSail.isEmpty()) return null;
-        for(int i=0; i < searchForSail.size(); i++){
+        for (int i = 0; i < searchForSail.size(); i++) {
             voiles.add((Voile) deckEngine.getEntitiesByClass(new Voile()).get(i));
         }
         return voiles;
@@ -157,17 +157,17 @@ public class NavigationEngine {
 
         List<Sailor> sailorsOnSail = new ArrayList<>();
 
-        for(Entity sail : sails){
+        for (Entity sail : sails) {
             deckEngine.getSailorByEntity(sail).ifPresent(sailor -> {
                 sailorsOnSail.add(sailor);
             });
         }
 
-        for(Sailor sailorOnSail : sailorsOnSail){
-            if(shouldLiftSailValue){
+        for (Sailor sailorOnSail : sailorsOnSail) {
+            if (shouldLiftSailValue) {
                 actions.add(new LiftSail(sailorOnSail.getId()));
             }
-            if(!(shouldLiftSailValue)){
+            if (!(shouldLiftSailValue)) {
                 actions.add(new LowerSail(sailorOnSail.getId()));
             }
         }
@@ -186,15 +186,13 @@ public class NavigationEngine {
     }
 
 
-
-
-    public List<Action> addVigieAction(){
+    public List<Action> addVigieAction() {
         List<Action> actions = new ArrayList<>();
 
         Vigie vigie = findVigie();
         Optional<Sailor> sailorOnVigie = findSailorOn(vigie);
 
-        if (sailorOnVigie.isPresent()){
+        if (sailorOnVigie.isPresent()) {
             actions.add(new UseWatch(sailorOnVigie.get().getId()));
         }
 
@@ -399,19 +397,13 @@ public class NavigationEngine {
 
         if (visibleEntities != null) {
             //visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
-            List<VisibleEntity> allEntities = new ArrayList<>();
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
                     visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
-                    if(!(visibleEntity instanceof OtherShip)){
-                        visibleEntitiesCache.add(visibleEntity);
-                    } else {
-                        allEntities.add(visibleEntity);
-                    }
+                    visibleEntitiesCache.add(visibleEntity);
                 }
             }
-            allEntities.addAll(visibleEntitiesCache);
-            for (VisibleEntity visibleEntity : allEntities) {
+            for (VisibleEntity visibleEntity : visibleEntities) {
                 for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(2).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
@@ -453,6 +445,7 @@ public class NavigationEngine {
             // TODO : try to go straight instead
             Cockpit.log("NO PATH FOUND");
         }
+        visibleEntitiesCache.removeIf(e -> e instanceof OtherShip);
     }
 
 
