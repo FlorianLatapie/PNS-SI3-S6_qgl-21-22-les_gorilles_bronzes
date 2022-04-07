@@ -27,7 +27,7 @@ class NodeTest {
     void compareToTest(){
         assertTrue(nodes.get(0).compareTo(nodes.get(1)) < 0);
         assertTrue( nodes.get(1).compareTo(nodes.get(0)) > 0);
-        assertTrue( nodes.get(0).compareTo(nodes.get(0)) == 0);
+        assertEquals(0, nodes.get(0).compareTo(nodes.get(0)));
     }
 
     @Test

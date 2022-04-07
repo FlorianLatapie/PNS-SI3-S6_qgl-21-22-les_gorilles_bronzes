@@ -55,11 +55,6 @@ public class Rectangle implements Shape {
         vertices[2] = new Point(halfHeight, halfWidth);
         vertices[3] = new Point(-halfHeight, halfWidth);
 
-        /*vertices[4] = new Point(-halfHeight, 0);
-        vertices[5] = new Point(0, -halfWidth);
-        vertices[6] = new Point(halfHeight, 0);
-        vertices[7] = new Point(0, halfWidth);*/
-
         polygon.setVertices(vertices);
         polygon.setOrientation(orientation);
         return polygon;

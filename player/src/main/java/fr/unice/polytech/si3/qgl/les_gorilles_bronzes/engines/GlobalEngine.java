@@ -9,14 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GlobalEngine {
-    private int round = 0;
     private final DeckEngine deckEngine;
     private final NavigationEngine navigationEngine;
-
-    public GlobalEngine(InitGame initGame) {
-        this.deckEngine = new DeckEngine(initGame);
-        this.navigationEngine = new NavigationEngine(initGame, deckEngine, false);
-    }
 
     public GlobalEngine(InitGame initGame, boolean displayGraph){
         this.deckEngine = new DeckEngine(initGame);
@@ -31,7 +25,6 @@ public class GlobalEngine {
 
         actions.addAll(navigationEngine.computeNextRound(nextRound));
 
-        round++;
         Cockpit.log(actions);
         return actions.toArray(new Action[0]);
     }

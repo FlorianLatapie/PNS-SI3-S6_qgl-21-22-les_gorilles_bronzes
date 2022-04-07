@@ -32,7 +32,7 @@ public class Cockpit implements ICockpit {
 
     public Cockpit(boolean displayGraph) {
         this();
-        this.displayGraph = displayGraph;
+        Cockpit.displayGraph = displayGraph;
     }
 
     public void initGame(String jsonGame) {

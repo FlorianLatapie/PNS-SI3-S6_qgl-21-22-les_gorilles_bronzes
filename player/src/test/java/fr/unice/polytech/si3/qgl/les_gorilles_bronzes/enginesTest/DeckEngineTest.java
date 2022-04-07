@@ -94,7 +94,5 @@ class DeckEngineTest {
         assertEquals(1, deckEngine.getEntitiesByClass(new Vigie()).size());
         assertEquals(0, deckEngine.getEntitiesByClass(new Canon()).size());
     }
-
-
 }
 

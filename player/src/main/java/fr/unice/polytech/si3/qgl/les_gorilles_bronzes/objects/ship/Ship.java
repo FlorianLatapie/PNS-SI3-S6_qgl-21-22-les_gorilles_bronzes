@@ -76,7 +76,7 @@ public class Ship {
 
     public double getLargestSideSize() {
         if (shape instanceof Rectangle) {
-            return Math.max(((Rectangle) this.getShape()).getHeight(), ((Rectangle) this.getShape()).getHeight());
+            return Math.max(((Rectangle) this.getShape()).getHeight(), ((Rectangle) this.getShape()).getWidth());
         } else {
             return 50;
         }

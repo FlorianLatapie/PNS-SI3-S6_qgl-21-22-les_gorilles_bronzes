@@ -69,7 +69,6 @@ public class NavigationEngine {
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
         actions.addAll(addVigieAction());
-        // TODO add vigie action
 
         return actions;
     }
@@ -139,10 +138,10 @@ public class NavigationEngine {
         return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
     }
 
-    public List<Voile> findSail() {// TODO: use an optional
+    public List<Voile> findSail() {
         List<Voile> voiles = new ArrayList<>();
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
-        if (searchForSail.isEmpty()) return null;
+        if (searchForSail.isEmpty()) return voiles;
         for (int i = 0; i < searchForSail.size(); i++) {
             voiles.add((Voile) deckEngine.getEntitiesByClass(new Voile()).get(i));
         }
@@ -158,9 +157,7 @@ public class NavigationEngine {
         List<Sailor> sailorsOnSail = new ArrayList<>();
 
         for (Entity sail : sails) {
-            deckEngine.getSailorByEntity(sail).ifPresent(sailor -> {
-                sailorsOnSail.add(sailor);
-            });
+            deckEngine.getSailorByEntity(sail).ifPresent(sailorsOnSail::add);
         }
 
         for (Sailor sailorOnSail : sailorsOnSail) {
@@ -204,7 +201,7 @@ public class NavigationEngine {
 
     }
 
-    public double getGoalSpeed() { //TODO : check this algorithm : the unit tests shown that the speed was not calculated correctly, it is now fixed
+    public double getGoalSpeed() {
         Checkpoint checkpoint = getCheckpoint();
         return bestDistance(checkpoint, nextRound.getShip())
                 // - ((Circle)checkpoint.getShape()).getRadius()
@@ -396,7 +393,6 @@ public class NavigationEngine {
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
 
         if (visibleEntities != null) {
-            //visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
                     visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
@@ -442,7 +438,6 @@ public class NavigationEngine {
                 nodesDisplay.paintTheseNodes(nodes, path);
             }
         } else {
-            // TODO : try to go straight instead
             Cockpit.log("NO PATH FOUND");
         }
         visibleEntitiesCache.removeIf(e -> e instanceof OtherShip);

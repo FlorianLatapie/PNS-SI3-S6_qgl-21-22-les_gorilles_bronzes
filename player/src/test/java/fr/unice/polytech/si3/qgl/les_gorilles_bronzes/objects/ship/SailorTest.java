@@ -39,22 +39,48 @@ class SailorTest {
 
     @Test
     void moveTest(){
-        Sailor sailor = new Sailor(1, 0, 0, "Sailor");
-
         Rame rame = new Rame();
 
+        Sailor sailor = new Sailor(1, 0, 0, "Sailor");
         rame.setX(1);
         rame.setY(1);
         assertEquals(new Move(sailor.getId(), 1, 1), sailor.moveTo(rame));
+        assertEquals(1, sailor.getX());
+        assertEquals(1, sailor.getY());
 
+        sailor = new Sailor(1, 0, 0, "Sailor");
         rame.setX(10);
         rame.setY(10);
         assertEquals(new Move(sailor.getId(), 0, 5), sailor.moveTo(rame));
+        assertEquals(0, sailor.getX());
+        assertEquals(5, sailor.getY());
 
         sailor = new Sailor(1, 0, 0, "Sailor");
+        rame.setX(2);
+        rame.setY(4);
+        assertEquals(new Move(sailor.getId(), 1, 4), sailor.moveTo(rame));
+        assertEquals(1, sailor.getX());
+        assertEquals(4, sailor.getY());
 
+        sailor = new Sailor(1, 0, 0, "Sailor");
+        rame.setX(-1);
+        rame.setY(-1);
+        assertEquals(new Move(sailor.getId(), -1, -1), sailor.moveTo(rame));
+        assertEquals(-1, sailor.getX());
+        assertEquals(-1, sailor.getY());
+
+        sailor = new Sailor(1, 0, 0, "Sailor");
+        rame.setX(-10);
+        rame.setY(-10);
+        assertEquals(new Move(sailor.getId(), 0, -5), sailor.moveTo(rame));
+        assertEquals(0, sailor.getX());
+        assertEquals(-5, sailor.getY());
+
+        sailor = new Sailor(1, 0, 0, "Sailor");
         rame.setX(-2);
         rame.setY(-4);
         assertEquals(new Move(sailor.getId(), -1, -4), sailor.moveTo(rame));
+        assertEquals(-1, sailor.getX());
+        assertEquals(-4, sailor.getY());
     }
 }
