@@ -20,6 +20,7 @@ public class Sailor {
     public Sailor(int id, int x, int y, String name) {
         this(id, x, y, name, true);
     }
+
     public Sailor(int id, int x, int y, String name, boolean isFree) {
         this.id = id;
         this.x = x;

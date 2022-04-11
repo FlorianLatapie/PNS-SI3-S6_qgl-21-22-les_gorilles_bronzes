@@ -20,6 +20,9 @@ import java.util.Objects;
 public abstract class Action {
     private int sailorId;
 
+    protected Action() {
+    }
+
     protected Action(int sailorId) {
         this.sailorId = sailorId;
     }

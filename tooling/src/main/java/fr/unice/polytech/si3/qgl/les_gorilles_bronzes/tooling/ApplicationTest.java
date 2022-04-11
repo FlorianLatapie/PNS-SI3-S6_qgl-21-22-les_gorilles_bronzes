@@ -14,17 +14,16 @@ import java.nio.file.Paths;
 public class ApplicationTest {
     static Path pathSimuInfos = Paths.get(System.getProperty("user.dir")+"/tooling/src/main/java/simulator/weeks/WEEK9-PREVIEW.json");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    static {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     public static void main(String[] args) throws Exception {
-        Cockpit cockpit = new Cockpit();
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        new Simulator(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class), cockpit);
+        Simulator s = new Simulator(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class));
+        s.run();
     }
 
     public static String readFileAsString(Path file)throws Exception {
         return new String(Files.readAllBytes(file));
     }
-
-
-
 }

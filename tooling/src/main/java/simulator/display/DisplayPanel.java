@@ -26,7 +26,6 @@ import java.awt.event.MouseAdapter;
             addMouseWheelListener(e -> {
                 var wheelRotation = e.getPreciseWheelRotation() < 0 ? 1.1 : (1 / 1.1);
                 scale = scale * wheelRotation;
-                //repaint();
             });
 
 
@@ -53,7 +52,6 @@ import java.awt.event.MouseAdapter;
                         offsetX -= (e.getX() - mouseOrigin.x) / scale;
                         offsetY -= (e.getY() - mouseOrigin.y) / scale;
                         mouseOrigin = new IntPoint(e.getX(), e.getY());
-                        //repaint();
                     }
                 }
             });

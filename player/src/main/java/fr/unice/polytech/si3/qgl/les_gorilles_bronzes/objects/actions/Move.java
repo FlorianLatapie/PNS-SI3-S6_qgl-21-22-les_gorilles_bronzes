@@ -6,6 +6,9 @@ public class Move extends Action {
     private int xdistance; //absolute(xdistance) + absolute(ydistance) <= 5
     private int ydistance; //absolute(xdistance) + absolute(ydistance) <= 5
 
+    public Move() {
+    }
+
     public Move(int sailorId, int xdistance, int ydistance) {
         super(sailorId);
         this.xdistance = xdistance;

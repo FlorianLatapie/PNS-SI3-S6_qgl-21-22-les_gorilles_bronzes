@@ -4,56 +4,63 @@ package simulator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import simulator.SimulatorInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import simulator.display.DeckPanel;
 import simulator.display.DisplayPanel;
+import simulator.display.DisplayedSailor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Simulator extends JFrame {
-
     private SimulatorInfos simulatorInfos;
     private Cockpit cockpit;
+    private DisplayedSailor[] generatedSailors;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-
     private DisplayPanel panel;
+    private DeckPanel deckPanel;
+    int multiplyFactor = 107;
 
-
-    public Simulator(SimulatorInfos simulatorInfos, Cockpit cockpit) throws JsonProcessingException {
-        setTitle("oui");
-        setSize(500, 500);
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    public Simulator(SimulatorInfos simulatorInfos) throws JsonProcessingException {
         this.simulatorInfos = simulatorInfos;
-        this.cockpit = cockpit;
+        this.cockpit = new Cockpit();
 
         init();
+
+        // JFrame
+        setTitle("Gorille Simulator");
+        setSize(500, 500);
+        setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setLayout(new BorderLayout());
         panel = new DisplayPanel(simulatorInfos);
         add(panel, BorderLayout.CENTER);
-        setSize(1800, 900);
+
+        var width = simulatorInfos.getShip().getDeck().getWidth() * multiplyFactor;
+        this.setLocation(width, 0);
+        setSize(1800 - width, 900);
 
         new Thread(() -> {
             try {
                 while (true) {
                     panel.repaint();
+                    deckPanel.repaint();
                     Thread.sleep(50);
                 }
             } catch (final InterruptedException ignored) {
-
             }
         }).start();
-
-
     }
 
     private void initSimulatorInfos() {
@@ -66,39 +73,68 @@ public class Simulator extends JFrame {
     private void init() throws JsonProcessingException {
         initSimulatorInfos();
         initCockpit();
+
+        initDeckWindow();
+    }
+
+    private void initDeckWindow() {
+        var deck = simulatorInfos.getShip().getDeck();
+        var entities = simulatorInfos.getShip().getEntities();
+        var sailors = generatedSailors;
+
+        JFrame frame = new JFrame("Deck View");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        var width = deck.getWidth();
+        var height = deck.getLength();
+        frame.setSize(width * multiplyFactor, height * multiplyFactor);
+        frame.setVisible(true);
+
+        frame.setLayout(new BorderLayout());
+        deckPanel = new DeckPanel(deck, entities, sailors);
+        frame.add(deckPanel, BorderLayout.CENTER);
+        deckPanel.repaint();
     }
 
     private void initCockpit() throws JsonProcessingException {
         var initGame = new InitGame();
         initGame.setGoal(simulatorInfos.getGoal());
-        initGame.setSailors(generateSailors());
+        generatedSailors = generateSailors();
+        initGame.setSailors(generatedSailors);
         initGame.setShip(simulatorInfos.getShip());
         initGame.setShipCount(1);
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(initGame));
-        System.out.println(cockpit.toString());
     }
 
-    private Sailor[] generateSailors() {
+    private DisplayedSailor[] generateSailors() {
+        var minumumCrewSize = simulatorInfos.getMinumumCrewSize();
+        var maximumCrewSize = simulatorInfos.getMaximumCrewSize();
+        var deck = simulatorInfos.getShip().getDeck();
+        return SimulatorEngine.generateSailors(minumumCrewSize, maximumCrewSize, deck);
+    }
+
+    public void run() throws JsonProcessingException {
+        var nextRound = new NextRound();
         var ship = simulatorInfos.getShip();
-        var shipDeck = ship.getDeck();
-        var deckLength = shipDeck.getLength();
-        var deckWidth = shipDeck.getWidth();
-        var nbSailors = simulatorInfos.getMinumumCrewSize();
+        var shipPosition = ship.getPosition();
 
-        var sailors = new ArrayList<Sailor>();
-        var x = 0;
-        var y = 0;
-        for (int id = 0 ; id < nbSailors ; id++) {
-           sailors.add(new Sailor(id, x, y, ""+id));
-           if (x<deckWidth) {
-               x++;
-           } else {
-               x = 0;
-               y++;
-               assert y >= deckLength;
-           }
+        ship.setPosition(shipPosition);
+        nextRound.setShip(ship);
+
+        nextRound.setWind(simulatorInfos.getWind());
+
+        nextRound.setVisibleEntities(simulatorInfos.getSeaEntities());
+
+        var stringDefiningActions = cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(nextRound));
+        var recievedActions = OBJECT_MAPPER.readValue("{\"actions\":" + stringDefiningActions + "}", ActionArray.class);
+
+        for (var action : recievedActions.getActions()) {
+            if (action instanceof Move) {
+                var move = (Move) action;
+                var sailor = generatedSailors[move.getSailorId()];
+                sailor.setX(sailor.getX() + move.getXdistance());
+                sailor.setY(sailor.getY() + move.getYdistance());
+            }
         }
-       return sailors.toArray(new Sailor[0]);
     }
-
 }

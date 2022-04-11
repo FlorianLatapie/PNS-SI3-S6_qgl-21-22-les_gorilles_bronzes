@@ -5,6 +5,9 @@ import java.util.Objects;
 public class Aim extends Action {
     private double angle;//-PI/4 <= rotation <= PI/4
 
+    public Aim() {
+    }
+
     public Aim(int sailorId, double angle) {
         super(sailorId);
         this.angle = angle;
