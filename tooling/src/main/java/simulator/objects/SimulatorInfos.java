@@ -1,4 +1,4 @@
-package simulator;
+package simulator.objects;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;

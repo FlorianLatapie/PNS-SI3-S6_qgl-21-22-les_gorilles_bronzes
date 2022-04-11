@@ -7,25 +7,25 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
-import simulator.SimulatorInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import simulator.display.DeckPanel;
 import simulator.display.DisplayPanel;
-import simulator.display.DisplayedSailor;
+import simulator.objects.DisplayedSailor;
+import simulator.objects.ActionArray;
+import simulator.objects.SimulatorInfos;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 public class Simulator extends JFrame {
     private SimulatorInfos simulatorInfos;
     private Cockpit cockpit;
     private DisplayedSailor[] generatedSailors;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private JFrame deckFrame;
 
     private DisplayPanel panel;
     private DeckPanel deckPanel;
@@ -38,18 +38,8 @@ public class Simulator extends JFrame {
         init();
 
         // JFrame
-        setTitle("Gorille Simulator");
-        setSize(500, 500);
-        setVisible(true);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        setLayout(new BorderLayout());
-        panel = new DisplayPanel(simulatorInfos);
-        add(panel, BorderLayout.CENTER);
-
-        var width = simulatorInfos.getShip().getDeck().getWidth() * multiplyFactor;
-        this.setLocation(width, 0);
-        setSize(1800 - width, 900);
+        initDeckWindow();
+        initMainWindow(deckFrame.getWidth());
 
         new Thread(() -> {
             try {
@@ -63,6 +53,22 @@ public class Simulator extends JFrame {
         }).start();
     }
 
+    private void initMainWindow(int startingXPosition) {
+        setTitle("Gorille Simulator");
+        setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        setLayout(new BorderLayout());
+        panel = new DisplayPanel(simulatorInfos);
+        add(panel, BorderLayout.CENTER);
+
+        this.setLocation(startingXPosition, 0);
+        var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        var width = (int) screenSize.getWidth();
+        var height = (int) screenSize.getHeight() - 100;
+        setSize(width - startingXPosition, height);
+    }
+
     private void initSimulatorInfos() {
         var pos = simulatorInfos.getStartingPositions();
         var ship = simulatorInfos.getShip();
@@ -74,7 +80,7 @@ public class Simulator extends JFrame {
         initSimulatorInfos();
         initCockpit();
 
-        initDeckWindow();
+
     }
 
     private void initDeckWindow() {
@@ -82,17 +88,17 @@ public class Simulator extends JFrame {
         var entities = simulatorInfos.getShip().getEntities();
         var sailors = generatedSailors;
 
-        JFrame frame = new JFrame("Deck View");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        deckFrame = new JFrame("Deck View");
+        deckFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         var width = deck.getWidth();
         var height = deck.getLength();
-        frame.setSize(width * multiplyFactor, height * multiplyFactor);
-        frame.setVisible(true);
+        deckFrame.setSize(width * multiplyFactor, height * multiplyFactor);
+        deckFrame.setVisible(true);
 
-        frame.setLayout(new BorderLayout());
+        deckFrame.setLayout(new BorderLayout());
         deckPanel = new DeckPanel(deck, entities, sailors);
-        frame.add(deckPanel, BorderLayout.CENTER);
+        deckFrame.add(deckPanel, BorderLayout.CENTER);
         deckPanel.repaint();
     }
 
@@ -110,10 +116,12 @@ public class Simulator extends JFrame {
         var minumumCrewSize = simulatorInfos.getMinumumCrewSize();
         var maximumCrewSize = simulatorInfos.getMaximumCrewSize();
         var deck = simulatorInfos.getShip().getDeck();
-        return SimulatorEngine.generateSailors(minumumCrewSize, maximumCrewSize, deck);
+        return SimulatorModel.generateSailors(minumumCrewSize, maximumCrewSize, deck);
     }
 
     public void run() throws JsonProcessingException {
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
         var nextRound = new NextRound();
         var ship = simulatorInfos.getShip();
         var shipPosition = ship.getPosition();

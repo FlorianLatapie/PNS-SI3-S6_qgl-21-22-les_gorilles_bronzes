@@ -1,8 +1,8 @@
 package simulator.display;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+import simulator.objects.DisplayedSailor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +26,7 @@ public class DeckPanel extends JPanel {
         var g = (Graphics2D) _g;
         g.setColor(new Color(0x964B00));
         g.fillRect(0, 0, getWidth(), getHeight());
+
         for (var entity : entities) {
             g.setColor(Color.BLACK);
             g.drawRect(entity.getY() * boxSize, entity.getX() * boxSize, boxSize, boxSize);
