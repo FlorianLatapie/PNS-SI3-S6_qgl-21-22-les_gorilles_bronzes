@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.io.Serializable;
 import java.util.List;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
@@ -11,6 +13,21 @@ public class Display extends JFrame {
     private static Display instance;
     private List<Node> nodes;
     private List<Point> path;
+
+    private int offsetX = 0;
+    private int offsetY = 0;
+
+    private IntPoint mouseOrigin;
+
+    private static class IntPoint implements Serializable {
+        public final int x;
+        public final int y;
+
+        public IntPoint(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     public static Display getInstance() {
         if (instance == null) {
@@ -20,10 +37,31 @@ public class Display extends JFrame {
     }
 
     private Display() {
-        setTitle("JFrame Canvas Example");
+        setTitle("Pathfinding");
         setSize(1800, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    mouseOrigin = new IntPoint(e.getX(), e.getY());
+                }
+            }
+        });
+
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent e) {
+                if (mouseOrigin != null) {
+                    offsetX += (e.getX() - mouseOrigin.x) ;
+                    offsetY += (e.getY() - mouseOrigin.y) ;
+                    mouseOrigin = new IntPoint(e.getX(), e.getY());
+                    repaint();
+                }
+            }
+        });
     }
 
     public void paintTheseNodes(List<Node> nodes, List<Point> path) {
@@ -40,9 +78,6 @@ public class Display extends JFrame {
 
         int circleSize = 10;
         int ratio = 7;
-        int offset = 200;
-        int offsetX = offset;
-        int offsetY = offset * 2;
         if (nodes != null) {
             for (int i = 0; i < nodes.size(); i++) {
                 Node node = nodes.get(i);

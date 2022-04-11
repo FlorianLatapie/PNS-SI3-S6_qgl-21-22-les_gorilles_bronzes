@@ -19,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Scanner;
 
-public class Simulator extends JFrame {
+public class SimulatorController extends JFrame {
     private SimulatorInfos simulatorInfos;
     private Cockpit cockpit;
     private DisplayedSailor[] generatedSailors;
@@ -31,9 +31,9 @@ public class Simulator extends JFrame {
     private DeckPanel deckPanel;
     int multiplyFactor = 107;
 
-    public Simulator(SimulatorInfos simulatorInfos) throws JsonProcessingException {
+    public SimulatorController(SimulatorInfos simulatorInfos) throws JsonProcessingException {
         this.simulatorInfos = simulatorInfos;
-        this.cockpit = new Cockpit();
+        this.cockpit = new Cockpit(true);
 
         init();
 
@@ -46,7 +46,7 @@ public class Simulator extends JFrame {
                 while (true) {
                     panel.repaint();
                     deckPanel.repaint();
-                    Thread.sleep(50);
+                    Thread.sleep(16);
                 }
             } catch (final InterruptedException ignored) {
             }
@@ -79,8 +79,6 @@ public class Simulator extends JFrame {
     private void init() throws JsonProcessingException {
         initSimulatorInfos();
         initCockpit();
-
-
     }
 
     private void initDeckWindow() {
@@ -110,6 +108,7 @@ public class Simulator extends JFrame {
         initGame.setShip(simulatorInfos.getShip());
         initGame.setShipCount(1);
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(initGame));
+        System.out.println(cockpit);
     }
 
     private DisplayedSailor[] generateSailors() {
@@ -119,14 +118,24 @@ public class Simulator extends JFrame {
         return SimulatorModel.generateSailors(minumumCrewSize, maximumCrewSize, deck);
     }
 
-    public void run() throws JsonProcessingException {
+    public void run() throws JsonProcessingException, InterruptedException {
+        System.out.println("Starting simulation");
+
+        // pause the simulation until the user presses a key
+        // (very ugly, but it works)
         Scanner scanner = new Scanner(System.in);
         scanner.next();
+
+        computeNextRound();
+
+        run();
+    }
+
+    private void computeNextRound() throws JsonProcessingException {
         var nextRound = new NextRound();
         var ship = simulatorInfos.getShip();
         var shipPosition = ship.getPosition();
 
-        ship.setPosition(shipPosition);
         nextRound.setShip(ship);
 
         nextRound.setWind(simulatorInfos.getWind());

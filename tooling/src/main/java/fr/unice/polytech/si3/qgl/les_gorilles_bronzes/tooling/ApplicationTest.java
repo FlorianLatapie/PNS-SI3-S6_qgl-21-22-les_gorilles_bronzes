@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.tooling;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import simulator.objects.SimulatorInfos;
-import simulator.Simulator;
+import simulator.SimulatorController;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +18,7 @@ public class ApplicationTest {
     }
 
     public static void main(String[] args) throws Exception {
-        Simulator s = new Simulator(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class));
+        SimulatorController s = new SimulatorController(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class));
         s.run();
     }
 

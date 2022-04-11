@@ -28,8 +28,9 @@ public class DeckPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         for (var entity : entities) {
-            g.setColor(Color.BLACK);
-            g.drawRect(entity.getY() * boxSize, entity.getX() * boxSize, boxSize, boxSize);
+            // darker brown than the background
+            g.setColor(new Color(0x8B4513));
+            g.fillRect(entity.getY() * boxSize, entity.getX() * boxSize, boxSize, boxSize);
             g.setColor(Color.BLACK);
             g.drawString(entity.getClass().getSimpleName() + "", entity.getY() * boxSize + padding/2, entity.getX() * boxSize + padding +2);
         }
