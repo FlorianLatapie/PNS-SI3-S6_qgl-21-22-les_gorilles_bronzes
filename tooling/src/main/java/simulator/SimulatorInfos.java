@@ -12,8 +12,6 @@ import java.util.Arrays;
 public class SimulatorInfos {
     private Goal goal;
     private Ship ship;
-    private Sailor[] sailors;
-    private int shipCount;
     private Wind wind;
     private VisibleEntity[] seaEntities;
     private int maxRound;
@@ -86,29 +84,11 @@ public class SimulatorInfos {
         this.goal = goal;
     }
 
-    public Sailor[] getSailors() {
-        return sailors;
-    }
-
-    public void setSailors(Sailor[] sailors) {
-        this.sailors = sailors;
-    }
-
-    public int getShipCount() {
-        return shipCount;
-    }
-
-    public void setShipCount(int shipCount) {
-        this.shipCount = shipCount;
-    }
-
     @Override
     public String toString() {
         return "SimulatorInfos{" +
                 "goal=" + goal +
                 ", ship=" + ship +
-                ", sailors=" + Arrays.toString(sailors) +
-                ", shipCount=" + shipCount +
                 ", wind=" + wind +
                 ", visibleEntities=" + Arrays.toString(seaEntities) +
                 ", maxRound=" + maxRound +

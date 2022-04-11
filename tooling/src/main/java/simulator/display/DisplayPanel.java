@@ -1,6 +1,7 @@
 package simulator.display;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Reef;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream;
 import simulator.SimulatorInfos;
@@ -10,8 +11,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 
     public class DisplayPanel extends JPanel {
-        private double offsetX = 0, offsetY = 0, scale = 0.5;
+        private double offsetX = 0;
+        private double offsetY = 0;
+        private double scale = 0.5;
         private IntPoint mouseOrigin;
+
+        private Color waterColor = new Color(173,216,230);
 
         private SimulatorInfos simulatorInfos;
         public DisplayPanel(SimulatorInfos simulatorInfos) {
@@ -58,7 +63,7 @@ import java.awt.event.MouseAdapter;
         public void paintComponent(Graphics _g) {
             var g = (Graphics2D) _g;
 
-            g.setColor(new Color(206, 226, 255));
+            g.setColor(waterColor);
             g.fillRect(0, 0, getWidth(), getHeight());
 
             g.setPaintMode();
@@ -66,14 +71,25 @@ import java.awt.event.MouseAdapter;
             var visibleEntities = simulatorInfos.getSeaEntities();
             for (var entity : visibleEntities) {
                 if (entity instanceof Reef) {
-                    g.setColor(new Color(1,75,44));
+                    g.setColor(new Color(0,128,0));
                 } else if (entity instanceof Stream) {
-                    g.setColor(new Color(102,159,244));
+                    g.setColor(new Color(0,0,255));
                 } else {
                     g.setColor(Color.RED);
                 }
                 drawShapedThing(g, entity.getPosition(), entity.getShape(), true, Color.BLACK);
             }
+
+            var checkPoints = ((RegattaGoal)simulatorInfos.getGoal()).getCheckpoints();
+            for (int i = 0; i < checkPoints.length ; i++) {
+                var checkPoint = checkPoints[i];
+                g.setColor(new Color(255,0,0));
+                drawShapedThing(g, checkPoint.getPosition(), checkPoint.getShape(), false, Color.BLACK);
+                g.setColor(Color.BLACK);
+                var p = getPoint(checkPoint.getPosition());
+                g.drawString(i + "", p.x - 4, p.y + 4);
+            }
+
             var ship = simulatorInfos.getShip();
             drawShapedThing(g, ship.getPosition(), ship.getShape(), true, Color.yellow);
 

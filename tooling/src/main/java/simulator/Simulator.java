@@ -46,9 +46,9 @@ public class Simulator extends JFrame {
             try {
                 while (true) {
                     panel.repaint();
-                    Thread.sleep(1000);
+                    Thread.sleep(50);
                 }
-            } catch (final InterruptedException e) {
+            } catch (final InterruptedException ignored) {
 
             }
         }).start();
