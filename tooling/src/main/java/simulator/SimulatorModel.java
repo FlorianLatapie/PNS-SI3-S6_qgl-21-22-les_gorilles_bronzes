@@ -147,8 +147,8 @@ public class SimulatorModel {
                 countActiveOars((Oar) action);
             } else if (action instanceof LiftSail) {
                 activeSails++;
-            /*} else if (action instanceof LowerSail) {
-                activeSails --;*/
+            } else if (action instanceof LowerSail) {
+                //activeSails --;
             } else if (action instanceof Turn) {
                 var turn = (Turn) action;
                 rudderAngle = turn.getRotation();
