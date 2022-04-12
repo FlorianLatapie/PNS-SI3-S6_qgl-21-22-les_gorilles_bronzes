@@ -130,10 +130,9 @@ public class SimulatorController extends JFrame {
 
     private void computeNextRound() throws JsonProcessingException {
         var nextRound = simulatorModel.generateNextRound();
-
         var nextRoundJSON = OBJECT_MAPPER.writeValueAsString(nextRound);
-        var stringDefiningActions = cockpit.nextRound(nextRoundJSON);
 
+        var stringDefiningActions = cockpit.nextRound(nextRoundJSON);
         var receivedActions = OBJECT_MAPPER.readValue("{\"actions\":" + stringDefiningActions + "}", ActionArray.class);
 
         simulatorModel.applyActions(receivedActions.getActions());
