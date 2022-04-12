@@ -2,7 +2,9 @@ package simulator.display;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+import simulator.SimulatorModel;
 import simulator.objects.DisplayedSailor;
+import simulator.objects.SimulatorInfos;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +17,10 @@ public class DeckPanel extends JPanel {
     private int boxSize = 100;
     private int padding = 10;
 
-    public DeckPanel(Deck deck, Entity[] entities, DisplayedSailor[] sailors) {
-        this.deck = deck;
-        this.sailors = sailors;
-        this.entities = entities;
+    public DeckPanel(SimulatorModel model, SimulatorInfos simulatorInfos) {
+        this.deck = simulatorInfos.getShip().getDeck();
+        this.sailors = model.getSailors();
+        this.entities = simulatorInfos.getShip().getEntities();
     }
 
     @Override

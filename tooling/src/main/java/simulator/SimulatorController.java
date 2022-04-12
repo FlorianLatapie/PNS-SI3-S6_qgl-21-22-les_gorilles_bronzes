@@ -21,8 +21,8 @@ import java.util.Scanner;
 
 public class SimulatorController extends JFrame {
     private SimulatorInfos simulatorInfos;
+    private SimulatorModel simulatorModel;
     private Cockpit cockpit;
-    private DisplayedSailor[] generatedSailors;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private JFrame deckFrame;
@@ -31,11 +31,8 @@ public class SimulatorController extends JFrame {
     private DeckPanel deckPanel;
     int multiplyFactor = 107;
 
-    public SimulatorController(SimulatorInfos simulatorInfos) throws JsonProcessingException {
-        this.simulatorInfos = simulatorInfos;
-        this.cockpit = new Cockpit(true);
-
-        init();
+    public SimulatorController(SimulatorInfos parsedJson) throws JsonProcessingException {
+       init(parsedJson);
 
         // JFrame
         initDeckWindow();
@@ -76,26 +73,28 @@ public class SimulatorController extends JFrame {
         ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(), ship.getPosition().getOrientation()));
     }
 
-    private void init() throws JsonProcessingException {
+    private void init(SimulatorInfos simulatorInfos) throws JsonProcessingException {
+        this.simulatorInfos = simulatorInfos;
+        this.simulatorModel = new SimulatorModel(simulatorInfos);
+        this.cockpit = new Cockpit(true);
+
         initSimulatorInfos();
         initCockpit();
     }
 
     private void initDeckWindow() {
-        var deck = simulatorInfos.getShip().getDeck();
-        var entities = simulatorInfos.getShip().getEntities();
-        var sailors = generatedSailors;
-
         deckFrame = new JFrame("Deck View");
         deckFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        var deck = simulatorInfos.getShip().getDeck();
         var width = deck.getWidth();
         var height = deck.getLength();
+
         deckFrame.setSize(width * multiplyFactor, height * multiplyFactor);
         deckFrame.setVisible(true);
 
         deckFrame.setLayout(new BorderLayout());
-        deckPanel = new DeckPanel(deck, entities, sailors);
+        deckPanel = new DeckPanel(simulatorModel, simulatorInfos);
         deckFrame.add(deckPanel, BorderLayout.CENTER);
         deckPanel.repaint();
     }
@@ -103,23 +102,21 @@ public class SimulatorController extends JFrame {
     private void initCockpit() throws JsonProcessingException {
         var initGame = new InitGame();
         initGame.setGoal(simulatorInfos.getGoal());
-        generatedSailors = generateSailors();
-        initGame.setSailors(generatedSailors);
+        initGame.setSailors(generateSailors());
         initGame.setShip(simulatorInfos.getShip());
         initGame.setShipCount(1);
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(initGame));
-        System.out.println(cockpit);
     }
 
     private DisplayedSailor[] generateSailors() {
         var minumumCrewSize = simulatorInfos.getMinumumCrewSize();
         var maximumCrewSize = simulatorInfos.getMaximumCrewSize();
         var deck = simulatorInfos.getShip().getDeck();
-        return SimulatorModel.generateSailors(minumumCrewSize, maximumCrewSize, deck);
+        return simulatorModel.generateSailors(minumumCrewSize, maximumCrewSize, deck);
     }
 
     public void run() throws JsonProcessingException, InterruptedException {
-        System.out.println("Starting simulation");
+        System.out.println("new step in simulation");
 
         // pause the simulation until the user presses a key
         // (very ugly, but it works)
@@ -132,26 +129,13 @@ public class SimulatorController extends JFrame {
     }
 
     private void computeNextRound() throws JsonProcessingException {
-        var nextRound = new NextRound();
-        var ship = simulatorInfos.getShip();
-        var shipPosition = ship.getPosition();
+        var nextRound = simulatorModel.generateNextRound();
 
-        nextRound.setShip(ship);
+        var nextRoundJSON = OBJECT_MAPPER.writeValueAsString(nextRound);
+        var stringDefiningActions = cockpit.nextRound(nextRoundJSON);
 
-        nextRound.setWind(simulatorInfos.getWind());
+        var receivedActions = OBJECT_MAPPER.readValue("{\"actions\":" + stringDefiningActions + "}", ActionArray.class);
 
-        nextRound.setVisibleEntities(simulatorInfos.getSeaEntities());
-
-        var stringDefiningActions = cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(nextRound));
-        var recievedActions = OBJECT_MAPPER.readValue("{\"actions\":" + stringDefiningActions + "}", ActionArray.class);
-
-        for (var action : recievedActions.getActions()) {
-            if (action instanceof Move) {
-                var move = (Move) action;
-                var sailor = generatedSailors[move.getSailorId()];
-                sailor.setX(sailor.getX() + move.getXdistance());
-                sailor.setY(sailor.getY() + move.getYdistance());
-            }
-        }
+        simulatorModel.applyActions(receivedActions.getActions());
     }
 }

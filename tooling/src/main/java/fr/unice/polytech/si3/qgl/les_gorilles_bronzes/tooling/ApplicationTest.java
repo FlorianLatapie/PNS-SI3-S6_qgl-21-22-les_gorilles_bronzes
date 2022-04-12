@@ -19,6 +19,7 @@ public class ApplicationTest {
 
     public static void main(String[] args) throws Exception {
         SimulatorController s = new SimulatorController(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class));
+        System.out.println("Starting simulation");
         s.run();
     }
 
