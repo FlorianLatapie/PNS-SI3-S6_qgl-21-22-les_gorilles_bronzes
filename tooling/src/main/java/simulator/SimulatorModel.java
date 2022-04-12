@@ -2,10 +2,12 @@ package simulator;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
@@ -14,7 +16,7 @@ import simulator.objects.DisplayedSailor;
 import simulator.objects.SimulatorInfos;
 import simulator.util.AWTUtil;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -32,8 +34,6 @@ public class SimulatorModel {
     private Wind wind;
 
     private Ship ship;
-    private Position shipPos;
-    private double shipSpeed;
 
     private final long oarCount;
     private int leftOars;
@@ -55,8 +55,6 @@ public class SimulatorModel {
         this.wind = simulatorInfos.getWind();
 
         this.ship = simulatorInfos.getShip();
-        this.shipPos = simulatorInfos.getShip().getPosition();
-        this.shipSpeed = 0;
 
         this.oarCount = Arrays.stream(simulatorInfos.getShip().getEntities()).filter(Rame.class::isInstance).count();
         this.sailCount = Arrays.stream(simulatorInfos.getShip().getEntities()).filter(Voile.class::isInstance).count();
@@ -113,12 +111,10 @@ public class SimulatorModel {
     }
 
     private Ship updateShip() {
-        System.out.println("updateShip() : stub, returns the same ship !");
         return ship;
     }
 
     private Wind updateWind() {
-        System.out.println("updateWind() : ok");
         return wind;
     }
 
@@ -163,14 +159,18 @@ public class SimulatorModel {
             }
         }
 
-        displayCounts();
+        //displayCounts();
 
         moveShip();
     }
 
     private void moveShip() {
         var linearSpeed = getOarSpeed() + getSailSpeed();
-        System.out.println("moveShip() : linearSpeed = " + linearSpeed);
+        var rotation = rudderAngle + new OarConfiguration(leftOars, rightOars, (int) oarCount).getAngle();
+
+        var newPoint = Point.fromPolar(linearSpeed, ship.getPosition().getOrientation());
+        var newShipPosition = ship.getPosition().add(newPoint.getX(), newPoint.getY(), rotation);
+        ship.setPosition(newShipPosition);
     }
 
     private double getOarSpeed() {

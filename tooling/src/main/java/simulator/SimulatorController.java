@@ -32,6 +32,7 @@ public class SimulatorController extends JFrame {
     int multiplyFactor = 107;
 
     public SimulatorController(SimulatorInfos parsedJson) throws JsonProcessingException {
+
        init(parsedJson);
 
         // JFrame
@@ -75,10 +76,11 @@ public class SimulatorController extends JFrame {
 
     private void init(SimulatorInfos simulatorInfos) throws JsonProcessingException {
         this.simulatorInfos = simulatorInfos;
-        this.simulatorModel = new SimulatorModel(simulatorInfos);
-        this.cockpit = new Cockpit(true);
-
         initSimulatorInfos();
+
+        this.simulatorModel = new SimulatorModel(simulatorInfos);
+
+        this.cockpit = new Cockpit(true);
         initCockpit();
     }
 
@@ -118,13 +120,15 @@ public class SimulatorController extends JFrame {
     public void run() throws JsonProcessingException, InterruptedException {
         System.out.println("new step in simulation");
 
+        /*
         // pause the simulation until the user presses a key
         // (very ugly, but it works)
         Scanner scanner = new Scanner(System.in);
-        scanner.next();
+        scanner.next();*/
 
         computeNextRound();
 
+        Thread.sleep(100);
         run();
     }
 
