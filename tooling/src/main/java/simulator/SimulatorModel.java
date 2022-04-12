@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import simulator.objects.DisplayedSailor;
 import simulator.objects.SimulatorInfos;
 import simulator.util.AWTUtil;
@@ -18,18 +19,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
+
 public class SimulatorModel {
     private final SimulatorInfos simulatorInfos;
 
     private DisplayedSailor[] generatedSailors;
 
+    private Random random;
+
+    private VisibleEntity[] seaEntities;
+    private Wind wind;
+
+    private Ship ship;
     private Position shipPos;
     private double shipSpeed;
 
-    private long OAR_COUNT;
+    private final long oarCount;
     private int leftOars;
     private int rightOars;
 
+    private final long sailCount;
     private int activeSails;
 
     private double rudderAngle;
@@ -37,12 +47,19 @@ public class SimulatorModel {
     private boolean useWatch;
 
     public SimulatorModel(SimulatorInfos simulatorInfos) {
+        this.random = new Random();
+
         this.simulatorInfos = simulatorInfos;
+
+        this.seaEntities = simulatorInfos.getSeaEntities();
+        this.wind = simulatorInfos.getWind();
+
+        this.ship = simulatorInfos.getShip();
         this.shipPos = simulatorInfos.getShip().getPosition();
         this.shipSpeed = 0;
 
-        this.OAR_COUNT = Arrays.stream(simulatorInfos.getShip().getEntities()).filter(e -> e instanceof Rame).count();
-
+        this.oarCount = Arrays.stream(simulatorInfos.getShip().getEntities()).filter(Rame.class::isInstance).count();
+        this.sailCount = Arrays.stream(simulatorInfos.getShip().getEntities()).filter(Voile.class::isInstance).count();
         initCounts();
     }
 
@@ -61,9 +78,9 @@ public class SimulatorModel {
     public DisplayedSailor[] generateSailors(int minSailors, int maxSailors, Deck deck) {
         var deckWidth = deck.getWidth();
         var deckLength = deck.getLength();
-        var nbSailors = new Random().nextInt(maxSailors - minSailors + 1) + minSailors;
+        var nbSailors = random.nextInt(maxSailors - minSailors + 1) + minSailors;
 
-        var sailors = new ArrayList<Sailor>();
+        var sailors = new ArrayList<DisplayedSailor>();
         var x = 0;
         var y = 0;
         for (int id = 0; id < nbSailors; id++) {
@@ -96,19 +113,16 @@ public class SimulatorModel {
     }
 
     private Ship updateShip() {
-        var ship = simulatorInfos.getShip();
         System.out.println("updateShip() : stub, returns the same ship !");
         return ship;
     }
 
     private Wind updateWind() {
-        var wind = simulatorInfos.getWind();
         System.out.println("updateWind() : ok");
         return wind;
     }
 
     private VisibleEntity[] updateSeaEntities() {
-        var seaEntities = simulatorInfos.getSeaEntities();
         System.out.println("updateSeaEntities() : give all entities to the cockpit");
         return seaEntities;
     }
@@ -127,19 +141,18 @@ public class SimulatorModel {
         }
 
         for (var action : moveActions) {
-            var move = (Move) action;
-            var sailor = generatedSailors[move.getSailorId()];
-            sailor.setX(sailor.getX() + move.getXdistance());
-            sailor.setY(sailor.getY() + move.getYdistance());
+            var sailor = generatedSailors[action.getSailorId()];
+            sailor.setX(sailor.getX() + action.getXdistance());
+            sailor.setY(sailor.getY() + action.getYdistance());
         }
 
         for (var action : otherActions) {
             if (action instanceof Oar) {
                 countActiveOars((Oar) action);
             } else if (action instanceof LiftSail) {
-                activeSails ++;
-            } else if (action instanceof LowerSail) {
-                activeSails --;
+                activeSails++;
+            /*} else if (action instanceof LowerSail) {
+                activeSails --;*/
             } else if (action instanceof Turn) {
                 var turn = (Turn) action;
                 rudderAngle = turn.getRotation();
@@ -151,10 +164,30 @@ public class SimulatorModel {
         }
 
         displayCounts();
+
+        moveShip();
+    }
+
+    private void moveShip() {
+        var linearSpeed = getOarSpeed() + getSailSpeed();
+        System.out.println("moveShip() : linearSpeed = " + linearSpeed);
+    }
+
+    private double getOarSpeed() {
+        return 165.0 * (leftOars + rightOars) / (double) oarCount;
+    }
+
+    private double getSailSpeed() {
+        var shipOrientation = ship.getPosition().getOrientation();
+        double clampedShipOrientation = clampAngle(shipOrientation);
+
+        var windSpeed = wind.getStrength();
+
+        return (activeSails / sailCount) * windSpeed * Math.cos(clampedShipOrientation - wind.getOrientation());
     }
 
     private void displayCounts() {
-        System.out.println("OAR_COUNT : " + OAR_COUNT);
+        System.out.println("OAR_COUNT : " + oarCount);
         System.out.println("leftOars : " + leftOars);
         System.out.println("rightOars : " + rightOars);
         System.out.println("activeSails : " + activeSails);
@@ -165,10 +198,10 @@ public class SimulatorModel {
     private void countActiveOars(Oar action) {
         var oar = action;
         var sailor = generatedSailors[oar.getSailorId()];
-        if (sailor.getY() == 0){
-            leftOars ++;
+        if (sailor.getY() == 0) {
+            leftOars++;
         } else {
-            rightOars ++;
+            rightOars++;
         }
     }
 

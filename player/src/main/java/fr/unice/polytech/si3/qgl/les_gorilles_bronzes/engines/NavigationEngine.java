@@ -123,6 +123,7 @@ public class NavigationEngine {
     }
 
     public double getWindSpeedRelativeToShip(Wind wind) {
+        //TODO : use the correct wind speed : Valeur: (nombre de voile ouverte / nombre de voile) x force du vent x cosinus(angle entre la direction du vent et la direction du bateau)
         int nbSail = deckEngine.getEntitiesByClass(new Voile()).size();
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
