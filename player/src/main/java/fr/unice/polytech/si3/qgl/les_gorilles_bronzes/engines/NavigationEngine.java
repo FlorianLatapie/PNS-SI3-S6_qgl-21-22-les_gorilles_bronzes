@@ -18,7 +18,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.display.Display;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.*;
@@ -29,7 +28,6 @@ import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
 
 public class NavigationEngine {
-    private boolean displayGraph;
     private InitGame initGame;
     private NextRound nextRound;
     private DeckEngine deckEngine;
@@ -38,7 +36,6 @@ public class NavigationEngine {
     private double nextPointRadius;
     private Point nextPoint2;
 
-    private Display nodesDisplay;
 
     // cached values for performance
     private Set<VisibleEntity> visibleEntitiesCache;
@@ -47,14 +44,9 @@ public class NavigationEngine {
     private List<Point> path;
     private List<Node> nodes;
 
-    public NavigationEngine(InitGame initGame, DeckEngine deckEngine, boolean displayGraph) {
+    public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
-
-        this.displayGraph = displayGraph;
-        if (displayGraph) {
-            nodesDisplay = Display.getInstance();
-        }
 
         visibleEntitiesCache = new HashSet<>();
     }
@@ -398,9 +390,6 @@ public class NavigationEngine {
         if (path != null && path.size() > 1) {
             nextPoint = path.get(1);
             nextPoint2 = null;
-            if (displayGraph) {
-                nodesDisplay.paintTheseNodes(nodes, path);
-            }
         } else {
             // TODO : try to go straight instead
             Cockpit.log("NO PATH FOUND");

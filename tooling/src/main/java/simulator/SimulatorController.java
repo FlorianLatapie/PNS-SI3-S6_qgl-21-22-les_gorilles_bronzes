@@ -80,7 +80,7 @@ public class SimulatorController extends JFrame {
 
         this.simulatorModel = new SimulatorModel(simulatorInfos);
 
-        this.cockpit = new Cockpit(true);
+        this.cockpit = new Cockpit();
         initCockpit();
     }
 
