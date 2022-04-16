@@ -360,7 +360,6 @@ public class NavigationEngine {
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
 
         if (visibleEntities != null) {
-            //visibleEntitiesCache.addAll(Arrays.asList(visibleEntities));
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
                     visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
@@ -381,18 +380,14 @@ public class NavigationEngine {
             var current = x.poll();
 
             for (Node node : nodes) {
-                if (node == current) { // don't link a node with itself
-                    continue;
-                }
+                if (node != current) { // don't link a node with itself
+                    var pos = node.getPoint();
 
-                var pos = node.getPoint();
-
-                if (checkInTheWay(current.getPoint(), pos)) {
-                    continue; // the node is not reachable
-                }
-
-                if (current.addBranch(node)) {
-                    x.add(node);
+                    if (!checkInTheWay(current.getPoint(), pos)) {
+                        if (current.addBranch(node)) {
+                            x.add(node);
+                        }
+                    }
                 }
             }
         }
