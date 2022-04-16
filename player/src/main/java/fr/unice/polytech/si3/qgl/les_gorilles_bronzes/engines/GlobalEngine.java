@@ -12,9 +12,9 @@ public class GlobalEngine {
     private final DeckEngine deckEngine;
     private final NavigationEngine navigationEngine;
 
-    public GlobalEngine(InitGame initGame, boolean displayGraph){
+    public GlobalEngine(InitGame initGame) {
         this.deckEngine = new DeckEngine(initGame);
-        this.navigationEngine = new NavigationEngine(initGame, deckEngine, displayGraph);
+        this.navigationEngine = new NavigationEngine(initGame, deckEngine);
     }
 
     public Action[] computeNextRound(NextRound nextRound) {

@@ -23,6 +23,11 @@ public class Position extends Point{
         this.orientation = orientation;
     }
 
+    public Position add(double x, double y, double rot)
+    {
+        return new Position(this.getX() + x, this.getY() + y, this.orientation + rot);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -20,7 +20,6 @@ public class Cockpit implements ICockpit {
     private GlobalEngine globalEngine;
     private static Logger logger = Logger.getLogger(Cockpit.class.getName());
     private static List<String> logs = new ArrayList<>();
-    private static boolean displayGraph;
 
     public Cockpit() {
         /**
@@ -30,15 +29,10 @@ public class Cockpit implements ICockpit {
         log("Cockpit initialized");
     }
 
-    public Cockpit(boolean displayGraph) {
-        this();
-        Cockpit.displayGraph = displayGraph;
-    }
-
     public void initGame(String jsonGame) {
         try {
             this.initGame = OBJECT_MAPPER.readValue(jsonGame, InitGame.class);
-            this.globalEngine = new GlobalEngine(initGame, displayGraph);
+            this.globalEngine = new GlobalEngine(initGame);
         } catch (JsonProcessingException e) {
             e.getMessage();
         }
@@ -79,5 +73,14 @@ public class Cockpit implements ICockpit {
 
     public void wipeLogs() {
         logs.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "Cockpit{" +
+                "initGame=" + initGame + System.lineSeparator() +
+                ", nextRound=" + nextRound + System.lineSeparator() +
+                ", globalEngine=" + globalEngine + System.lineSeparator() +
+                '}';
     }
 }

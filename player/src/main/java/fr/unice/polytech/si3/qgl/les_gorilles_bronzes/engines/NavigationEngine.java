@@ -21,7 +21,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouver
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.display.Display;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.*;
@@ -32,7 +31,6 @@ import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
 
 public class NavigationEngine {
-    private boolean displayGraph;
     private InitGame initGame;
     private NextRound nextRound;
     private DeckEngine deckEngine;
@@ -41,21 +39,17 @@ public class NavigationEngine {
     private double nextPointRadius;
     private Point nextPoint2;
 
-    private Display nodesDisplay;
 
     // cached values for performance
     private Set<VisibleEntity> visibleEntitiesCache;
     private double bestAngle;
     private boolean shouldLiftSailValue;
+    private List<Point> path;
+    private List<Node> nodes;
 
-    public NavigationEngine(InitGame initGame, DeckEngine deckEngine, boolean displayGraph) {
+    public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
-
-        this.displayGraph = displayGraph;
-        if (displayGraph) {
-            nodesDisplay = Display.getInstance();
-        }
 
         visibleEntitiesCache = new HashSet<>();
     }
@@ -131,6 +125,7 @@ public class NavigationEngine {
     }
 
     public double getWindSpeedRelativeToShip(Wind wind) {
+        //TODO : use the correct wind speed : Valeur: (nombre de voile ouverte / nombre de voile) x force du vent x cosinus(angle entre la direction du vent et la direction du bateau)
         int nbSail = deckEngine.getEntitiesByClass(new Voile()).size();
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
@@ -371,8 +366,9 @@ public class NavigationEngine {
 
     public void updateGraph() {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
-        List<Node> nodes = new ArrayList<>();
 
+        nodes = new ArrayList<>();
+        nodes.clear();
 
         Ship ship = nextRound.getShip();
         Node shipNode = new Node(ship.getPosition());
@@ -413,38 +409,36 @@ public class NavigationEngine {
             var current = x.poll();
 
             for (Node node : nodes) {
-                if (node == current) { // don't link a node with itself
-                    continue;
-                }
+                if (node != current) { // don't link a node with itself
+                    var pos = node.getPoint();
 
-                var pos = node.getPoint();
-
-                if (checkInTheWay(current.getPoint(), pos)) {
-                    continue; // the node is not reachable
-                }
-
-                if (current.addBranch(node)) {
-                    x.add(node);
+                    if (!checkInTheWay(current.getPoint(), pos) && current.addBranch(node)) {
+                            x.add(node);
+                    }
                 }
             }
         }
 
-        var path = shipNode.findPathTo(checkpoint);
+        path = shipNode.findPathTo(checkpoint);
 
         if (path != null && path.size() > 1) {
             nextPoint = path.get(1);
             nextPoint2 = null;
-            if (displayGraph) {
-                nodesDisplay.paintTheseNodes(nodes, path);
-            }
         } else {
             Cockpit.log("NO PATH FOUND");
         }
         visibleEntitiesCache.removeIf(e -> e instanceof OtherShip);
     }
 
+    public List<Point> getPath() {
+        return path;
+    }
 
-    public void setNextCheckpointToReach(int nextCheckpointToReach) {
-        this.nextCheckpointToReach = nextCheckpointToReach;
+    public Set<VisibleEntity> getVisibleEntitiesCache() {
+        return visibleEntitiesCache;
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
     }
 }

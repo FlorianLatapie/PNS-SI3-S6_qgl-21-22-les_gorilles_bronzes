@@ -16,6 +16,10 @@ public class Point {
         this.y = y;
     }
 
+    public static Point fromPolar(double r, double theta) {
+        return new Point(r * Math.cos(theta), r * Math.sin(theta));
+    }
+
     public double getX() {
         return x;
     }

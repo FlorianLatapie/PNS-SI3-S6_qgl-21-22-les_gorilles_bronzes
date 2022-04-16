@@ -5,6 +5,9 @@ import java.util.Objects;
 public class Turn extends Action {
     private double rotation;//-PI/4 <= rotation <= PI/4
 
+    public Turn() {
+    }
+
     public Turn(int sailorId, double rotation) {
         super(sailorId);
         this.rotation = rotation;
