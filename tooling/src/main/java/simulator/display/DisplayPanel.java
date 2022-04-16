@@ -32,6 +32,7 @@ public class DisplayPanel extends JPanel {
 
     private Set<VisibleEntity> visibleEntitiesCache;
     private List<Point> path;
+    private List<Node> nodes;
 
     public DisplayPanel(SimulatorInfos simulatorInfos, Cockpit cockpit) {
         super();
@@ -40,6 +41,7 @@ public class DisplayPanel extends JPanel {
 
         this.path = cockpit.getGlobalEngine().getNavigationEngine().getPath();
         this.visibleEntitiesCache = cockpit.getGlobalEngine().getNavigationEngine().getVisibleEntitiesCache();
+        this.nodes = cockpit.getGlobalEngine().getNavigationEngine().getNodes();
 
         addMouseWheelListener(e -> {
             var wheelRotation = e.getPreciseWheelRotation() < 0 ? 1.1 : (1 / 1.1);
@@ -86,16 +88,6 @@ public class DisplayPanel extends JPanel {
 
 
         // infos from cockpit
-        this.path = cockpit.getGlobalEngine().getNavigationEngine().getPath();
-        if (path != null) {
-            g.setColor(Color.RED);
-            for (var i = 0; i < path.size() - 1; i++) {
-                var from = getPoint(path.get(i));
-                var to = getPoint(path.get(i + 1));
-                g.drawLine(from.x, from.y, to.x, to.y);
-            }
-        }
-
         this.visibleEntitiesCache = cockpit.getGlobalEngine().getNavigationEngine().getVisibleEntitiesCache();
         if (visibleEntitiesCache != null) {
             for (var entity : visibleEntitiesCache) {
@@ -109,9 +101,6 @@ public class DisplayPanel extends JPanel {
                 drawShapedThing(g, entity.getPosition(), entity.getShape(), true, Color.BLACK);
             }
         }
-
-
-
 
         // infos from simulator
 
@@ -140,6 +129,38 @@ public class DisplayPanel extends JPanel {
         var ship = simulatorInfos.getShip();
         drawShapedThing(g, ship.getPosition(), ship.getShape(), true, Color.yellow);
 
+
+        // infos from cockpit
+        this.nodes = cockpit.getGlobalEngine().getNavigationEngine().getNodes();
+        if (nodes != null) {
+            g.setColor(Color.BLACK);
+            for (var node : nodes) {
+                var point = getPoint(node.getPoint());
+                g.fillOval(point.x - circleSize / 2, point.y - circleSize / 2, circleSize, circleSize);
+
+                g.setColor(Color.gray);
+
+                for (var edge : node.getNeighbors().entrySet()) {
+                    var from = getPoint(node.getPoint());
+                    var to = getPoint(edge.getKey().getPoint());
+                    int x1 = from.x;
+                    int y1 = from.y;
+                    int x2 = to.x;
+                    int y2 = to.y;
+                    g.drawLine(x1, y1, x2, y2);
+                }
+            }
+        }
+
+        this.path = cockpit.getGlobalEngine().getNavigationEngine().getPath();
+        if (path != null) {
+            g.setColor(Color.RED);
+            for (var i = 0; i < path.size() - 1; i++) {
+                var from = getPoint(path.get(i));
+                var to = getPoint(path.get(i + 1));
+                g.drawLine(from.x, from.y, to.x, to.y);
+            }
+        }
     }
 
     private void drawShapedThing(Graphics gp, Position p, fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Shape shape, boolean showArrow, Color color) {
