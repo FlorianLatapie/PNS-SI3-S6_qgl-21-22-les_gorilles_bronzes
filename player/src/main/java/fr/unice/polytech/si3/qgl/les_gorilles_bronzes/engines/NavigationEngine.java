@@ -44,6 +44,8 @@ public class NavigationEngine {
     private Set<VisibleEntity> visibleEntitiesCache;
     private double bestAngle;
     private boolean shouldLiftSailValue;
+    private List<Point> path;
+    private List<Node> nodes;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine, boolean displayGraph) {
         this.initGame = initGame;
@@ -338,8 +340,9 @@ public class NavigationEngine {
 
     public void updateGraph() {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
-        List<Node> nodes = new ArrayList<>();
 
+        nodes = new ArrayList<>();
+        nodes.clear();
 
         Ship ship = nextRound.getShip();
         Node shipNode = new Node(ship.getPosition());
@@ -383,16 +386,14 @@ public class NavigationEngine {
                 if (node != current) { // don't link a node with itself
                     var pos = node.getPoint();
 
-                    if (!checkInTheWay(current.getPoint(), pos)) {
-                        if (current.addBranch(node)) {
+                    if (!checkInTheWay(current.getPoint(), pos) && current.addBranch(node)) {
                             x.add(node);
-                        }
                     }
                 }
             }
         }
 
-        var path = shipNode.findPathTo(checkpoint);
+        path = shipNode.findPathTo(checkpoint);
 
         if (path != null && path.size() > 1) {
             nextPoint = path.get(1);
@@ -406,8 +407,15 @@ public class NavigationEngine {
         }
     }
 
+    public List<Point> getPath() {
+        return path;
+    }
 
-    public void setNextCheckpointToReach(int nextCheckpointToReach) {
-        this.nextCheckpointToReach = nextCheckpointToReach;
+    public Set<VisibleEntity> getVisibleEntitiesCache() {
+        return visibleEntitiesCache;
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
     }
 }

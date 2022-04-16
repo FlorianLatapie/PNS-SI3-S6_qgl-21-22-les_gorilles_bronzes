@@ -57,7 +57,7 @@ public class SimulatorController extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setLayout(new BorderLayout());
-        panel = new DisplayPanel(simulatorInfos);
+        panel = new DisplayPanel(simulatorInfos, cockpit);
         add(panel, BorderLayout.CENTER);
 
         this.setLocation(startingXPosition, 0);
