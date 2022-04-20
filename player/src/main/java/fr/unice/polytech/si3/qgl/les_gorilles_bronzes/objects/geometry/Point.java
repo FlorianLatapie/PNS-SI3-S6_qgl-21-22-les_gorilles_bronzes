@@ -51,10 +51,7 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Point{" + "x=" + x + ", y=" + y + '}';
     }
 
     public double distanceTo(Point destination) {
@@ -67,7 +64,7 @@ public class Point {
 
     public Point normalize() {
         if (this.getX() == 0 && this.getY() == 0) {
-            throw new IllegalArgumentException("Cannot normalize a point with x and y equal to 0");
+            return new Point(0, 0);
         }
         double norm = Math.hypot(this.getX(), this.getY());
         return new Point(this.getX() / norm, this.getY() / norm);
