@@ -346,17 +346,22 @@ public class NavigationEngine {
         if (visibleEntitiesCache != null) {
             return visibleEntitiesCache.stream().anyMatch(e -> {
                 if (e instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
-                    double angle = a.getAngleTo(b);
-                    fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream stream = (fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) e;
-
-                    boolean condition = Math.cos(stream.getPosition().getOrientation() - angle) > 0;
-                    stream.setShouldGoInto(condition);
+                    fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream s = (fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) e;
+                    setShouldGoIntoStream(a, b, s);
                 }
                 return !e.shouldGoInto() && e.intersects(a, b);
             });
         } else {
             return true;
         }
+    }
+
+    private void setShouldGoIntoStream(Point a, Point b, fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream stream) {
+        double angle = a.getAngleTo(b);
+
+        boolean condition = Math.cos(stream.getPosition().getOrientation() - angle) > 0;
+
+        stream.setShouldGoInto(condition);
     }
 
     public int getNextCheckpointToReach() {
@@ -412,7 +417,7 @@ public class NavigationEngine {
                     var pos = node.getPoint();
 
                     if (!checkInTheWay(current.getPoint(), pos) && current.addBranch(node)) {
-                            x.add(node);
+                        x.add(node);
                     }
                 }
             }

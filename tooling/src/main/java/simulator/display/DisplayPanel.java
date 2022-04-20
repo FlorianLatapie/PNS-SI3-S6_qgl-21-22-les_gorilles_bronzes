@@ -1,20 +1,19 @@
 package simulator.display;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Reef;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import simulator.objects.SimulatorInfos;
-
-import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
+import java.util.List;
 import java.util.Set;
 
 public class DisplayPanel extends JPanel {
@@ -94,7 +93,11 @@ public class DisplayPanel extends JPanel {
                 if (entity instanceof Reef) {
                     g.setColor(Color.GREEN);
                 } else if (entity instanceof Stream) {
-                    g.setColor(Color.BLUE);
+                    if (entity.shouldGoInto()) {
+                        g.setColor(Color.BLUE);
+                    } else {
+                        g.setColor(Color.RED);
+                    }
                 } else {
                     g.setColor(Color.RED);
                 }
@@ -109,7 +112,7 @@ public class DisplayPanel extends JPanel {
             if (entity instanceof Reef) {
                 g.setColor(new Color(0, 128, 0));
             } else if (entity instanceof Stream) {
-                g.setColor(new Color(0, 0, 255));
+                g.setColor(Color.BLUE);
             } else {
                 g.setColor(Color.RED);
             }
@@ -131,6 +134,7 @@ public class DisplayPanel extends JPanel {
 
 
         // infos from cockpit
+
         this.nodes = cockpit.getGlobalEngine().getNavigationEngine().getNodes();
         if (nodes != null) {
             g.setColor(Color.BLACK);
