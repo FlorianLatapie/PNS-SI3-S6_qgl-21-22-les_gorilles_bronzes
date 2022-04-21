@@ -394,6 +394,15 @@ public class NavigationEngine {
             }
         }
 
+        if (visibleEntitiesCache != null) {
+            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+                if (visibleEntity instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
+                    boolean condition = Math.cos(visibleEntity.getPosition().getOrientation() - ship.getPosition().getOrientation()) > 0;
+                    visibleEntity.setShouldGoInto(condition);
+                }
+            }
+        }
+
         var x = new LinkedList<Node>();
         x.add(shipNode);
 

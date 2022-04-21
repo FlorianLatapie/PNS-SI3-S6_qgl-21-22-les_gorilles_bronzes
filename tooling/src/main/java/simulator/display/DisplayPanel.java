@@ -94,7 +94,7 @@ public class DisplayPanel extends JPanel {
                     g.setColor(Color.GREEN);
                 } else if (entity instanceof Stream) {
                     if (entity.shouldGoInto()) {
-                        g.setColor(Color.BLUE);
+                        g.setColor(Color.CYAN);
                     } else {
                         g.setColor(Color.RED);
                     }
