@@ -380,15 +380,14 @@ public class NavigationEngine {
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
 
         if (visibleEntities != null) {
-
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
-                    visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
+                    //visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(80));
                     visibleEntitiesCache.add(visibleEntity);
                 }
             }
-            for (VisibleEntity visibleEntity : visibleEntities) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(2).getVertices()) {
+            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(80).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
             }
@@ -422,12 +421,13 @@ public class NavigationEngine {
 
         path = shipNode.findPathTo(checkpoint);
 
-        if (path != null && path.size() > 1) {
+        if (path != null && !path.isEmpty()) {
             nextPoint = path.get(1);
             nextPoint2 = null;
         } else {
             Cockpit.log("NO PATH FOUND");
         }
+
         visibleEntitiesCache.removeIf(OtherShip.class::isInstance);
     }
 
