@@ -382,12 +382,11 @@ public class NavigationEngine {
         if (visibleEntities != null) {
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
-                    //visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(80));
                     visibleEntitiesCache.add(visibleEntity);
                 }
             }
             for (VisibleEntity visibleEntity : visibleEntitiesCache) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(80).getVertices()) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
                 }
             }
