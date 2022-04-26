@@ -125,7 +125,6 @@ public class NavigationEngine {
     }
 
     public double getWindSpeedRelativeToShip(Wind wind) {
-        //TODO : use the correct wind speed : Valeur: (nombre de voile ouverte / nombre de voile) x force du vent x cosinus(angle entre la direction du vent et la direction du bateau)
         int nbSail = deckEngine.getEntitiesByClass(new Voile()).size();
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
@@ -346,13 +345,6 @@ public class NavigationEngine {
     private boolean checkInTheWay(Point a, Point b) {
         if (visibleEntitiesCache != null) {
             return visibleEntitiesCache.stream().anyMatch(e -> {
-                if (e instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
-                    double angle = a.getAngleTo(b);
-                    fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream stream = (fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) e;
-
-                    boolean condition = Math.cos(stream.getPosition().getOrientation() - angle) > 0;
-                    stream.setShouldGoInto(condition);
-                }
                 return !e.shouldGoInto() && e.intersects(a, b);
             });
         } else {
@@ -385,19 +377,26 @@ public class NavigationEngine {
             // do nothing
         }
 
-
         VisibleEntity[] visibleEntities = nextRound.getVisibleEntities();
 
         if (visibleEntities != null) {
             for (VisibleEntity visibleEntity : visibleEntities) {
                 if (!visibleEntitiesCache.contains(visibleEntity)) {
-                    visibleEntity.setShape(visibleEntity.getShape().toPolygon().getPolygonWithMargin(50));
                     visibleEntitiesCache.add(visibleEntity);
                 }
             }
-            for (VisibleEntity visibleEntity : visibleEntities) {
-                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(2).getVertices()) {
+            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+                for (Point point : visibleEntity.getShape().toPolygon().getPolygonWithMargin(50).getVertices()) {
                     nodes.add(new Node(visibleEntity.toGlobalCoordinates(point)));
+                }
+            }
+        }
+
+        if (visibleEntitiesCache != null) {
+            for (VisibleEntity visibleEntity : visibleEntitiesCache) {
+                if (visibleEntity instanceof fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream) {
+                    boolean condition = Math.cos(visibleEntity.getPosition().getOrientation() - ship.getPosition().getOrientation()) > 0;
+                    visibleEntity.setShouldGoInto(condition);
                 }
             }
         }
@@ -413,7 +412,7 @@ public class NavigationEngine {
                     var pos = node.getPoint();
 
                     if (!checkInTheWay(current.getPoint(), pos) && current.addBranch(node)) {
-                            x.add(node);
+                        x.add(node);
                     }
                 }
             }
@@ -421,13 +420,14 @@ public class NavigationEngine {
 
         path = shipNode.findPathTo(checkpoint);
 
-        if (path != null && path.size() > 1) {
+        if (path != null && !path.isEmpty()) {
             nextPoint = path.get(1);
             nextPoint2 = null;
         } else {
             Cockpit.log("NO PATH FOUND");
         }
-        visibleEntitiesCache.removeIf(e -> e instanceof OtherShip);
+
+        visibleEntitiesCache.removeIf(OtherShip.class::isInstance);
     }
 
     public List<Point> getPath() {

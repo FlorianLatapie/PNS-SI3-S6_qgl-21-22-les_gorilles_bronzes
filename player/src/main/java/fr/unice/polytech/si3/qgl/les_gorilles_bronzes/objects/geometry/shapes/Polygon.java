@@ -50,14 +50,25 @@ public class Polygon implements Shape {
     }
 
     public Polygon getPolygonWithMargin(double margin) {
+        var center = getCenter();
         Point[] verticesWithMargin = new Point[vertices.length];
         for (int i = 0; i < vertices.length; i++) {
-            verticesWithMargin[i] = vertices[i].add(vertices[i].normalize().multiply(margin));
+            verticesWithMargin[i] = vertices[i].add(vertices[i].substract(center).normalize().multiply(margin));
         }
         Polygon result = new Polygon();
         result.setVertices(verticesWithMargin);
         result.orientation = orientation;
         return result;
+    }
+
+    public Point getCenter() {
+        double x = 0;
+        double y = 0;
+        for (var vertex : vertices) {
+            x += vertex.getX();
+            y += vertex.getY();
+        }
+        return new Point(x / vertices.length, y / vertices.length);
     }
 
     @Override

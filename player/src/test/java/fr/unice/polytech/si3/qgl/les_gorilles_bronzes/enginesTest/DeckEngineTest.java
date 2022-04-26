@@ -79,7 +79,6 @@ class DeckEngineTest {
     @Test
     void getSailorByEntityTest(){
         assertEquals(0, deckEngine.getSailorByEntity(new Gouvernail()).get().getId());
-
     }
 
     @Test

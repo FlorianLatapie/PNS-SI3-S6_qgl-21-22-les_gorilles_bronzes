@@ -67,8 +67,7 @@ class PointTest {
 
 
         Point point3 = new Point(0, 0);
-        Throwable exception = assertThrows(Exception.class, () -> point3.normalize());
-        assertEquals("Cannot normalize a point with x and y equal to 0", exception.getMessage());
+        assertEquals(new Point(0,0), point3.normalize());
     }
 
     @Test

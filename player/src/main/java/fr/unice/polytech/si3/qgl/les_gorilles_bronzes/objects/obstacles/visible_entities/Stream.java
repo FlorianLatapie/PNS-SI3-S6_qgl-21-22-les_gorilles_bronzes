@@ -6,7 +6,7 @@ public class Stream extends VisibleEntity {
     private double strength;
 
     public Stream(){
-        this.setShouldGoInto(true);
+        this.setShouldGoInto(false);
     }
 
     public double getStrength() {
@@ -22,13 +22,14 @@ public class Stream extends VisibleEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Stream stream = (Stream) o;
-        return Double.compare(stream.strength, strength) == 0;
+        return Double.compare(stream.strength, strength) == 0 && Objects.equals(getPosition(), stream.getPosition()) && Objects.equals(getShape(), stream.getShape());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(strength);
+        return Objects.hash(strength, getPosition(), getShape(), shouldGoInto());
     }
+
 
     @Override
     public String toString() {
