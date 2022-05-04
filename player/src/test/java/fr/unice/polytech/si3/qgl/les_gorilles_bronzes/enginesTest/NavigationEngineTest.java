@@ -182,7 +182,7 @@ class NavigationEngineTest {
     }
 
     @Test
-    void turnShipWithBestConfigurationTest(){
+    void turnShipWithBestConfigurationTest() {
         //Turn sailorId=3{rotation=0.0}, Oar sailorId=0, Oar sailorId=1, Oar sailorId=2, Oar sailorId=5
         assertEquals(List.of(
                 new Turn(3, 0.0),
@@ -194,22 +194,22 @@ class NavigationEngineTest {
     }
 
     @Test
-    void findSailorOnTest(){
+    void findSailorOnTest() {
         assertEquals(Optional.empty(), navigationEngine.findSailorOn(null));
     }
 
     @Test
-    void findSailorOnTest2(){
+    void findSailorOnTest2() {
         assertEquals(Optional.of(initGame.getSailors()[0]), navigationEngine.findSailorOn(initGame.getShip().getEntities()[0]));
     }
 
     @Test
-    void getWindSpeedRelativeToShipTest(){
+    void getWindSpeedRelativeToShipTest() {
         assertEquals(100.0, navigationEngine.getWindSpeedRelativeToShip(nextRound.getWind()));
     }
 
     @Test
-    void getWindSpeedRelativeToShipTest2(){
+    void getWindSpeedRelativeToShipTest2() {
         Wind wind = new Wind();
         wind.setOrientation(Math.toRadians(180));
         wind.setStrength(100.0);
@@ -217,7 +217,7 @@ class NavigationEngineTest {
     }
 
     @Test
-    void findSailsTest(){
+    void findSailsTest() {
         Voile voile = new Voile();
         voile.setX(2);
         voile.setY(1);
@@ -226,12 +226,12 @@ class NavigationEngineTest {
     }
 
     @Test
-    void findVigieTest(){
+    void findVigieTest() {
         assertEquals(Optional.empty(), navigationEngine.findVigie());
     }
 
     @Test
-    void findVigieTest2(){
+    void findVigieTest2() {
         var entities = new ArrayList<>(List.of(initGame.getShip().getEntities()));
         Vigie vigie = new Vigie();
         vigie.setX(0);
@@ -242,7 +242,7 @@ class NavigationEngineTest {
     }
 
     @Test
-    void addVigieActionTest(){
+    void addVigieActionTest() {
         assertEquals(List.of(), navigationEngine.addVigieAction());
     }
 }

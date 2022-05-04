@@ -43,6 +43,9 @@ class EntityTest {
         voile.setFree(true);
         voile.setOpenned(false);
 
+        assertTrue(voile.equals(voile));
+        assertFalse(voile.equals(null));
+
         assertFalse(voile.isOpenned());
         voile.setOpenned(true);
         assertTrue(voile.isOpenned());
@@ -76,6 +79,9 @@ class EntityTest {
         canon.setFree(true);
         canon.setLoaded(false);
         canon.setAngle(10.0);
+
+        assertTrue(canon.equals(canon));
+        assertFalse(canon.equals(null));
 
         assertFalse(canon.isLoaded());
 

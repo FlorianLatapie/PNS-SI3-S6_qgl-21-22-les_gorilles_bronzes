@@ -78,7 +78,7 @@ class PolygonTest {
     }
 
     @Test
-    void intersectsTest(){
+    void intersectsTest() {
         assertFalse(polygon.intersects(new Point(0, 0), new Point(1, 0)));
         assertTrue(polygon.intersects(new Point(-5, -5), new Point(4, 5)));
     }

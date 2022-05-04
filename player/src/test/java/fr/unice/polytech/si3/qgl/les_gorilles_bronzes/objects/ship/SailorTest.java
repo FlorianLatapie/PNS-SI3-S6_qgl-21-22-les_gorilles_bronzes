@@ -4,41 +4,31 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Rame;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SailorTest {
     @Test
-    void sailorTest(){
+    void sailorTest() {
         Sailor sailor = new Sailor(1, 0, 0, "Sailor");
+        Sailor sailor2 = new Sailor(2, 0, 0, "Sailor");
+
+        assertTrue(sailor.equals(sailor));
+        assertFalse(sailor.equals(null));
 
         assertEquals(sailor, new Sailor(1, 0, 0, "Sailor"));
+        assertNotEquals(sailor, sailor2);
         assertEquals(sailor.hashCode(), new Sailor(1, 0, 0, "Sailor").hashCode());
-
-        sailor.setId(2);
-        assertEquals(2, sailor.getId());
-
-        sailor.setX(1);
-        assertEquals(1, sailor.getX());
-
-        sailor.setY(1);
-        assertEquals(1, sailor.getY());
-
-        sailor.setName("Sailor2");
-        assertEquals("Sailor2", sailor.getName());
-
-        sailor.setFree(false);
-        assertFalse(sailor.isFree());
+        assertNotEquals(sailor.hashCode(), sailor2.hashCode());
     }
 
     @Test
-    void toStringTest(){
+    void toStringTest() {
         Sailor sailor = new Sailor(1, 0, 0, "Sailor");
         assertEquals("Sailor{id=1, x=0, y=0, name='Sailor', isFree=true}", sailor.toString());
     }
 
     @Test
-    void moveTest(){
+    void moveTest() {
         Rame rame = new Rame();
 
         Sailor sailor = new Sailor(1, 0, 0, "Sailor");

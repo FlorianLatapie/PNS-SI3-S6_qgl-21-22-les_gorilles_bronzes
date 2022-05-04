@@ -18,13 +18,14 @@ class StreamTest {
         stream.setShape(new Rectangle());
         stream.setShouldGoInto(true);
     }
+
     @Test
-    void streamTest(){
+    void streamTest() {
         assertEquals(10, stream.getStrength());
     }
 
     @Test
-    void equalsTest(){
+    void equalsTest() {
         Stream stream2 = new Stream();
         stream2.setStrength(10);
         stream2.setPosition(new Position());
@@ -36,7 +37,7 @@ class StreamTest {
 
         Stream stream3 = new Stream();
         stream3.setStrength(10);
-        stream3.setPosition(new Position(1,1,1));
+        stream3.setPosition(new Position(1, 1, 1));
         stream3.setShape(new Rectangle());
         stream3.setShouldGoInto(true);
 

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WindTest {
     Wind wind;
+
     @BeforeEach
     void setUp() {
         wind = new Wind();
@@ -16,7 +17,7 @@ class WindTest {
     }
 
     @Test
-    void equalsTest(){
+    void equalsTest() {
         assertTrue(wind.equals(wind));
         assertFalse(wind.equals(null));
 
@@ -28,11 +29,13 @@ class WindTest {
         wind2.setStrength(20);
 
         assertEquals(wind, wind2);
+        assertNotEquals(wind, new Wind());
         assertEquals(wind.hashCode(), wind2.hashCode());
+        assertNotEquals(wind.hashCode(), new Wind().hashCode());
     }
 
     @Test
-    void toStringTest(){
+    void toStringTest() {
         assertEquals("Wind{orientation=3.141592653589793, strength=20.0}", wind.toString());
     }
 }

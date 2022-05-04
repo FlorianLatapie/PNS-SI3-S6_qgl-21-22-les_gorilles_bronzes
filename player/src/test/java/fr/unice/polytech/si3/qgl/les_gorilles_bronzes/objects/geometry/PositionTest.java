@@ -38,6 +38,6 @@ class PositionTest {
 
     @Test
     void addTest() {
-        assertEquals(new Position(2.0, 4.0,4.570796326794897), position.add(1, 2, 3));
+        assertEquals(new Position(2.0, 4.0, 4.570796326794897), position.add(1, 2, 3));
     }
 }

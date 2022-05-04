@@ -26,15 +26,15 @@ public class Canon extends Entity{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Canon)) return false;
         if (!super.equals(o)) return false;
         Canon canon = (Canon) o;
-        return loaded == canon.loaded && Double.compare(canon.angle, angle) == 0;
+        return isLoaded() == canon.isLoaded() && Double.compare(canon.getAngle(), getAngle()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), loaded, angle);
+        return Objects.hash(super.hashCode(), isLoaded(), getAngle());
     }
 
     @Override
