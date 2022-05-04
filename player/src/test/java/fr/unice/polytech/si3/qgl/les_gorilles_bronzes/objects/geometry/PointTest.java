@@ -1,11 +1,10 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PointTest {
     Point point;
@@ -43,7 +42,7 @@ class PointTest {
     }
 
     @Test
-    void distanceToTest(){
+    void distanceToTest() {
         Point point2 = new Point(3, 4);
         assertEquals(2.8284271247461903, point.distanceTo(point2));
 
@@ -52,58 +51,63 @@ class PointTest {
     }
 
     @Test
-    void getAngleToTest(){
+    void getAngleToTest() {
         Point point2 = new Point(3, 4);
-        assertEquals(Math.PI/4, point.getAngleTo(point2));
+        assertEquals(Math.PI / 4, point.getAngleTo(point2));
 
         point2 = new Point(1, 2);
         assertEquals(0, point.getAngleTo(point2));
     }
 
     @Test
-    void normalizeTest(){
+    void normalizeTest() {
         Point point2 = new Point(4, 3);
-        assertEquals(new Point(0.8,0.6), point2.normalize());
+        assertEquals(new Point(0.8, 0.6), point2.normalize());
 
 
         Point point3 = new Point(0, 0);
-        assertEquals(new Point(0,0), point3.normalize());
+        assertEquals(new Point(0, 0), point3.normalize());
     }
 
     @Test
-    void addTest(){
+    void addTest() {
         Point point2 = new Point(3, 4);
         assertEquals(new Point(4, 6), point.add(point2));
     }
 
     @Test
-    void multiplyTest(){
+    void multiplyTest() {
         assertEquals(new Point(2, 4), point.multiply(2));
     }
 
     @Test
-    void dotProductTest(){
+    void dotProductTest() {
         Point point2 = new Point(3, 4);
         assertEquals(11, point.dotProduct(point2));
     }
 
     @Test
-    void rotateByTest(){
-        assertEquals(new Point(-2, 1), point.rotateBy(Math.PI/2));
-        assertEquals(new Point(2, -1), point.rotateBy(-Math.PI/2));
+    void rotateByTest() {
+        assertEquals(new Point(-2, 1), point.rotateBy(Math.PI / 2));
+        assertEquals(new Point(2, -1), point.rotateBy(-Math.PI / 2));
         Point point2 = new Point(65465, 23856);
         assertEquals(new Point(61565.83460822776, -32625.495704929082), point2.rotateBy(46545));
     }
 
     @Test
-    void crossProductTest(){
+    void crossProductTest() {
         Point point2 = new Point(3, 4);
         assertEquals(-2.0, point.crossProduct(point2));
     }
 
     @Test
-    void fromPolarTest(){
-        assertEquals(new Point(0,0), Point.fromPolar(0,0));
-        assertEquals(new Point(0.8487048774164866,1.321779532040728), Point.fromPolar(Math.PI/2,1));
+    void fromPolarTest() {
+        assertEquals(new Point(0, 0), Point.fromPolar(0, 0));
+        assertEquals(new Point(0.8487048774164866, 1.321779532040728), Point.fromPolar(Math.PI / 2, 1));
+    }
+
+    @Test
+    void distanceToLineTest() {
+        assertEquals(0, Point.distanceToLine(new Point(1, 2), new Point(3, 4), new Point(5, 6)));
     }
 }

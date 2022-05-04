@@ -4,8 +4,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RectangleTest {
     Rectangle rectangle;
@@ -57,21 +56,18 @@ class RectangleTest {
 
         assertEquals(rectangle.getOrientation(), polygon.getOrientation());
 
-        assertEquals(4, polygon.getVertices().length);;
-
-        /*assertEquals(new Point(-5, -10), polygon.getVertices()[0]);
-        assertEquals(new Point(5, -10), polygon.getVertices()[1]);
-        assertEquals(new Point(5, 10), polygon.getVertices()[2]);
-        assertEquals(new Point(-5, 10), polygon.getVertices()[3]);*/
+        assertEquals(4, polygon.getVertices().length);
+        ;
 
         assertEquals(new Point(-10, -5), polygon.getVertices()[0]);
         assertEquals(new Point(10, -5), polygon.getVertices()[1]);
         assertEquals(new Point(10, 5), polygon.getVertices()[2]);
         assertEquals(new Point(-10, 5), polygon.getVertices()[3]);
+    }
 
-        /*assertEquals(new Point(-10, 0), polygon.getVertices()[4]);
-        assertEquals(new Point(0, -5), polygon.getVertices()[5]);
-        assertEquals(new Point(10, 0), polygon.getVertices()[6]);
-        assertEquals(new Point(0, 5), polygon.getVertices()[7]);*/
+    @Test
+    void intersectsTest() {
+        assertFalse(rectangle.intersects(new Point(0, 0), new Point(1, 0)));
+        assertTrue(rectangle.intersects(new Point(-50, -50), new Point(40, 50)));
     }
 }

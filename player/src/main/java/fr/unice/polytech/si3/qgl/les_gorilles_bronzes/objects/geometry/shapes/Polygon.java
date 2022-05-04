@@ -5,6 +5,8 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point.distanceToLine;
+
 public class Polygon implements Shape {
     private double orientation;
     private Point[] vertices;
@@ -23,30 +25,6 @@ public class Polygon implements Shape {
 
     public void setVertices(Point[] vertices) {
         this.vertices = vertices;
-    }
-
-    public Rectangle toRectangle() {
-        double leftMostValue = 0;
-        double rightMostValue = 0;
-        double topMostValue = 0;
-        double bottomMostValue = 0;
-
-        for (var vertex : vertices) {
-            if (vertex.getX() < leftMostValue) {
-                leftMostValue = vertex.getX();
-            } else if (vertex.getX() > rightMostValue) {
-                rightMostValue = vertex.getX();
-            } else if (vertex.getY() < topMostValue) {
-                topMostValue = vertex.getY();
-            } else if (vertex.getY() > bottomMostValue) {
-                bottomMostValue = vertex.getY();
-            }
-        }
-
-        var width = rightMostValue - leftMostValue;
-        var height = bottomMostValue - topMostValue;
-
-        return new Rectangle(width, height, orientation);
     }
 
     public Polygon getPolygonWithMargin(double margin) {
@@ -97,12 +75,6 @@ public class Polygon implements Shape {
     @Override
     public Polygon toPolygon() {
         return this;
-    }
-
-    private static double distanceToLine(Point a, Point b, Point p) {
-        var ba = b.substract(a);
-        var pa = p.substract(a);
-        return ba.crossProduct(pa);
     }
 
     @Override

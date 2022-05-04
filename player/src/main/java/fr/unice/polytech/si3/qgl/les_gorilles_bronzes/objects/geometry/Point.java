@@ -90,6 +90,12 @@ public class Point {
         return this.getX() * other.getY() - this.getY() * other.getX();
     }
 
+    public static double distanceToLine(Point a, Point b, Point p) {
+        var ba = b.substract(a);
+        var pa = p.substract(a);
+        return ba.crossProduct(pa);
+    }
+
     public Point rotateBy(double theta) {
         if (theta == 0) {
             return this;
