@@ -55,7 +55,7 @@ public class Circle implements Shape {
     //https://www.desmos.com/calculator/qagzzrbcx1?lang=fr
     @Override
     public boolean intersects(Point e, Point l) {
-        var rad = radius ;
+        var rad = radius;
         var d = l.substract(e);
 
         // find intersection point between line and perpendicular line crossing the center

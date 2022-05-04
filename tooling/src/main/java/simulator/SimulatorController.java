@@ -2,22 +2,18 @@ package simulator;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Move;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import simulator.display.DeckPanel;
 import simulator.display.DisplayPanel;
-import simulator.objects.DisplayedSailor;
 import simulator.objects.ActionArray;
+import simulator.objects.DisplayedSailor;
 import simulator.objects.SimulatorInfos;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
 
 public class SimulatorController extends JFrame {
     private SimulatorInfos simulatorInfos;
@@ -33,7 +29,7 @@ public class SimulatorController extends JFrame {
 
     public SimulatorController(SimulatorInfos parsedJson) throws JsonProcessingException {
 
-       init(parsedJson);
+        init(parsedJson);
 
         // JFrame
         initDeckWindow();

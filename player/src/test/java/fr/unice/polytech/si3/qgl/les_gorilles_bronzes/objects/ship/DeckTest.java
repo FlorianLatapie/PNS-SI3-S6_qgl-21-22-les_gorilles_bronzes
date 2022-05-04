@@ -29,6 +29,7 @@ class DeckTest {
 
         assertTrue(deck.equals(deck));
         assertFalse(deck.equals(null));
+        assertFalse(deck.equals(new Object()));
 
         assertEquals(deck, deck2);
         assertNotEquals(deck, new Deck());

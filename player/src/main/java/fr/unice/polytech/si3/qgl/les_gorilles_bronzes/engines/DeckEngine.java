@@ -52,6 +52,7 @@ public class DeckEngine {
     public List<Action> placeSailors(Entity entityToMatch) {
         return placeSailors(entities, entityToMatch);
     }
+
     public List<Action> placeSailors(Entity[] search, Entity entityToMatch) {
         List<Action> actions = new ArrayList<>();
 
@@ -60,7 +61,7 @@ public class DeckEngine {
                 .filter(entity -> entity.getClass().equals(entityToMatch.getClass()))
                 .forEach(entity -> {
                     var sailor = nearestSailorToThisEntity(entity).get();
-                    if (entity.isFree() && sailor.isFree()){
+                    if (entity.isFree() && sailor.isFree()) {
                         actions.add(sailor.moveTo(entity));
                         sailor.setFree(false);
                         entity.setFree(false);
@@ -114,7 +115,7 @@ public class DeckEngine {
         List<Action> actions = new ArrayList<>();
 
         int nbSailorsToMove = availableSailors / 2;
-        this.sailorsPlacedOnOars = nbSailorsToMove*2;
+        this.sailorsPlacedOnOars = nbSailorsToMove * 2;
 
         actions.addAll(placeSailorsOnOars(nbSailorsToMove, Direction.LEFT));
         actions.addAll(placeSailorsOnOars(nbSailorsToMove, Direction.RIGHT));

@@ -4,7 +4,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Goal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 
 import java.util.Arrays;
@@ -17,7 +16,7 @@ public class SimulatorInfos {
     private int maxRound;
     private int minumumCrewSize;
     private int maximumCrewSize;
-    private Position[] startingPositions ;
+    private Position[] startingPositions;
 
 
     public int getMaxRound() {

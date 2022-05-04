@@ -2,7 +2,7 @@
 
 name: PITest
 
-on: 
+on:
   push:
     branches:
       - master
@@ -17,19 +17,19 @@ jobs:
       run:
         working-directory: ./player
     steps:
-    - name: Checkout project
-      uses: actions/checkout@v2
-    - name: Set up JDK 1.11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.11
-    - run: |
-        mvn test -P pitest
-        zip -r pit-reports.zip target/pit-reports
-        ls -l
-    - name: Upload to slack step
-      uses: adrey/slack-file-upload-action@1.0.5
-      with:
-        token: xoxb-744038435863-3253611990165-l65US4wKUdXKcVfLVPHHPTI8
-        path: player/pit-reports.zip
-        channel: si3-qgl-21-22-les_gorilles_bronzes
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - run: |
+          mvn test -P pitest
+          zip -r pit-reports.zip target/pit-reports
+          ls -l
+      - name: Upload to slack step
+        uses: adrey/slack-file-upload-action@1.0.5
+        with:
+          token: xoxb-744038435863-3253611990165-l65US4wKUdXKcVfLVPHHPTI8
+          path: player/pit-reports.zip
+          channel: si3-qgl-21-22-les_gorilles_bronzes

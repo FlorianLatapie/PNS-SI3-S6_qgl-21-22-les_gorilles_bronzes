@@ -45,6 +45,7 @@ class EntityTest {
 
         assertTrue(voile.equals(voile));
         assertFalse(voile.equals(null));
+        assertFalse(voile.equals(new Object()));
 
         assertFalse(voile.isOpenned());
         voile.setOpenned(true);
@@ -62,11 +63,15 @@ class EntityTest {
         voile3.setFree(false);
         voile3.setOpenned(true);
 
+        assertEquals(voile, voile);
+
         assertEquals(voile, voile2);
         assertEquals(voile.hashCode(), voile2.hashCode());
         assertNotEquals(voile, voile3);
         assertNotEquals(voile.hashCode(), voile3.hashCode());
         assertEquals(voile.hashCode(), voile2.hashCode());
+
+        assertNotEquals(voile, new Voile());
 
         assertEquals("Voile{(0,1), opened=true}", voile.toString());
     }
@@ -82,6 +87,7 @@ class EntityTest {
 
         assertTrue(canon.equals(canon));
         assertFalse(canon.equals(null));
+        assertFalse(canon.equals(new Object()));
 
         assertFalse(canon.isLoaded());
 
@@ -108,6 +114,8 @@ class EntityTest {
         assertEquals(canon.hashCode(), canon2.hashCode());
         assertNotEquals(canon3, canon);
         assertNotEquals(canon3.hashCode(), canon.hashCode());
+
+        assertNotEquals(canon, new Canon());
 
         assertEquals("Canon{(0,1), loaded=true, angle=10.0}", canon.toString());
     }

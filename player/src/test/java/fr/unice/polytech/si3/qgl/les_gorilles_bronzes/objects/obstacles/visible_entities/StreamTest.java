@@ -16,16 +16,17 @@ class StreamTest {
         stream.setStrength(10);
         stream.setPosition(new Position());
         stream.setShape(new Rectangle());
-        stream.setShouldGoInto(true);
     }
 
     @Test
     void streamTest() {
         assertEquals(10, stream.getStrength());
+        assertFalse(stream.shouldGoInto());
     }
 
     @Test
     void equalsTest() {
+        stream.setShouldGoInto(true);
         Stream stream2 = new Stream();
         stream2.setStrength(10);
         stream2.setPosition(new Position());
@@ -43,6 +44,7 @@ class StreamTest {
 
         assertTrue(stream.equals(stream));
         assertFalse(stream.equals(null));
+        assertFalse(stream.equals(new Object()));
 
         assertNotEquals(stream, stream3);
         assertNotEquals(stream.hashCode(), stream3.hashCode());

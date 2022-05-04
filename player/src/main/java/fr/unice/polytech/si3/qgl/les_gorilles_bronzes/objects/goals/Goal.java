@@ -8,6 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = RegattaGoal.class, name = "REGATTA"),
         @JsonSubTypes.Type(value = BattleGoal.class, name = "BATTLE")
 })
-public interface Goal{
+public interface Goal {
 
 }

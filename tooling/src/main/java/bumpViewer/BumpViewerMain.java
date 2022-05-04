@@ -2,14 +2,11 @@ package bumpViewer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import simulator.SimulatorController;
 import simulator.objects.SimulatorInfos;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
 
 public class BumpViewerMain {
     private static Path pathSimuInfos = Paths.get(System.getProperty("user.dir")

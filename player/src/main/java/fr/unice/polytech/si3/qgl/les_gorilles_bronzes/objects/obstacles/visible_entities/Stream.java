@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Stream extends VisibleEntity {
     private double strength;
 
-    public Stream(){
+    public Stream() {
         this.setShouldGoInto(false);
     }
 

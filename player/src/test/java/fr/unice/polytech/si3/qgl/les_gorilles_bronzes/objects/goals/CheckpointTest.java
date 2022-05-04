@@ -15,6 +15,7 @@ class CheckpointTest {
 
         assertTrue(checkpoint.equals(checkpoint));
         assertFalse(checkpoint.equals(null));
+        assertFalse(checkpoint.equals(new Object()));
 
         assertEquals(checkpoint, new Checkpoint());
         assertEquals(checkpoint.hashCode(), new Checkpoint().hashCode());

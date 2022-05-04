@@ -20,6 +20,10 @@ class RectangleTest {
 
     @Test
     void rectangleTest() {
+        assertTrue(rectangle.equals(rectangle));
+        assertFalse(rectangle.equals(null));
+        assertFalse(rectangle.equals(new Object()));
+
         assertEquals(10, rectangle.getWidth());
         assertEquals(20, rectangle.getHeight());
         assertEquals(Math.PI / 2, rectangle.getOrientation());

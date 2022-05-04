@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity;
 
 import java.util.Objects;
 
-public class Canon extends Entity{
+public class Canon extends Entity {
 
     private boolean loaded;
     private double angle;
@@ -43,7 +43,7 @@ public class Canon extends Entity{
                 "{" +
                 "(" + getX() +
                 "," + getY() +
-                ')'  +
+                ')' +
                 ", loaded=" + loaded +
                 ", angle=" + angle +
                 "}";

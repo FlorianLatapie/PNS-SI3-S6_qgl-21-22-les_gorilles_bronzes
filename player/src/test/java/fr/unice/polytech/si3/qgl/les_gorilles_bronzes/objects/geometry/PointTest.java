@@ -3,8 +3,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PointTest {
     Point point;
@@ -32,6 +31,10 @@ class PointTest {
     void equalsTest() {
         Point point2 = new Point(1, 2);
         Point point3 = new Point(3, 4);
+
+        assertTrue(point.equals(point));
+        assertFalse(point.equals(null));
+        assertFalse(point.equals(new Object()));
 
         assertEquals(point, point);
         assertEquals(point.hashCode(), point.hashCode());

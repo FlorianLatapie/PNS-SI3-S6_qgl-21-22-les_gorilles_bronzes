@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible
 
 import java.util.Objects;
 
-public class OtherShip extends VisibleEntity{
+public class OtherShip extends VisibleEntity {
     private int life;
 
     public int getLife() {

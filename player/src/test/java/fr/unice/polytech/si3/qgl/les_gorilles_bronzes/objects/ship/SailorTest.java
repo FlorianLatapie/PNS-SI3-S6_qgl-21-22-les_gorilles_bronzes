@@ -12,8 +12,11 @@ class SailorTest {
         Sailor sailor = new Sailor(1, 0, 0, "Sailor");
         Sailor sailor2 = new Sailor(2, 0, 0, "Sailor");
 
+        assertEquals("Sailor", sailor.getName());
+
         assertTrue(sailor.equals(sailor));
         assertFalse(sailor.equals(null));
+        assertFalse(sailor.equals(new Object()));
 
         assertEquals(sailor, new Sailor(1, 0, 0, "Sailor"));
         assertNotEquals(sailor, sailor2);

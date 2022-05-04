@@ -26,6 +26,7 @@ class RegattaGoalTest {
 
         assertTrue(regattaGoal.equals(regattaGoal));
         assertFalse(regattaGoal.equals(null));
+        assertFalse(regattaGoal.equals(new Object()));
 
         assertEquals(regattaGoal, regattaGoal2);
         assertNotEquals(regattaGoal, new RegattaGoal());

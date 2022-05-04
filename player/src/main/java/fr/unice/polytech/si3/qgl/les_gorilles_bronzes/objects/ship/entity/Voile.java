@@ -33,7 +33,7 @@ public class Voile extends Entity {
                 "{" +
                 "(" + getX() +
                 "," + getY() +
-                ')'  +
+                ')' +
                 ", opened=" + opened
                 + "}";
     }

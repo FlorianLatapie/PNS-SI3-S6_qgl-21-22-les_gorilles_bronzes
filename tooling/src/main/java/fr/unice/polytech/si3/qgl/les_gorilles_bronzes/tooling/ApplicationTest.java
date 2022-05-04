@@ -2,8 +2,8 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.tooling;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import simulator.objects.SimulatorInfos;
 import simulator.SimulatorController;
+import simulator.objects.SimulatorInfos;
 
 import java.io.File;
 import java.nio.file.Files;

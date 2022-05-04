@@ -1,16 +1,7 @@
 package bumpViewer;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
-import simulator.SimulatorModel;
-import simulator.display.DeckPanel;
-import simulator.display.DisplayPanel;
-import simulator.objects.ActionArray;
-import simulator.objects.DisplayedSailor;
 import simulator.objects.SimulatorInfos;
 
 import javax.swing.*;
@@ -22,7 +13,7 @@ public class BumpController extends JFrame {
     private BumpDisplayPanel panel;
 
     public BumpController(SimulatorInfos parsedJson, Bump bump) {
-       init(parsedJson, bump);
+        init(parsedJson, bump);
 
         // JFrame
         initMainWindow(0);

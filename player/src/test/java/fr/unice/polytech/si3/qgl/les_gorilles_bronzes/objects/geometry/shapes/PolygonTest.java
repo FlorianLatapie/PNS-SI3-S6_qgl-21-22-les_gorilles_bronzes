@@ -43,6 +43,10 @@ class PolygonTest {
         polygon3.setOrientation(Math.PI / 2);
         polygon3.setVertices(new Point[]{new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 2)});
 
+        assertTrue(polygon.equals(polygon));
+        assertFalse(polygon.equals(null));
+        assertFalse(polygon.equals(new Object()));
+
         assertEquals(polygon, polygon);
         assertEquals(polygon.hashCode(), polygon.hashCode());
         assertEquals(polygon, polygon2);

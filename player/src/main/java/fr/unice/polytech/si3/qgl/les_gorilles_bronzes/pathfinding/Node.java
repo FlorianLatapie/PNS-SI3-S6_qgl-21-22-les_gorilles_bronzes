@@ -2,8 +2,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 
-
-import java.util.List;
 import java.util.*;
 
 //https://stackabuse.com/graphs-in-java-a-star-algorithm/

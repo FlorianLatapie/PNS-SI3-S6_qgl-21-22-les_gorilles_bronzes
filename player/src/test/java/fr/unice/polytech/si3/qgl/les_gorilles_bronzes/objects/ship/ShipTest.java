@@ -50,6 +50,7 @@ class ShipTest {
 
         assertTrue(ship.equals(ship));
         assertFalse(ship.equals(null));
+        assertFalse(ship.equals(new Object()));
 
         assertEquals(ship, ship2);
         assertNotEquals(ship, new Ship());

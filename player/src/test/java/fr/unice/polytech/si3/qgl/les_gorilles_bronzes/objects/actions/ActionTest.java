@@ -21,6 +21,7 @@ class ActionTest {
 
         assertTrue(aim.equals(aim));
         assertFalse(aim.equals(null));
+        assertFalse(aim.equals(new Object()));
 
         assertEquals(aim, new Aim(2, 3.0));
         assertEquals(aim.hashCode(), new Aim(2, 3.0).hashCode());
@@ -73,6 +74,7 @@ class ActionTest {
 
         assertTrue(move.equals(move));
         assertFalse(move.equals(null));
+        assertFalse(move.equals(new Object()));
 
         assertEquals(move, new Move(1, 4, 5));
         assertEquals(move.hashCode(), new Move(1, 4, 5).hashCode());
@@ -110,6 +112,7 @@ class ActionTest {
 
         assertTrue(turn.equals(turn));
         assertFalse(turn.equals(null));
+        assertFalse(turn.equals(new Object()));
 
         assertEquals(5.0, turn.getRotation());
         assertEquals("Turn sailorId=1{rotation=5.0}", turn.toString());
@@ -118,6 +121,8 @@ class ActionTest {
         assertEquals(turn.hashCode(), new Turn(1, 5.0).hashCode());
         assertNotEquals(turn, new Turn(1, 6.0));
         assertNotEquals(turn.hashCode(), new Turn(1, 6.0).hashCode());
+
+        assertNotEquals(turn, new Turn(2, 5.0));
     }
 
     @Test

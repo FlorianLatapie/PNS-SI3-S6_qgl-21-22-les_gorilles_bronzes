@@ -19,6 +19,7 @@ class OarConfigurationTest {
 
         assertTrue(oarConfiguration.equals(oarConfiguration));
         assertFalse(oarConfiguration.equals(null));
+        assertFalse(oarConfiguration.equals(new Object()));
 
         assertEquals(oarConfiguration, new OarConfiguration(1, 2, 3));
         assertNotEquals(oarConfiguration, new OarConfiguration(1, 2, 4));

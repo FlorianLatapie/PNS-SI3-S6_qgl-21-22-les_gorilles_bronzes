@@ -1,20 +1,15 @@
 package bumpViewer;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Position;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Reef;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.Stream;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import simulator.objects.SimulatorInfos;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.util.List;
-import java.util.Set;
 
 public class BumpDisplayPanel extends JPanel {
     private double offsetX = 0;
@@ -76,7 +71,6 @@ public class BumpDisplayPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setPaintMode();
-
 
 
         // infos from simulator

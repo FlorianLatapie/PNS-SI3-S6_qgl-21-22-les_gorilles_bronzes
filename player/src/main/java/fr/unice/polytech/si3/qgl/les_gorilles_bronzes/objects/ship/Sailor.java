@@ -14,7 +14,7 @@ public class Sailor {
 
     private boolean isFree;
 
-    public Sailor(){
+    public Sailor() {
     }
 
     public Sailor(int id, int x, int y, String name) {

@@ -45,6 +45,7 @@ class OtherShipTest {
 
         assertTrue(otherShip.equals(otherShip));
         assertFalse(otherShip.equals(null));
+        assertFalse(otherShip.equals(new Object()));
 
         assertEquals(otherShip2, otherShip);
         assertNotEquals(otherShip, new OtherShip());

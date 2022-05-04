@@ -12,6 +12,7 @@ class VisibleEntityTest {
 
         assertTrue(otherShip.equals(otherShip));
         assertFalse(otherShip.equals(null));
+        assertFalse(otherShip.equals(new Object()));
 
         OtherShip otherShip2 = new OtherShip();
         otherShip2.setLife(10);

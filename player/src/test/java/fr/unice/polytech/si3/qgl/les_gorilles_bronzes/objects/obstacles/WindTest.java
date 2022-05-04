@@ -20,6 +20,7 @@ class WindTest {
     void equalsTest() {
         assertTrue(wind.equals(wind));
         assertFalse(wind.equals(null));
+        assertFalse(wind.equals(new Object()));
 
         assertEquals(PI, wind.getOrientation());
         assertEquals(20, wind.getStrength());
