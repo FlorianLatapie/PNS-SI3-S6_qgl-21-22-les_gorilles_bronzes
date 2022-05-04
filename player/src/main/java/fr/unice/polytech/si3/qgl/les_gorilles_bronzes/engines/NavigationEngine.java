@@ -111,6 +111,8 @@ public class NavigationEngine {
 
     /**
      * Lifts sail if the wind blows at the back of the boat
+     *
+     * @return true if the sail should be lifted
      */
     public boolean shouldLiftSail() {
         Wind wind = nextRound.getWind();
@@ -132,7 +134,7 @@ public class NavigationEngine {
         return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
     }
 
-    public List<Voile> findSail() {
+    public List<Voile> findSails() {
         List<Voile> voiles = new ArrayList<>();
         var searchForSail = deckEngine.getEntitiesByClass(new Voile());
         if (searchForSail.isEmpty()) return voiles;
@@ -146,7 +148,7 @@ public class NavigationEngine {
         List<Action> actions = new ArrayList<>();
 
         List<Voile> sails = new ArrayList<>();
-        sails.addAll(findSail());
+        sails.addAll(findSails());
 
         List<Sailor> sailorsOnSail = new ArrayList<>();
 
@@ -167,25 +169,21 @@ public class NavigationEngine {
     }
 
     /**
-     * Using vigie in any case
+     * Find the Vigie object from the deck
+     *
+     * @return the Vigie object or null if not found
      */
-
-    public Vigie findVigie() {// TODO: use an optional
+    public Optional<Vigie> findVigie() {
         var searchForVigie = deckEngine.getEntitiesByClass(new Vigie());
-        if (searchForVigie.isEmpty()) return null;
-        return (Vigie) deckEngine.getEntitiesByClass(new Vigie()).get(0);
+        if (searchForVigie.isEmpty()) return Optional.empty();
+        return Optional.of((Vigie) deckEngine.getEntitiesByClass(new Vigie()).get(0));
     }
 
 
     public List<Action> addVigieAction() {
         List<Action> actions = new ArrayList<>();
 
-        Vigie vigie = findVigie();
-        Optional<Sailor> sailorOnVigie = findSailorOn(vigie);
-
-        if (sailorOnVigie.isPresent()) {
-            actions.add(new UseWatch(sailorOnVigie.get().getId()));
-        }
+        findVigie().flatMap(this::findSailorOn).ifPresent(sailor -> actions.add(new UseWatch(sailor.getId())));
 
         return actions;
     }

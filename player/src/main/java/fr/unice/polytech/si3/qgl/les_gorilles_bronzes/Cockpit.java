@@ -22,9 +22,7 @@ public class Cockpit implements ICockpit {
     private static List<String> logs = new ArrayList<>();
 
     public Cockpit() {
-        /**
-         * Avoids exceptions when a JSON string contains new fields/properties
-         */
+        //Avoids exceptions when a JSON string contains new fields/properties
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         log("Cockpit initialized");
     }
