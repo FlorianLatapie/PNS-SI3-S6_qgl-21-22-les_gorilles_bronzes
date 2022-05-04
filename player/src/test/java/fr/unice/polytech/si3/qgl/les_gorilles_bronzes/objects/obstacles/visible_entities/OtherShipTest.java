@@ -6,7 +6,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Re
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OtherShipTest {
     OtherShip otherShip;
@@ -43,8 +43,14 @@ class OtherShipTest {
         rectangle2.setHeight(2);
         rectangle2.setOrientation(3);
         otherShip2.setShape(rectangle2);
+
+        assertTrue(otherShip.equals(otherShip));
+        assertFalse(otherShip.equals(null));
+
         assertEquals(otherShip2, otherShip);
+        assertNotEquals(otherShip, new OtherShip());
         assertEquals(otherShip2.hashCode(), otherShip.hashCode());
+        assertNotEquals(otherShip.hashCode(), new OtherShip().hashCode());
     }
 
     @Test

@@ -1,10 +1,9 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals;
 
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegattaGoalTest {
     RegattaGoal regattaGoal;
@@ -25,8 +24,13 @@ class RegattaGoalTest {
         RegattaGoal regattaGoal2 = new RegattaGoal();
         regattaGoal2.setCheckpoints(new Checkpoint[]{new Checkpoint()});
 
+        assertTrue(regattaGoal.equals(regattaGoal));
+        assertFalse(regattaGoal.equals(null));
+
         assertEquals(regattaGoal, regattaGoal2);
+        assertNotEquals(regattaGoal, new RegattaGoal());
         assertEquals(regattaGoal.hashCode(), regattaGoal2.hashCode());
+        assertNotEquals(regattaGoal.hashCode(), new RegattaGoal().hashCode());
     }
 
     @Test

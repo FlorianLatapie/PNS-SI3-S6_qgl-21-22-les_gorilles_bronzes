@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.PI;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WindTest {
     Wind wind;
@@ -16,13 +16,13 @@ class WindTest {
     }
 
     @Test
-    void windTest(){
+    void equalsTest(){
+        assertTrue(wind.equals(wind));
+        assertFalse(wind.equals(null));
+
         assertEquals(PI, wind.getOrientation());
         assertEquals(20, wind.getStrength());
-    }
 
-    @Test
-    void equalsTest(){
         Wind wind2 = new Wind();
         wind2.setOrientation(PI);
         wind2.setStrength(20);

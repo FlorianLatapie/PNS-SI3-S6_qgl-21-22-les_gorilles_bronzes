@@ -5,8 +5,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Re
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StreamTest {
     Stream stream;
@@ -40,6 +39,9 @@ class StreamTest {
         stream3.setPosition(new Position(1,1,1));
         stream3.setShape(new Rectangle());
         stream3.setShouldGoInto(true);
+
+        assertTrue(stream.equals(stream));
+        assertFalse(stream.equals(null));
 
         assertNotEquals(stream, stream3);
         assertNotEquals(stream.hashCode(), stream3.hashCode());
