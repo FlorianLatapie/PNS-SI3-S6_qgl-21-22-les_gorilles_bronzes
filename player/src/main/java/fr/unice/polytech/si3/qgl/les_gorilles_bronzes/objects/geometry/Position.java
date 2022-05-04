@@ -2,16 +2,16 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry;
 
 import java.util.Objects;
 
-public class Position extends Point{
+public class Position extends Point {
 
     private double orientation;
 
-    public Position (){
+    public Position() {
         super();
     }
 
-    public Position(double x, double y, double orientation){
-        super(x,y);
+    public Position(double x, double y, double orientation) {
+        super(x, y);
         this.orientation = orientation;
     }
 
@@ -23,17 +23,17 @@ public class Position extends Point{
         this.orientation = orientation;
     }
 
-    public Position add(double x, double y, double rot)
-    {
+    public Position add(double x, double y, double rot) {
         return new Position(this.getX() + x, this.getY() + y, this.orientation + rot);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Position)) return false;
+        if (!super.equals(o)) return false;
         Position position = (Position) o;
-        return Double.compare(position.orientation, orientation) == 0 && position.getX() == getX() && position.getY() == getY();
+        return Double.compare(position.getOrientation(), getOrientation()) == 0;
     }
 
     @Override

@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionTest {
     @Test
     void aimTest() {
-        Aim aim = new Aim(1, 2.0);
+        Aim aim = new Aim();
+        aim.setSailorId(1);
+        aim.setAngle(2.0);
+
         assertEquals(2.0, aim.getAngle());
         assertEquals(1, aim.getSailorId());
         aim.setAngle(3.0);
@@ -15,6 +18,9 @@ class ActionTest {
         aim.setSailorId(2);
         assertEquals(2, aim.getSailorId());
         assertEquals("Aim sailorId=2{angle=3.0}", aim.toString());
+
+        assertTrue(aim.equals(aim));
+        assertFalse(aim.equals(null));
 
         assertEquals(aim, new Aim(2, 3.0));
         assertEquals(aim.hashCode(), new Aim(2, 3.0).hashCode());
@@ -51,7 +57,10 @@ class ActionTest {
 
     @Test
     void MoveTest() {
-        Move move = new Move(1, 2, 3);
+        Move move = new Move();
+        move.setSailorId(1);
+        move.setXdistance(2);
+        move.setYdistance(3);
         assertEquals(2, move.getXdistance());
         assertEquals(3, move.getYdistance());
 
@@ -62,10 +71,13 @@ class ActionTest {
         assertEquals(5, move.getYdistance());
         assertEquals("Move sailorId=1{xdistance=4, ydistance=5}", move.toString());
 
-        assertEquals(move, new Move(1,4,5));
-        assertEquals(move.hashCode(), new Move(1,4,5).hashCode());
-        assertNotEquals(move, new Move(1,4,6));
-        assertNotEquals(move.hashCode(), new Move(1,4,6).hashCode());
+        assertTrue(move.equals(move));
+        assertFalse(move.equals(null));
+
+        assertEquals(move, new Move(1, 4, 5));
+        assertEquals(move.hashCode(), new Move(1, 4, 5).hashCode());
+        assertNotEquals(move, new Move(1, 4, 6));
+        assertNotEquals(move.hashCode(), new Move(1, 4, 6).hashCode());
     }
 
     @Test
@@ -88,10 +100,16 @@ class ActionTest {
 
     @Test
     void TurnTest() {
-        Turn turn = new Turn(1, 2.0);
+        Turn turn = new Turn();
+        turn.setSailorId(1);
+        turn.setRotation(2.0);
+
         assertEquals(2, turn.getRotation());
 
         turn.setRotation(5.0);
+
+        assertTrue(turn.equals(turn));
+        assertFalse(turn.equals(null));
 
         assertEquals(5.0, turn.getRotation());
         assertEquals("Turn sailorId=1{rotation=5.0}", turn.toString());

@@ -17,7 +17,7 @@ class PositionTest {
 
     @Test
     void positionTest() {
-        assertEquals(PI/ 2, position.getOrientation());
+        assertEquals(PI / 2, position.getOrientation());
 
         position.setOrientation(PI);
 
@@ -27,12 +27,17 @@ class PositionTest {
     }
 
     @Test
-    void equalsTest(){
+    void equalsTest() {
         assertEquals(position, new Position(1.0, 2.0, PI / 2));
         assertEquals(position.hashCode(), new Position(1.0, 2.0, PI / 2).hashCode());
         assertNotEquals(position, new Position(2.0, 2.0, PI / 2));
         assertNotEquals(position.hashCode(), new Position(2.0, 2.0, PI / 2).hashCode());
         assertNotEquals(position, new Position(1.0, 2.0, PI / 3));
         assertNotEquals(position.hashCode(), new Position(1.0, 2.0, PI / 3).hashCode());
+    }
+
+    @Test
+    void addTest() {
+        assertEquals(new Position(2.0, 4.0,4.570796326794897), position.add(1, 2, 3));
     }
 }

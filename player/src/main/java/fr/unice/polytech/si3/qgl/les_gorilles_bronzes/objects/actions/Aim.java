@@ -24,10 +24,9 @@ public class Aim extends Action {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (!(o instanceof Aim)) return false;
         Aim aim = (Aim) o;
-        return Double.compare(aim.angle, angle) == 0;
+        return Double.compare(aim.getAngle(), getAngle()) == 0;
     }
 
     @Override

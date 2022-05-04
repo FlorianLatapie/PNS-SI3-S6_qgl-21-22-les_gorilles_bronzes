@@ -39,7 +39,7 @@ public class Point {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Point)) return false;
         Point point = (Point) o;
         return Util.areTheseDoubleAboutEqual(point.x, x) && Util.areTheseDoubleAboutEqual(point.y, y);
     }

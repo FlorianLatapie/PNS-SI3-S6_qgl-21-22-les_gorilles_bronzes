@@ -91,11 +91,19 @@ class PointTest {
     void rotateByTest(){
         assertEquals(new Point(-2, 1), point.rotateBy(Math.PI/2));
         assertEquals(new Point(2, -1), point.rotateBy(-Math.PI/2));
+        Point point2 = new Point(65465, 23856);
+        assertEquals(new Point(61565.83460822776, -32625.495704929082), point2.rotateBy(46545));
     }
 
     @Test
     void crossProductTest(){
         Point point2 = new Point(3, 4);
         assertEquals(-2.0, point.crossProduct(point2));
+    }
+
+    @Test
+    void fromPolarTest(){
+        assertEquals(new Point(0,0), Point.fromPolar(0,0));
+        assertEquals(new Point(0.8487048774164866,1.321779532040728), Point.fromPolar(Math.PI/2,1));
     }
 }

@@ -25,10 +25,10 @@ public class Turn extends Action {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Turn)) return false;
         if (!super.equals(o)) return false;
         Turn turn = (Turn) o;
-        return Double.compare(turn.rotation, rotation) == 0;
+        return Double.compare(turn.getRotation(), getRotation()) == 0;
     }
 
     @Override
