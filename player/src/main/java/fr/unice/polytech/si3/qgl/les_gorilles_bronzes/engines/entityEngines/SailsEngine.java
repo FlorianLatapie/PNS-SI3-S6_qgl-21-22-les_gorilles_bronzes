@@ -13,7 +13,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
 
@@ -28,10 +27,6 @@ public class SailsEngine {
         this.navigationEngine = navigationEngine;
     }
 
-    public Optional<Sailor> findSailorOn(Entity entity) {
-        if (entity == null) return Optional.empty();
-        return deckEngine.getSailorByEntity(entity);
-    }
 
     /**
      * Lifts sail if the wind blows at the back of the boat

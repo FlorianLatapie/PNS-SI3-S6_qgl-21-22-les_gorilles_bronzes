@@ -16,9 +16,7 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.OtherShip;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
@@ -64,7 +62,9 @@ public class NavigationEngine {
         shouldLiftSailValue = sailsEngine.shouldLiftSail(nextRound);
 
         actions.addAll(turnShipWithBestConfiguration());
+        //sail action
         actions.addAll(sailsEngine.getActionOnSails(shouldLiftSailValue));
+        //vigie action
         actions.addAll(vigieEngine.getActionOnVigie());
 
         return actions;
@@ -73,7 +73,6 @@ public class NavigationEngine {
 
     public List<Action> turnShipWithBestConfiguration() {
         List<Action> actions = new ArrayList<>();
-
 
         OarConfiguration bestConf = oarsEngine.findBestOarConfiguration(nextRound);
 
@@ -84,11 +83,6 @@ public class NavigationEngine {
         actions.addAll(oarsEngine.getActionOnOars(bestConf));
 
         return actions;
-    }
-
-    public Optional<Sailor> findSailorOn(Entity entity) {
-        if (entity == null) return Optional.empty();
-        return deckEngine.getSailorByEntity(entity);
     }
 
     public double getGoalSpeed() {
@@ -124,7 +118,6 @@ public class NavigationEngine {
         double shipX = ship.getPosition().getX();
         double shipY = ship.getPosition().getY();
         double shipOrientation = ship.getPosition().getOrientation();
-
 
         return Math.hypot(checkX - (shipX + (Math.sin(shipOrientation) * ((Rectangle) ship.getShape()).getHeight() / 2)),
                 checkY - (shipY + (Math.cos(shipOrientation) * ((Rectangle) ship.getShape()).getHeight() / 2)));

@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -134,16 +133,6 @@ class NavigationEngineTest {
                 new Oar(2),
                 new Oar(5)
         ), navigationEngine.turnShipWithBestConfiguration());
-    }
-
-    @Test
-    void findSailorOnTest() {
-        assertEquals(Optional.empty(), navigationEngine.findSailorOn(null));
-    }
-
-    @Test
-    void findSailorOnTest2() {
-        assertEquals(Optional.of(initGame.getSailors()[0]), navigationEngine.findSailorOn(initGame.getShip().getEntities()[0]));
     }
 
 

@@ -66,4 +66,5 @@ public class RudderEngineTest {
         sailor.setId(1);
         assertEquals(List.of(new Turn(sailor.getId(), 0.5)), rudderEngine.turnShipWithRudder(0.5, sailor));
     }
+
 }

@@ -24,7 +24,7 @@ public class RudderEngine {
     public List<Action> getActionOnRudder(Double bestAngle, Double bestConfAngle) {
         List<Action> actions = new ArrayList<>();
         Gouvernail rudder = findRudder();
-        Optional<Sailor> sailorOnRudder = findSailorOn(rudder);
+        Optional<Sailor> sailorOnRudder = findSailorOnRudder(rudder);
         sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(bestAngle - bestConfAngle, sailor)));
         return actions;
     }
@@ -35,7 +35,7 @@ public class RudderEngine {
         return (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
     }
 
-    public Optional<Sailor> findSailorOn(Entity entity) {
+    public Optional<Sailor> findSailorOnRudder(Entity entity) {
         if (entity == null) return Optional.empty();
         return deckEngine.getSailorByEntity(entity);
     }

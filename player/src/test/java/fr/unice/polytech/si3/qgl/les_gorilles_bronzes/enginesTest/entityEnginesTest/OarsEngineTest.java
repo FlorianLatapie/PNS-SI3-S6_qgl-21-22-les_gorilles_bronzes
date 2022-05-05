@@ -57,5 +57,4 @@ public class OarsEngineTest {
         List<OarConfiguration> angles = oarsEngine.getPossibleAnglesWithOars();
         assertEquals(9, angles.size());
     }
-
 }

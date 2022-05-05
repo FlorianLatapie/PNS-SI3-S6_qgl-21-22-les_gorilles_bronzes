@@ -32,11 +32,11 @@ public class VigieEngine {
 
     public List<Action> getActionOnVigie() {
         List<Action> actions = new ArrayList<>();
-        findVigie().flatMap(this::findSailorOn).ifPresent(sailor -> actions.add(new UseWatch(sailor.getId())));
+        findVigie().flatMap(this::findSailorOnVigie).ifPresent(sailor -> actions.add(new UseWatch(sailor.getId())));
         return actions;
     }
 
-    public Optional<Sailor> findSailorOn(Entity entity) {
+    public Optional<Sailor> findSailorOnVigie(Entity entity) {
         if (entity == null) return Optional.empty();
         return deckEngine.getSailorByEntity(entity);
     }
