@@ -3,25 +3,22 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.OarsEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.RudderEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.SailsEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.VigieEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LiftSail;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LowerSail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.OtherShip;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.visible_entities.VisibleEntity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
@@ -48,6 +45,7 @@ public class NavigationEngine {
     private RudderEngine rudderEngine;
     private OarsEngine oarsEngine;
     private VigieEngine vigieEngine;
+    private SailsEngine sailsEngine;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
@@ -55,7 +53,7 @@ public class NavigationEngine {
         this.rudderEngine = new RudderEngine(deckEngine);
         this.oarsEngine = new OarsEngine(deckEngine, this, initGame);
         this.vigieEngine = new VigieEngine(deckEngine);
-
+        this.sailsEngine = new SailsEngine(deckEngine, oarsEngine, this);
         visibleEntitiesCache = new HashSet<>();
     }
 
@@ -63,10 +61,10 @@ public class NavigationEngine {
         List<Action> actions = new ArrayList<>();
         this.nextRound = nextRound;
         bestAngle = getBestAngle();
-        shouldLiftSailValue = shouldLiftSail();
+        shouldLiftSailValue = sailsEngine.shouldLiftSail(nextRound);
 
         actions.addAll(turnShipWithBestConfiguration());
-        actions.addAll(addSailAction());
+        actions.addAll(sailsEngine.getActionOnSails(shouldLiftSailValue));
         actions.addAll(vigieEngine.getActionOnVigie());
 
         return actions;
@@ -93,79 +91,6 @@ public class NavigationEngine {
         return deckEngine.getSailorByEntity(entity);
     }
 
-
-    /**
-     * Lifts sail if the wind blows at the back of the boat
-     *
-     * @return true if the sail should be lifted
-     */
-    public boolean shouldLiftSail() {
-        Wind wind = nextRound.getWind();
-        double windOrientation = wind.getOrientation();
-
-        double shipOrientation = nextRound.getShip().getPosition().getOrientation();
-        double clampedShipOrientation = clampAngle(shipOrientation);
-
-        if (getWindSpeedRelativeToShip(wind) + oarsEngine.findBestOarConfiguration(nextRound).getSpeed() >= getGoalSpeed())
-            return false;
-
-        return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
-    }
-
-    public double getWindSpeedRelativeToShip(Wind wind) {
-        int nbSail = deckEngine.getEntitiesByClass(new Voile()).size();
-        double shipOrientation = nextRound.getShip().getPosition().getOrientation();
-        double clampedShipOrientation = clampAngle(shipOrientation);
-
-        return nbSail * wind.getStrength() * Math.cos(clampedShipOrientation - wind.getOrientation());
-    }
-
-    public List<Voile> findSails() {
-        List<Voile> voiles = new ArrayList<>();
-        var searchForSail = deckEngine.getEntitiesByClass(new Voile());
-        if (searchForSail.isEmpty()) return voiles;
-        for (int i = 0; i < searchForSail.size(); i++) {
-            voiles.add((Voile) deckEngine.getEntitiesByClass(new Voile()).get(i));
-        }
-        return voiles;
-    }
-
-    public List<Action> addSailAction() {
-        List<Action> actions = new ArrayList<>();
-
-        List<Voile> sails = new ArrayList<>();
-        sails.addAll(findSails());
-
-        List<Sailor> sailorsOnSail = new ArrayList<>();
-
-        for (Entity sail : sails) {
-            deckEngine.getSailorByEntity(sail).ifPresent(sailorsOnSail::add);
-        }
-
-        for (Sailor sailorOnSail : sailorsOnSail) {
-            if (shouldLiftSailValue) {
-                actions.add(new LiftSail(sailorOnSail.getId()));
-            }
-            if (!(shouldLiftSailValue)) {
-                actions.add(new LowerSail(sailorOnSail.getId()));
-            }
-        }
-
-        return actions;
-    }
-
-    /**
-     * Find the Vigie object from the deck
-     *
-     * @return the Vigie object or null if not found
-     */
-
-
-    public Checkpoint getCheckpoint() {
-        return ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
-
-    }
-
     public double getGoalSpeed() {
         Checkpoint checkpoint = getCheckpoint();
         return bestDistance(checkpoint, nextRound.getShip())
@@ -185,6 +110,11 @@ public class NavigationEngine {
 
         return Math.hypot(checkX - shipX + (Math.sin(shipOrientation) * (shipShape).getHeight() / 2),
                 checkY - shipY + (Math.cos(shipOrientation) * (shipShape).getHeight() / 2));
+    }
+
+    public Checkpoint getCheckpoint() {
+        return ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
+
     }
 
     public double getDistanceToCheckpoint(Checkpoint checkPoint, Ship ship) {

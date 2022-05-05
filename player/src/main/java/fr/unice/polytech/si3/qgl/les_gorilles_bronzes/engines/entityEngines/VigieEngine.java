@@ -18,6 +18,12 @@ public class VigieEngine {
         this.deckEngine = deckEngine;
     }
 
+    /**
+     * Find the Vigie object from the deck
+     *
+     * @return the Vigie object or null if not found
+     */
+
     public Optional<Vigie> findVigie() {
         var searchForVigie = deckEngine.getEntitiesByClass(new Vigie());
         if (searchForVigie.isEmpty()) return Optional.empty();
