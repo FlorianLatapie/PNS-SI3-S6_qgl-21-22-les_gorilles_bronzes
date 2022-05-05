@@ -3,8 +3,10 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.*;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.enums.Direction;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LiftSail;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LowerSail;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
@@ -17,17 +19,13 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfigurat
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
 import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clampAngle;
 
 public class NavigationEngine {
@@ -47,12 +45,13 @@ public class NavigationEngine {
     private List<Point> path;
     private List<Node> nodes;
     private RudderEngine rudderEngine;
+    private OarsEngine oarsEngine;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
         this.rudderEngine = new RudderEngine(deckEngine);
-
+        this.oarsEngine = new OarsEngine(deckEngine, this, initGame);
 
         visibleEntitiesCache = new HashSet<>();
     }
@@ -70,30 +69,18 @@ public class NavigationEngine {
         return actions;
     }
 
-    public List<OarConfiguration> getPossibleAnglesWithOars() {
-        int nbOars = deckEngine.getTotalNbSailorsOnOars(); // for the next weeks we need to change this number
-        List<OarConfiguration> possibleAngles = new ArrayList<>();
-
-        for (int i = 0; i <= nbOars / 2; i++) {
-            for (int j = 0; j <= nbOars / 2; j++) {
-                possibleAngles.add(new OarConfiguration(i, j, nbOars));
-            }
-        }
-        return possibleAngles;
-    }
-
-
 
     public List<Action> turnShipWithBestConfiguration() {
         List<Action> actions = new ArrayList<>();
 
-        OarConfiguration bestConf = findBestOarConfiguration();
+
+        OarConfiguration bestConf = oarsEngine.findBestOarConfiguration(nextRound);
 
         //rudder action
-        actions.addAll(this.rudderEngine.useRudder(getBestAngle(), bestConf.getAngle()));
+        actions.addAll(rudderEngine.getActionOnRudder(getBestAngle(), bestConf.getAngle()));
 
         //oar action
-        addOarAction(actions, bestConf);
+        actions.addAll(oarsEngine.getActionOnOars(bestConf));
 
         return actions;
     }
@@ -116,7 +103,8 @@ public class NavigationEngine {
         double shipOrientation = nextRound.getShip().getPosition().getOrientation();
         double clampedShipOrientation = clampAngle(shipOrientation);
 
-        if (getWindSpeedRelativeToShip(wind) + findBestOarConfiguration().getSpeed() >= getGoalSpeed()) return false;
+        if (getWindSpeedRelativeToShip(wind) + oarsEngine.findBestOarConfiguration(nextRound).getSpeed() >= getGoalSpeed())
+            return false;
 
         return Math.abs(clampedShipOrientation - windOrientation) < Math.toRadians(90);
     }
@@ -195,43 +183,6 @@ public class NavigationEngine {
                 + ((Rectangle) nextRound.getShip().getShape()).getHeight();
     }
 
-    public OarConfiguration findBestOarConfiguration() {
-        double bestGoalAngle = bestAngle;
-        var checkpoint = ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];
-
-        List<OarConfiguration> possibleAngles = getPossibleAnglesWithOars();
-        List<OarConfiguration> bestConfs = possibleAngles.stream()
-                .filter(conf -> willBeInsideCheckpoint(checkpoint, nextRound.getShip(), conf))
-                .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()))
-                .collect(Collectors.toList());
-
-        OarConfiguration bestConf;
-
-        if (bestConfs.isEmpty()) {
-            bestConf = possibleAngles.stream()
-                    .sorted(Comparator.<OarConfiguration>comparingInt(conf -> conf.getLeftOar() + conf.getRightOar()).reversed())
-                    .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
-                    .orElse(possibleAngles.get(0));
-        } else {
-            bestConf = bestConfs.stream()
-                    .min(Comparator.comparingDouble(conf -> Math.abs(conf.getAngle() - bestGoalAngle)))
-                    .orElse(bestConfs.get(0));
-        }
-
-        return bestConf;
-    }
-
-
-
-    public void addOarAction(List<Action> actions, OarConfiguration bestConf) {
-        var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
-        var rightOars = deckEngine.getOars(Direction.RIGHT).stream().limit(bestConf.getRightOar());// take M right oars
-
-        Stream.concat(leftOars, rightOars) // we take all oars we want to activate
-                .map(oar -> deckEngine.getSailorByEntity(oar)) // for each oar, we try to get the sailor that's on it
-                .flatMap(Optional::stream) // we keep only the oars that do have a sailor on them
-                .forEach(sailor -> actions.add(new Oar(sailor.getId()))); // we add an Oar action associated to each matching sailor
-    }
 
     public double bestDistance(Checkpoint checkPoint, Ship ship) {
         double checkX = checkPoint.getPosition().getX();
@@ -263,12 +214,8 @@ public class NavigationEngine {
         return getDistanceToCheckpoint(checkPoint, ship) <= ((Circle) checkPoint.getShape()).getRadius();
     }
 
-    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration) {
-        double distance = getDistanceToCheckpoint(checkpoint, ship) - oarConfiguration.getSpeed();
-        return distance <= ((Circle) checkpoint.getShape()).getRadius();
-    }
 
-    private double getBestAngle() {
+    public double getBestAngle() {
         Checkpoint[] checkpoints = ((RegattaGoal) initGame.getGoal()).getCheckpoints();
 
         var boatPosition = nextRound.getShip().getPosition();
@@ -329,6 +276,11 @@ public class NavigationEngine {
 
         // check whether the line (ship position ; nextPoint) intersects with something
         updateGraph();
+    }
+
+    public boolean willBeInsideCheckpoint(Checkpoint checkpoint, Ship ship, OarConfiguration oarConfiguration) {
+        double distance = getDistanceToCheckpoint(checkpoint, ship) - oarConfiguration.getSpeed();
+        return distance <= ((Circle) checkpoint.getShape()).getRadius();
     }
 
     private boolean checkInTheWay(Point a, Point b) {

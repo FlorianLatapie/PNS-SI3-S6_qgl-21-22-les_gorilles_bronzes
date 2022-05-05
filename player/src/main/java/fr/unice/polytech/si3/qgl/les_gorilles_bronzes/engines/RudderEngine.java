@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Gouvernail;
@@ -15,12 +14,13 @@ import static fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util.clamp;
 
 public class RudderEngine {
     private DeckEngine deckEngine;
-    public RudderEngine(DeckEngine deckEngine){
+
+    public RudderEngine(DeckEngine deckEngine) {
         this.deckEngine = deckEngine;
 
     }
 
-    public List<Action> useRudder(Double bestAngle, Double bestConfAngle){
+    public List<Action> getActionOnRudder(Double bestAngle, Double bestConfAngle) {
         List<Action> actions = new ArrayList<>();
         Gouvernail rudder = findRudder();
         Optional<Sailor> sailorOnRudder = findSailorOn(rudder);

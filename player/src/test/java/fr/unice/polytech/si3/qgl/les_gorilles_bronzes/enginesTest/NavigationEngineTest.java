@@ -14,7 +14,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.Checkpoint;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.obstacles.Wind;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
@@ -129,12 +128,6 @@ class NavigationEngineTest {
         assertEquals(Math.PI / 4, navigationEngine.getGoalAngle());
     }
 
-    @Test
-    void getPossibleAnglesWithOarsTest() {
-        deckEngine.placeSailors();
-        List<OarConfiguration> angles = navigationEngine.getPossibleAnglesWithOars();
-        assertEquals(9, angles.size());
-    }
 
     @Test
     void addSailActionTest() {
@@ -164,7 +157,6 @@ class NavigationEngineTest {
         nextRound.getShip().setPosition(ninetyDegrees);
         assertFalse(navigationEngine.shouldLiftSail());
     }
-
 
 
     @Test
