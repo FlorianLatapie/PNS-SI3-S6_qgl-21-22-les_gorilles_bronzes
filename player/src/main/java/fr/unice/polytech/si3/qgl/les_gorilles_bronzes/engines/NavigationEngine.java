@@ -46,10 +46,13 @@ public class NavigationEngine {
     private boolean shouldLiftSailValue;
     private List<Point> path;
     private List<Node> nodes;
+    private RudderEngine rudderEngine;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
+        this.rudderEngine = new RudderEngine(deckEngine);
+
 
         visibleEntitiesCache = new HashSet<>();
     }
@@ -79,13 +82,7 @@ public class NavigationEngine {
         return possibleAngles;
     }
 
-    public List<Action> turnShipWithRudder(Double angle, Sailor sailorOnRudder) {
-        List<Action> actions = new ArrayList<>();
-        double angleToTurnWithRudder = clamp(angle, -Math.PI / 4, Math.PI / 4);
-        actions.add(new Turn(sailorOnRudder.getId(), angleToTurnWithRudder));
 
-        return actions;
-    }
 
     public List<Action> turnShipWithBestConfiguration() {
         List<Action> actions = new ArrayList<>();
@@ -93,9 +90,7 @@ public class NavigationEngine {
         OarConfiguration bestConf = findBestOarConfiguration();
 
         //rudder action
-        Gouvernail rudder = findRudder();
-        Optional<Sailor> sailorOnRudder = findSailorOn(rudder);
-        sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(bestAngle - bestConf.getAngle(), sailor)));
+        actions.addAll(this.rudderEngine.useRudder(getBestAngle(), bestConf.getAngle()));
 
         //oar action
         addOarAction(actions, bestConf);
@@ -226,11 +221,7 @@ public class NavigationEngine {
         return bestConf;
     }
 
-    public Gouvernail findRudder() {
-        var rechercheGouvernail = deckEngine.getEntitiesByClass(new Gouvernail());
-        if (rechercheGouvernail.isEmpty()) return null;
-        return (Gouvernail) deckEngine.getEntitiesByClass(new Gouvernail()).get(0);
-    }
+
 
     public void addOarAction(List<Action> actions, OarConfiguration bestConf) {
         var leftOars = deckEngine.getOars(Direction.LEFT).stream().limit(bestConf.getLeftOar());// take N left oars
