@@ -24,7 +24,6 @@ public class RudderEngine {
         List<Action> actions = new ArrayList<>();
         Gouvernail rudder = findRudder();
         Optional<Sailor> sailorOnRudder = findSailorOn(rudder);
-        System.out.println("sailorOnRudder : "+sailorOnRudder);
         sailorOnRudder.ifPresent(sailor -> actions.addAll(turnShipWithRudder(bestAngle - bestConfAngle, sailor)));
         return actions;
     }
