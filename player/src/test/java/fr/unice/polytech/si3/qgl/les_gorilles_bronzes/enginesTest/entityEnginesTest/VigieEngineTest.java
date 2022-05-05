@@ -1,30 +1,33 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.enginesTest;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.enginesTest.entityEnginesTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.RudderEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.OarsEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.VigieEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RudderEngineTest {
+public class VigieEngineTest {
     DeckEngine deckEngine;
     InitGame initGame;
     NavigationEngine navigationEngine;
     NextRound nextRound;
-    RudderEngine rudderEngine;
+    VigieEngine vigieEngine;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -45,8 +48,7 @@ public class RudderEngineTest {
 
         deckEngine = cockpit.getGlobalEngine().getDeckEngine();
         navigationEngine = cockpit.getGlobalEngine().getNavigationEngine();
-        rudderEngine = new RudderEngine(deckEngine);
-
+        vigieEngine = new VigieEngine(deckEngine);
     }
 
     public static String readFileAsString(Path file) throws Exception {
@@ -54,16 +56,24 @@ public class RudderEngineTest {
     }
 
     @Test
-    void turnShipWithRudderTest() {
-        Sailor sailor = new Sailor();
-        sailor.setId(1);
-        assertEquals(List.of(new Turn(sailor.getId(), 0.7853981633974483)), rudderEngine.turnShipWithRudder(10.0, sailor));
+    void findVigieTest() {
+        assertEquals(Optional.empty(), vigieEngine.findVigie());
     }
 
     @Test
-    void turnShipWithRudderTest2() {
-        Sailor sailor = new Sailor();
-        sailor.setId(1);
-        assertEquals(List.of(new Turn(sailor.getId(), 0.5)), rudderEngine.turnShipWithRudder(0.5, sailor));
+    void findVigieTest2() {
+        var entities = new ArrayList<>(List.of(initGame.getShip().getEntities()));
+        Vigie vigie = new Vigie();
+        vigie.setX(0);
+        vigie.setY(0);
+        entities.add(vigie);
+        deckEngine.setEntities(entities.toArray(new Entity[0]));
+        assertEquals(Optional.of(vigie), vigieEngine.findVigie());
     }
+
+    @Test
+    void addVigieActionTest() {
+        assertEquals(List.of(), vigieEngine.getActionOnVigie());
+    }
+
 }

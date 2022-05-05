@@ -1,6 +1,9 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
 
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.OarsEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.RudderEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.VigieEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
@@ -46,12 +49,14 @@ public class NavigationEngine {
     private List<Node> nodes;
     private RudderEngine rudderEngine;
     private OarsEngine oarsEngine;
+    private VigieEngine vigieEngine;
 
     public NavigationEngine(InitGame initGame, DeckEngine deckEngine) {
         this.initGame = initGame;
         this.deckEngine = deckEngine;
         this.rudderEngine = new RudderEngine(deckEngine);
         this.oarsEngine = new OarsEngine(deckEngine, this, initGame);
+        this.vigieEngine = new VigieEngine(deckEngine);
 
         visibleEntitiesCache = new HashSet<>();
     }
@@ -64,7 +69,7 @@ public class NavigationEngine {
 
         actions.addAll(turnShipWithBestConfiguration());
         actions.addAll(addSailAction());
-        actions.addAll(addVigieAction());
+        actions.addAll(vigieEngine.getActionOnVigie());
 
         return actions;
     }
@@ -156,20 +161,10 @@ public class NavigationEngine {
      *
      * @return the Vigie object or null if not found
      */
-    public Optional<Vigie> findVigie() {
-        var searchForVigie = deckEngine.getEntitiesByClass(new Vigie());
-        if (searchForVigie.isEmpty()) return Optional.empty();
-        return Optional.of((Vigie) deckEngine.getEntitiesByClass(new Vigie()).get(0));
-    }
 
 
-    public List<Action> addVigieAction() {
-        List<Action> actions = new ArrayList<>();
 
-        findVigie().flatMap(this::findSailorOn).ifPresent(sailor -> actions.add(new UseWatch(sailor.getId())));
 
-        return actions;
-    }
 
     public Checkpoint getCheckpoint() {
         return ((RegattaGoal) initGame.getGoal()).getCheckpoints()[nextCheckpointToReach];

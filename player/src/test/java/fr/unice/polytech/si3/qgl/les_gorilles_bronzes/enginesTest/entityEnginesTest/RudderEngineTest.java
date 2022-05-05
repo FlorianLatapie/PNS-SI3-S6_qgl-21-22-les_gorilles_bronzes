@@ -1,13 +1,14 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.enginesTest;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.enginesTest.entityEnginesTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.OarsEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines.RudderEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfiguration;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,12 +19,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OarsEngineTest {
+public class RudderEngineTest {
     DeckEngine deckEngine;
     InitGame initGame;
     NavigationEngine navigationEngine;
     NextRound nextRound;
-    OarsEngine oarsEngine;
+    RudderEngine rudderEngine;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -44,7 +45,8 @@ public class OarsEngineTest {
 
         deckEngine = cockpit.getGlobalEngine().getDeckEngine();
         navigationEngine = cockpit.getGlobalEngine().getNavigationEngine();
-        oarsEngine = new OarsEngine(deckEngine, navigationEngine, initGame);
+        rudderEngine = new RudderEngine(deckEngine);
+
     }
 
     public static String readFileAsString(Path file) throws Exception {
@@ -52,10 +54,16 @@ public class OarsEngineTest {
     }
 
     @Test
-    void getPossibleAnglesWithOarsTest() {
-        deckEngine.placeSailors();
-        List<OarConfiguration> angles = oarsEngine.getPossibleAnglesWithOars();
-        assertEquals(9, angles.size());
+    void turnShipWithRudderTest() {
+        Sailor sailor = new Sailor();
+        sailor.setId(1);
+        assertEquals(List.of(new Turn(sailor.getId(), 0.7853981633974483)), rudderEngine.turnShipWithRudder(10.0, sailor));
     }
 
+    @Test
+    void turnShipWithRudderTest2() {
+        Sailor sailor = new Sailor();
+        sailor.setId(1);
+        assertEquals(List.of(new Turn(sailor.getId(), 0.5)), rudderEngine.turnShipWithRudder(0.5, sailor));
+    }
 }

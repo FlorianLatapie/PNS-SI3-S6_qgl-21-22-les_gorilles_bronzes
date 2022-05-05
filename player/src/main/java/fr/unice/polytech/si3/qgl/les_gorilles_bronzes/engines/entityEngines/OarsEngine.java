@@ -1,5 +1,7 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.NavigationEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.InitGame;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;

@@ -202,25 +202,4 @@ class NavigationEngineTest {
         voile.setOpenned(false);
         assertEquals(List.of(voile), navigationEngine.findSails());
     }
-
-    @Test
-    void findVigieTest() {
-        assertEquals(Optional.empty(), navigationEngine.findVigie());
-    }
-
-    @Test
-    void findVigieTest2() {
-        var entities = new ArrayList<>(List.of(initGame.getShip().getEntities()));
-        Vigie vigie = new Vigie();
-        vigie.setX(0);
-        vigie.setY(0);
-        entities.add(vigie);
-        deckEngine.setEntities(entities.toArray(new Entity[0]));
-        assertEquals(Optional.of(vigie), navigationEngine.findVigie());
-    }
-
-    @Test
-    void addVigieActionTest() {
-        assertEquals(List.of(), navigationEngine.addVigieAction());
-    }
 }

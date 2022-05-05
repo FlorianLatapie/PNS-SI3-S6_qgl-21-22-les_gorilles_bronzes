@@ -1,5 +1,6 @@
-package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines;
+package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines;
 
+import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Turn;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
