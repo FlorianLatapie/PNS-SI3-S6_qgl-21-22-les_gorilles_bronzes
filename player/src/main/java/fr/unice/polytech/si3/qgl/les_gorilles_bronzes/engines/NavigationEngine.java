@@ -9,7 +9,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.NextRound;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LiftSail;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.LowerSail;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.Point;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
@@ -22,7 +21,6 @@ import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.OarConfigurat
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Ship;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Voile;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.util.Util;
@@ -161,9 +159,6 @@ public class NavigationEngine {
      *
      * @return the Vigie object or null if not found
      */
-
-
-
 
 
     public Checkpoint getCheckpoint() {

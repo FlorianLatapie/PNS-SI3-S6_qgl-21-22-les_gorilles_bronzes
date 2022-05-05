@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.entityEngines;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.engines.DeckEngine;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.Action;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.actions.UseWatch;
-import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Deck;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.Sailor;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Entity;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.ship.entity.Vigie;
@@ -15,7 +14,7 @@ import java.util.Optional;
 public class VigieEngine {
     DeckEngine deckEngine;
 
-    public VigieEngine(DeckEngine deckEngine){
+    public VigieEngine(DeckEngine deckEngine) {
         this.deckEngine = deckEngine;
     }
 
