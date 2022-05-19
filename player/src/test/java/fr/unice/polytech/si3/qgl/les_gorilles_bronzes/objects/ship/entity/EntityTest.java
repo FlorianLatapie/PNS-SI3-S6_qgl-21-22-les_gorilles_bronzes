@@ -63,8 +63,6 @@ class EntityTest {
         voile3.setFree(false);
         voile3.setOpenned(true);
 
-        assertEquals(voile, voile);
-
         assertEquals(voile, voile2);
         assertEquals(voile.hashCode(), voile2.hashCode());
         assertNotEquals(voile, voile3);

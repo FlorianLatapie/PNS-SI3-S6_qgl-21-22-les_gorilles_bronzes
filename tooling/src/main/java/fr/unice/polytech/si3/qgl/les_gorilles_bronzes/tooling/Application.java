@@ -1,16 +1,59 @@
 package fr.unice.polytech.si3.qgl.les_gorilles_bronzes.tooling;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.Cockpit;
 import fr.unice.polytech.si3.qgl.les_gorilles_bronzes.objects.geometry.shapes.Rectangle;
+import simulator.SimulatorController;
+import simulator.objects.SimulatorInfos;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Application {
-    public static void main(String[] args) {
-        Cockpit cockpit = new Cockpit();
-        cockpit.initGame("\n{\n  \"goal\": {\n    \"mode\": \"REGATTA\",\n    \"checkpoints\": [\n      {\n        \"position\": {\n          \"x\": 1000,\n          \"y\": 0,\n          \"orientation\": 0\n        },\n        \"shape\": {\n          \"type\": \"circle\",\n          \"radius\": 50\n        }\n      },\n      {\n        \"position\": {\n          \"x\": 0,\n          \"y\": 0,\n          \"orientation\": 0\n        },\n        \"shape\": {\n          \"type\": \"circle\",\n          \"radius\": 50\n        }\n      }\n    ]\n  },\n  \"ship\": {\n    \"type\": \"ship\",\n    \"life\": 100,\n    \"position\": {\n      \"x\": 0,\n      \"y\": 0,\n      \"orientation\": 0\n    },\n    \"name\": \"Les copaings d'abord!\",\n    \"deck\": {\n      \"width\": 3,\n      \"length\": 6\n    },\n    \"entities\": [\n      {\n        \"x\": 1,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 1,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 3,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 3,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 4,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 4,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 2,\n        \"y\": 1,\n        \"type\": \"sail\",\n        \"openned\": false\n      },\n      {\n        \"x\": 5,\n        \"y\": 0,\n        \"type\": \"rudder\"\n      }\n    ],\n    \"shape\": {\n      \"type\": \"rectangle\",\n      \"width\": 3,\n      \"height\": 6,\n      \"orientation\": 0\n    }\n  },\n  \"sailors\": [\n    {\n      \"x\": 0,\n      \"y\": 0,\n      \"id\": 0,\n      \"name\": \"Edward Teach\"\n    },\n    {\n      \"x\": 0,\n      \"y\": 1,\n      \"id\": 1,\n      \"name\": \"Edward Pouce\"\n    },\n    {\n      \"x\": 0,\n      \"y\": 2,\n      \"id\": 2,\n      \"name\": \"Tom Pouce\"\n    },\n    {\n      \"x\": 1,\n      \"y\": 0,\n      \"id\": 3,\n      \"name\": \"Jack Teach\"\n    },\n    {\n      \"x\": 1,\n      \"y\": 1,\n      \"id\": 4,\n      \"name\": \"Jack Teach\"\n    },\n    {\n      \"x\": 1,\n      \"y\": 2,\n      \"id\": 5,\n      \"name\": \"Tom Pouce\"\n    }\n  ],\n  \"shipCount\": 1\n}\n");
-        System.out.println("An instance of my team player: " + cockpit);
-        System.out.println("When called, it returns some JSON: " + cockpit.nextRound("\n{\n  \"ship\": {\n    \"type\": \"ship\",\n    \"life\": 100,\n    \"position\": {\n      \"x\": 0,\n      \"y\": 0,\n      \"orientation\": 0\n    },\n    \"name\": \"Les copaings d'abord!\",\n    \"deck\": {\n      \"width\": 3,\n      \"length\": 6\n    },\n    \"entities\": [\n      {\n        \"x\": 1,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 1,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 3,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 3,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 4,\n        \"y\": 0,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 4,\n        \"y\": 2,\n        \"type\": \"oar\"\n      },\n      {\n        \"x\": 2,\n        \"y\": 1,\n        \"type\": \"sail\",\n        \"openned\": false\n      },\n      {\n        \"x\": 5,\n        \"y\": 0,\n        \"type\": \"rudder\"\n      }\n    ],\n    \"shape\": {\n      \"type\": \"rectangle\",\n      \"width\": 3,\n      \"height\": 6,\n      \"orientation\": 0\n    }\n  },\n  \"visibleEntities\": [\n    {\n      \"type\": \"stream\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 0,\n        \"orientation\": 0\n      },\n      \"shape\": {\n        \"type\": \"rectangle\",\n        \"width\": 50,\n        \"height\": 500,\n        \"orientation\": 0\n      },\n      \"strength\": 40\n    }\n  ],\n  \"wind\": {\n    \"orientation\": 0,\n    \"strength\": 110\n  }\n}\n"));
+    static Path pathSimuInfos = Paths.get(System.getProperty("user.dir") + "/tooling/src/main/java/simulator/weeks/WEEK9-PREVIEW.json");
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-        System.out.println(((Rectangle) cockpit.getInitGame().getShip().getShape()).getWidth());
-        System.out.println(((Rectangle) cockpit.getInitGame().getShip().getShape()).getHeight());
+    static {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    public static void main(String[] args) throws Exception {
+        var pathSimuInfos = askUserWhichWeek();
+
+        SimulatorController s = new SimulatorController(OBJECT_MAPPER.readValue(readFileAsString(pathSimuInfos), SimulatorInfos.class));
+        System.out.println("Starting simulation");
+        s.run();
+    }
+
+    private static Path askUserWhichWeek() {
+        String dossierDExec = System.getProperty("user.dir") + "/tooling/src/main/java/simulator/weeks/";
+        System.out.println("recherche de fichiers dans : " + dossierDExec);
+        File fichiersDuDossierDExec = new File(dossierDExec);
+        System.out.println("choisissez le fichier en écrivant le numéro : ");
+        for (int i = 0; i < fichiersDuDossierDExec.listFiles().length; i++) {
+            System.out.println(i + " : " + fichiersDuDossierDExec.listFiles()[i].getName());
+        }
+        Scanner scanner = new Scanner(System.in);
+        int choix = scanner.nextInt();
+        if (choix < 0 || choix >= fichiersDuDossierDExec.listFiles().length) {
+            System.out.println("choix invalide");
+            System.out.println("changement du dossier de recherche : ");
+            dossierDExec = scanner.next();
+            fichiersDuDossierDExec = new File(dossierDExec);
+            for (int i = 0; i < fichiersDuDossierDExec.listFiles().length; i++) {
+                System.out.println(i + " : " + fichiersDuDossierDExec.listFiles()[i].getName());
+            }
+            choix = scanner.nextInt();
+        }
+        return pathSimuInfos = Paths.get(dossierDExec + fichiersDuDossierDExec.listFiles()[choix].getName());
+
+    }
+
+    public static String readFileAsString(Path file) throws Exception {
+        return new String(Files.readAllBytes(file));
     }
 }
